@@ -1,6 +1,7 @@
 # Terminality: A Java Dungeon Crawler
 
-![Terminality Logo](![vgy.me](https://i.vgy.me/GBzj6O.png))
+![Terminality Logo](https://i.vgy.me/GBzj6O.png)
+
 
 ![Language Logo](https://img.shields.io/badge/Language-Java-blue)
 ![Application Logo](https://img.shields.io/badge/Type-Console%20Application-orange)
