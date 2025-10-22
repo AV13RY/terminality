@@ -1,10 +1,10 @@
 # Terminality: A Java Dungeon Crawler
 
-![vgy.me](https://i.vgy.me/8jl3AJ.png)
+![Terminality Logo](![vgy.me](https://i.vgy.me/GBzj6O.png))
 
-![Terminality Logo Placeholder](https://img.shields.io/badge/Language-Java-blue)
-![Terminality Logo Placeholder](https://img.shields.io/badge/Type-Console%20Application-orange)
-![Terminality Logo Placeholder](https://img.shields.io/badge/Style-Text%20Based%20RPG-green)
+![Language Logo](https://img.shields.io/badge/Language-Java-blue)
+![Application Logo](https://img.shields.io/badge/Type-Console%20Application-orange)
+![Game Type Logo](https://img.shields.io/badge/Style-Text%20Based%20RPG-green)
 
 ## Overview
 
