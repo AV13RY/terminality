@@ -1,76 +1,81 @@
 # Terminality: A Java Dungeon Crawler
 
+![vgy.me](https://i.vgy.me/8jl3AJ.png)
+
 ![Terminality Logo Placeholder](https://img.shields.io/badge/Language-Java-blue)
 ![Terminality Logo Placeholder](https://img.shields.io/badge/Type-Console%20Application-orange)
-![Terminality Logo Placeholder](https://img.shields.io/badge/Status-Development-red)
+![Terminality Logo Placeholder](https://img.shields.io/badge/Style-Text%20Based%20RPG-green)
 
 ## Overview
 
-[cite_start]**Terminality** is a text-based dungeon crawler game developed in **pure Java** for the 6G4Z0044: Introduction to Programming module[cite: 1]. The objective of the game is for the player to navigate a labyrinth of rooms, manage their inventory, engage in combat with different enemy types, and ultimately defeat the dungeon's final boss.
+**Terminality** is a text-based, command-line dungeon crawler game developed in **pure Java**. The project was created for the 6G4Z0044: Introduction to Programming module, by **Jack McGillivray**.
 
-The project demonstrates core programming concepts and advanced Object-Oriented Programming (OOP) principles, including **Inheritance**, **Interfaces**, and strict **Encapsulation**.
+The goal is to guide a player through their journey, engaging in turn-based combat, managing items, and utilizing the player's core stats to survive the dungeon, gather and upgrade loot, and eventually defeat the final boss.
 
-## Features Implemented
+## Key Features
 
-The game is built around the following core functionalities:
+### Core Programming Concepts
 
-### Core Gameplay Features (Introduction to Programming)
+* **Console I/O:** All user interaction is managed through typed commands and text output.
+* **Selection & Loops:** Extensive use of `if/else` and `switch` statements for command parsing and combat resolution, encapsulated within a persistent **Game Loop**.
+* **Methods & Objects:** The code is modularized using distinct methods and is built around key classes: `Player`, various `Enemy` types, `Room`, and `Item`.
+* **Arrays/Lists:** Dynamic collection types (e.g., `ArrayList`) are used for managing the player's inventory and the list of enemies within a room.
+* **Testing:** A dedicated class is used to verify the correctness of core logic, such as damage calculation and character instantiation.
 
-* [cite_start]**Console I/O:** All game output and player commands are handled via the console[cite: 66, 68].
-* [cite_start]**Player & Enemy Objects:** Management of separate `Player` and `Enemy` entities with health and attack stats[cite: 77].
-* [cite_start]**Combat Logic:** Turn-based combat managed by conditional statements (`if/else`) to handle attacks, damage, and defeat[cite: 70].
-* [cite_start]**Game Loop:** The core game logic runs continuously until the player is defeated or the objective is met[cite: 71].
-* [cite_start]**Methods:** Separation of concerns using dedicated methods for actions like `move()`, `attack()`, and `printStatus()`[cite: 73].
-* [cite_start]**Inventory/Map Data:** Use of arrays/lists to manage the player's inventory and the map structure[cite: 74].
+### Advanced OOP & Style
 
-### Advanced OOP & Style Features (High-Grade Focus)
+* **Inheritance:** An **Abstract `Character`** class provides a blueprint for both the `Player` and the various specialized `Enemy` subclasses (e.g., `Goblin`, `Ogre`, `Boss`).
+* **Encapsulation:** Strict control over data integrity is enforced using private fields and public getter/setter methods across all major classes.
+* **Interfaces:** The **`IEquippable`** interface is implemented by different item classes (`Sword`, `Shield`) to ensure polymorphic handling of gear.
+* **Appropriate Package Structure:** Code is professionally organized into logical packages.
 
-* [cite_start]**Inheritance:** Use of an **Abstract `Character`** class, with `Player` and multiple enemy types (`Goblin`, `Ogre`, `Boss`) inheriting common attributes and overriding specific behaviours[cite: 113, 115].
-* [cite_start]**Encapsulation:** All class attributes are private, with controlled access via public getter and setter methods to ensure data integrity[cite: 115].
-* [cite_start]**Interfaces:** Implementation of the **`IEquippable`** interface, allowing various items (e.g., `Sword`, `Shield`) to be handled polymorphically within the inventory system[cite: 115].
-* [cite_start]**Testing:** Inclusion of a dedicated `TestHarness` class to verify the correctness of core game mechanics, such as damage calculation and room navigation[cite: 75, 113].
-* [cite_start]**Professional Code Management:** Project development was managed using **Git** for version control, demonstrating self-directed code management[cite: 116, 121].
+* **Self-directed Code Management:** **Git / GitHub** version control software was used throughout the development of the programme to manage feature implementation and maintain code integrity.
 
 ## Getting Started
 
 ### Prerequisites
 
-You will need a Java Development Kit (JDK) installed on your system (Java 17 or higher recommended).
+You need a **Java Development Kit (JDK)** installed on your machine (Java 17 or higher recommended) to run.
 
-### Running Terminality
+### How to Run
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [YOUR-GIT-REPO-LINK]
+    git clone git@github.com:AV13RY/terminality.git
     ```
-2.  **Navigate to the project directory:**
+2.  **Navigate to the Source Directory:**
     ```bash
-    cd Terminality
+    cd Terminality/src
     ```
-3.  **Compile the code:**
+3.  **Compile and Run (Standard Command Line):**
     ```bash
-    # Assuming your main class is in the root and called Game.java
-    javac com/rpg/game/Game.java
+    # You may need to adjust the path to your main class
+    javac com/terminality/game/*.java com/terminality/characters/*.java com/terminality/world/*.java
+    java com.terminality.game.Game
     ```
-4.  **Run the game:**
-    ```bash
-    # Execute the main class
-    java com.rpg.game.Game
-    ```
+    *(Note: If using an IDE like IntelliJ or VS Code, use the integrated 'Run' feature.)*
 
-## How to Play
+## In-Game Commands
 
-Upon starting the game, you will be in the dungeon's entrance room. You control your character by typing commands into the console.
+Control your character by typing commands when prompted. Commands are case-insensitive.
 
-| Command | Action |
-| :--- | :--- |
-| `move [direction]` | Move to an adjacent room (e.g., `move north`, `move east`) |
-| `attack` | Engage the current enemy in combat |
-| `status` | View your current health, attack power, and equipped gear |
-| `inventory` | View your collected items |
-| `help` | Display a list of available commands |
-| `exit` | Quit the game |
+| Command | Purpose | Example |
+| :--- | :--- | :--- |
+| `move [direction]` | Navigate to an adjacent room. | `move north` |
+| `attack` | Start or continue combat with the room's enemy. | `attack` |
+| `status` | Display the player's current health and equipped gear. | `status` |
+| `inventory` | View items in the player's backpack. | `inventory` |
+| `help` | List all available commands. | `help` |
+| `exit` | Quit the game. | `exit` |
 
 ## Project Structure
 
-[cite_start]The project is structured using appropriate Java packages [cite: 113] for clear organization:
+{{{{{{{{NEED TO ADD}}}}}}}}
+## Author
+
+**[Jack McGillivray]**
+Software Engineer & Degree Apprentice.
+
+## License
+
+This project is submitted solely for academic assessment.
