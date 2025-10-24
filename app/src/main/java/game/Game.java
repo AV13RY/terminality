@@ -7,6 +7,20 @@ public class Game {
     private JTextArea outputArea;
     private JTextField inputField;
 
+    // Color definitions
+    Color RED = Color.RED;
+    Color GREEN = Color.GREEN;
+    Color BLUE = Color.BLUE;
+    Color YELLOW = Color.YELLOW;
+    Color CYAN = Color.CYAN;
+    Color MAGENTA = Color.MAGENTA;
+    Color WHITE = Color.WHITE;
+    Color DARK_GRAY = Color.DARK_GRAY;
+    Color LIGHT_GRAY = Color.LIGHT_GRAY;
+    Color BLACK = Color.BLACK;
+    Color DEFAULT = new Color(0xD8125B);
+
+
     public Game() {
         initializeUI();
         displayTitle();
@@ -30,9 +44,22 @@ public class Game {
         println("════════════════════════════════════════════════════════════════════════════════════════");
         println("                       A Java Dungeon Crawler by Jack McGillivray                       ");
         println("════════════════════════════════════════════════════════════════════════════════════════");
-        println("You awaken in a dark dungeon with no memory of how you got here.");
-        println("Your only goal: survive, gather loot, and defeat the final boss.");
-        println("\nType 'help' for available commands or 'exit' to quit the game.");
+        println(" >> B R I E F I N G <<\n");
+        println(" Welcome, Adventurer, to the Labyrinth of Shadows.\n");
+        println(" This is a text-based, single-player dungeon crawler. Your goal is to navigate the");
+        println(" dungeon, fight monsters, and defeat the Boss at the end of your journey.\n");
+        println(" Your experience will consist of three main interactions:\n");
+        println(" 1.  **MOVEMENT:** You will be prompted to move between rooms (North, South, East, West)");
+        println(" - Use the command: [ move <direction> ]\n");
+        println(" 2.  **COMBAT:** If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
+        println("        - Use the command: [ attack ]\n");
+        println(" 3.  **STATUS & INVENTORY:** Manage your character's state and gear.");
+        println("        - Use the commands: [ status ] and [ inventory ]\n");
+        println(" Remember, the labyrinth is unforgiving. Plan your moves, manage your health, \n and use your commands wisely.\n");
+        println(" To see all available commands at any time, type [ help ].");
+        println(" To end your journey prematurely, type [ exit ].\n");
+        println(" Prepare yourself...");
+        println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
     private void processCommand(String input) {
@@ -61,28 +88,28 @@ public class Game {
         Color newColor;
         switch (colorName.toLowerCase()) {
             case "red":
-                newColor = Color.RED;
+                newColor = RED;
                 break;
             case "green":
-                newColor = Color.GREEN;
+                newColor = GREEN;
                 break;
             case "blue":
-                newColor = Color.BLUE;
+                newColor = BLUE;
                 break;
             case "yellow":
-                newColor = Color.YELLOW;
+                newColor = YELLOW;
                 break;
             case "cyan":
-                newColor = Color.CYAN;
+                newColor = CYAN;
                 break;
             case "magenta":
-                newColor = Color.MAGENTA;
+                newColor = MAGENTA;
                 break;
             case "white":
-                newColor = Color.WHITE;
+                newColor = WHITE;
                 break;
             case "default":
-                newColor = new Color(0xD8125B);
+                newColor = DEFAULT;
                 break;
             default:
                 println("Unknown color. Available colors: red, green, blue, yellow, cyan, magenta, white, default");
@@ -106,77 +133,72 @@ public class Game {
         println("- exit             : Quit the game");
     }
 
-    // Method to clear the console output area.
     private void clearScreen() {
         outputArea.setText("");
+        displayTitle();
         displayWelcomeMessage();
     }
 
-
-    // Custom method for println (does the same thing just works with the interface + /n)
     private void println(String text) {
         outputArea.append(text + "\n");
         outputArea.setCaretPosition(outputArea.getDocument().getLength());
     }
 
-    // UI METHODS
     private void initializeUI() {
-        // Main frame setup
         JFrame frame = new JFrame("Terminality");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        // Left Area (Sidebar)
         JTextArea sidebarArea = new JTextArea();
         sidebarArea.setEditable(false);
         sidebarArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        sidebarArea.setBackground(Color.BLACK);
-        sidebarArea.setForeground(new Color(0xD8125B));
+        sidebarArea.setBackground(DARK_GRAY);
+        sidebarArea.setForeground(DEFAULT);
         JScrollPane leftScroll = new JScrollPane(sidebarArea);
         leftScroll.setPreferredSize(new Dimension(300, frame.getHeight()));
 
-        // Centre Area (Output)
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         outputArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        outputArea.setBackground(Color.BLACK);
-        outputArea.setForeground(new Color(0xD8125B));
+        outputArea.setBackground(BLACK);
+        outputArea.setForeground(DEFAULT);
 
         JScrollPane centerScroll = new JScrollPane(outputArea);
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setPreferredSize(new Dimension(705, 600));
         centerPanel.add(centerScroll, BorderLayout.CENTER);
 
-        // Right Area (Character Display)
         JTextArea characterDisplayArea = new JTextArea();
         characterDisplayArea.setEditable(false);
         characterDisplayArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        characterDisplayArea.setBackground(Color.BLACK);
-        characterDisplayArea.setForeground(new Color(0xD8125B));
+        characterDisplayArea.setBackground(BLACK);
+        characterDisplayArea.setForeground(DEFAULT);
         JScrollPane rightScroll = new JScrollPane(characterDisplayArea);
         rightScroll.setPreferredSize(new Dimension(500, frame.getHeight()));
 
-        // Bottom Area (Input)
+        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputPanel.setBackground(BLACK);
+
+        JLabel promptLabel = new JLabel(" > ");
+        promptLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        promptLabel.setForeground(WHITE);
+        inputPanel.add(promptLabel, BorderLayout.WEST);
+
         inputField = new JTextField();
         inputField.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        inputField.setBackground(Color.BLACK);
-        inputField.setForeground(new Color(0xD8125B));
-        inputField.setCaretColor(new Color(0xD8125B));
-        inputField.setPreferredSize(new Dimension(705, 200));
-
-        // Create a panel for the input field that excludes the left sidebar
-        JPanel inputPanel = new JPanel(new BorderLayout());
+        inputField.setBackground(BLACK);
+        inputField.setForeground(DEFAULT);
+        inputField.setCaretColor(DEFAULT);
+        inputField.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 10));
         inputPanel.add(inputField, BorderLayout.CENTER);
 
-        // Add components to the main panel
         mainPanel.add(leftScroll, BorderLayout.WEST);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(rightScroll, BorderLayout.EAST);
         mainPanel.add(inputPanel, BorderLayout.SOUTH);
 
-        // Add main panel to frame
         frame.add(mainPanel);
 
         inputField.addActionListener(e -> {
