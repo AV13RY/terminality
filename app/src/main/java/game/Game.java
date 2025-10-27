@@ -12,6 +12,9 @@ public class Game {
     // Section Declarations
     private JTextArea display;
     private JTextField terminal;
+    private JTextArea characterArea;  // Add this field
+
+    // Game state variables
 
     // Color Declarations
     private final Color RED = Color.RED;
@@ -23,14 +26,13 @@ public class Game {
     private final Color WHITE = Color.WHITE;
     private final Color BLACK = Color.BLACK;
     private final Color DEFAULT = new Color(0xD8125B);
-    private final Color DEFAULT2 = new Color(0x0f0207);
+    private final Color DEFAULT2 = new Color(0x230410);
 
     // CORE METHODS ---------------------------------------------------------------------------------------------------
-
     // Game Constructor
     public Game() {
         initializeUI();
-        terminalTitle();
+        terminalTitleMessage();
         terminalWelcomeMessage();
     }
 
@@ -41,7 +43,7 @@ public class Game {
 
     // TEXT METHODS ---------------------------------------------------------------------------------------------------
     // ASCII art title
-    private void terminalTitle() {
+    private void terminalTitleMessage() {
         println("");
         println(" ████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗");
         println(" ╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝");
@@ -63,24 +65,24 @@ public class Game {
 
 
         println(" Hello, World.. . . . . ............... .  . . . .  .", 2);
-        println(" Ah what am I saying, you probably already know this isn't your average powershell.\n", 0.5);
-        println(" Anyway, welcome to Terminality, a text-based dungeon crawler.", 2);
-
-        println(" Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n", 2);
-        println(" Your experience will consist of three main interactions:\n", 1);
+        println(" Ah what am I saying, you probably already know this isn't just your average powershell.\n", 2);
+        println(" Anyway, welcome to Terminality, a text-based dungeon crawler.", 0.1);
+        println(" Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n", 0.1);
+        println(" Your experience will consist of three main interactions:\n", 0.1);
         println(" 1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
-        println(" - Use the command: [ move <direction> ]\n");
+        println(" - Use the command: [ move <direction> ]\n", 1);
         println(" 2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
-        println("        - Use the command: [ attack ]\n");
+        println("        - Use the command: [ attack ]\n", 1);
         println(" 3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
         println("        - Use the commands: [ status ] and [ inventory ]\n\n", 1);
-        println(" To see all available commands at any time, type [ help ].");
-        println(" To end your journey prematurely, type [ exit ].\n", 1);
-        println(" Prepare yourself...");
-        println(" ═══════════════════════════════════════════════════════════════════════════════════════");
+        println(" To see all available commands at any time, type [ help ].", 0.1);
+        println(" To end your journey prematurely, type [ exit ].\n", 0.1);
+        println(" Prepare yourself...", 0.1);
+        println(" ═══════════════════════════════════════════════════════════════════════════════════════", 0.1);
         println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
+    // Tutorial Message
     private void terminalTutorialMessage() {
         println(" ═══════════════════════════════════════════════════════════════════════════════════════");
         println("                       A Java Dungeon Crawler by Jack McGillivray                       ");
@@ -91,7 +93,7 @@ public class Game {
 
 
         println(" Hello, World.. . . . . ............... .  . . . .  .");
-        println(" Ah what am I saying, you probably already know this isn't just CMD 2.0.\n");
+        println(" Ah what am I saying, you probably already know this isn't just your average powershell.\n");
         println(" Anyway, welcome to Terminality, a text-based dungeon crawler.");
 
         println(" Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n");
@@ -119,8 +121,20 @@ public class Game {
         println("- colour [color]   : Change text color (red, green, blue, yellow, cyan, magenta, white)");
         println("- clear            : Clear the terminal screen");
         println("- help             : terminal this help message");
+        println("- start            : Start the game");
         println("- exit             : Quit the game");
     }
+
+    // Knight ASCII Art method
+    private void displayKnightCharacter() {
+        String knight1 = "                        {}\n" + "                       .--.      \n" + "                      /.--.\\\n" + "                      |====|\n" + "                      |`::`|\n" + "                  .-;`\\..../`;-.\n" + "                 /  |...::...|  \\\n" + "                |   /'''::'''\\   |\n" + "                ;--'\\   ::   /\\--;\n" + "                <__>,>._::_.<,<__>\n" + "                |  |/   ^^   \\|  |\n" + "                \\::/|        |\\::/\n" + "                |||\\|        |/|||\n" + "                ''' |___/\\___| '''\n" + "                     \\_ || _/\n" + "                     <_ >< _>\n" + "                     |  ||  |\n" + "                     |  ||  |\n" + "                    _\\.:||:./_\n" + "                   /____/\\____\\";
+        String knight2 = "                        {}\n" + "                       .--.      \n" + "                      /.--.\\\n" + "                      |====|\n" + "                      |`::`|\n" + "                  .-;`\\..../`;-.\n" + "                /   |...::...|   \\\n" + "               |  / /'''::'''\\\\   |\n" + "               ;--' \\   ::   / \\--;\n" + "               <__>, >._::_.< ,<__>\n" + "               |  | /   ^^   \\ |  |\n" + "               \\::/ |        | \\::/\n" + "               |||\\ |        | /|||\n" + "               '''  |___/\\___|  '''\n" + "                     \\_ || _/\n" + "                     <_ >< _>\n" + "                     |  ||  |\n" + "                     |  ||  |\n" + "                    _\\.:||:./_\n" + "                   /____/\\____\\";
+
+        //as this is an animation, a new thread is created to run the animation without blocking the main thread.
+        Thread idleAnimationThread = idleAnimation(knight1, knight2);
+        idleAnimationThread.start();
+    }
+
 
     // COMMAND METHODS ------------------------------------------------------------------------------------------------
     // Method to process different commands that are inputted by the user.e
@@ -142,6 +156,11 @@ public class Game {
             terminalHelpMessage();
         } else if (input.equals("clear")) {
             clearScreen();
+        } else if (input.equals("status")) {
+            // player.displayStatus();
+        } else if (input.equals("start")) {
+            displayKnightCharacter();
+            println("Game started! Your knight appears in the character display.");
         } else {
             println("Unknown command. Type 'help' for available commands.");
         }
@@ -150,7 +169,7 @@ public class Game {
     // Clear Method
     private void clearScreen() {
         display.setText("");
-        terminalTitle();
+        terminalTitleMessage();
         terminalTutorialMessage();
     }
 
@@ -177,7 +196,7 @@ public class Game {
         JTextArea sidebarArea = new JTextArea();
         sidebarArea.setEditable(false);
         sidebarArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        sidebarArea.setBackground(DEFAULT2);
+        sidebarArea.setBackground(BLACK);
         sidebarArea.setForeground(DEFAULT);
         JScrollPane leftScroll = new JScrollPane(sidebarArea);
         leftScroll.setPreferredSize(new Dimension(300, frame.getHeight()));
@@ -197,12 +216,15 @@ public class Game {
         centerPanel.setPreferredSize(new Dimension(705, 600));
         centerPanel.add(centerScroll, BorderLayout.CENTER);
 
-        JTextArea characterterminalArea = new JTextArea();
-        characterterminalArea.setEditable(false);
-        characterterminalArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        characterterminalArea.setBackground(DEFAULT2);
-        characterterminalArea.setForeground(DEFAULT);
-        JScrollPane rightScroll = new JScrollPane(characterterminalArea);
+        // Update the character area initialization
+        characterArea = new JTextArea();
+        characterArea.setEditable(false);
+        characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        characterArea.setBackground(BLACK);
+        characterArea.setForeground(DEFAULT);
+        // Center the text in the character area
+        characterArea.setMargin(new Insets(50, 50, 50, 50));
+        JScrollPane rightScroll = new JScrollPane(characterArea);
         rightScroll.setPreferredSize(new Dimension(480, frame.getHeight()));
 
         JPanel inputPanel = new JPanel(new BorderLayout());
@@ -215,7 +237,7 @@ public class Game {
 
         terminal = new JTextField();
         terminal.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        terminal.setBackground(DEFAULT2);
+        terminal.setBackground(BLACK);
         terminal.setForeground(WHITE);
         terminal.setCaretColor(DEFAULT);
         terminal.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 10));
@@ -275,6 +297,7 @@ public class Game {
         display.setForeground(newColor);
         terminal.setForeground(newColor);
         terminal.setCaretColor(newColor);
+        characterArea.setForeground(newColor);
         println("Text color changed to " + colorName);
     }
 
@@ -289,5 +312,31 @@ public class Game {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    // Method to create a new thread for the idle animation of the character.
+    @SuppressWarnings("BusyWait") // just stops the warning for sleeping
+    private Thread idleAnimation(String knight1, String knight2) {
+        Thread animationThread = new Thread(() -> {
+            while (true) {
+                try {
+                    SwingUtilities.invokeLater(() -> {
+                        characterArea.setText(knight1);
+                        characterArea.setCaretPosition(0);
+                    });
+                    Thread.sleep(2500); //delay till each breath.
+                    SwingUtilities.invokeLater(() -> {
+                        characterArea.setText(knight2);
+                        characterArea.setCaretPosition(0);
+                    });
+                    Thread.sleep(1250); // different delay to make it look more dynamic
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        animationThread.setDaemon(true); // makes the thread a 'background' thread so closing works properly.
+        return animationThread;
     }
 }
