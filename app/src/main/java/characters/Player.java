@@ -180,4 +180,8 @@ public class Player extends Character {
     public int getExperience() {
         return experience;
     }
+
+    public int getCurrentHealth() {
+        return currentHealth;
+    }
 }

@@ -41,7 +41,7 @@ public class Game {
         initializeUI();
         initializeWorld();
         tutorialTitleMessage();
-        terminalWelcomeMessage();
+        tutorialWelcomeMessage(0.1);
     }
 
     // Main Method
@@ -50,7 +50,7 @@ public class Game {
     }
 
     // TEXT METHODS ---------------------------------------------------------------------------------------------------
-    // ASCII art title
+    // Tutorial ASCII Art Title
     private void tutorialTitleMessage() {
         println("");
         println("████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗");
@@ -64,7 +64,7 @@ public class Game {
 
 
     // Welcome message
-    private void terminalWelcomeMessage() {
+    private void tutorialWelcomeMessage(double wait) {
         println("                      A Java Dungeon Crawler by Jack McGillivray                       ");
         println("═══════════════════════════════════════════════════════════════════════════════════════");
         println("▖ ▖   ▄▖▖▖▄▖▄▖▄▖▄▖▄▖▖    ▖ ▖");
@@ -72,26 +72,26 @@ public class Game {
         println("▞ ▞   ▐ ▙▌▐ ▙▌▌▌▟▖▛▌▙▖  ▝▖▝▖\n");
 
 
-        println("Hello, World.. . . . . ............... .  . . . .  .", 0.1);
-        println("Ah what am I saying, you probably already know this isn't just your average powershell.\n", 0.1);
-        println("Anyway, welcome to Terminality, a text-based dungeon crawler.", 0.1);
-        println("Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n", 0.1);
-        println("Your experience will consist of three main interactions:\n", 0.1);
+        println("Hello, World.. . . . . ............... .  . . . .  .", wait);
+        println("Ah what am I saying, you probably already know this isn't just your average powershell.\n", wait);
+        println("Anyway, welcome to Terminality, a text-based dungeon crawler.", wait);
+        println("Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n", wait);
+        println("Your experience will consist of three main interactions:\n", wait);
         println("1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
-        println("- Use the command: [ move <direction> ]\n", 0.1);
+        println("- Use the command: [ move <direction> ]\n", wait);
         println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
-        println("        - Use the command: [ attack ]\n", 0.1);
+        println("        - Use the command: [ attack ]\n", wait);
         println("3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
-        println("       - Use the commands: [ status ] and [ inventory ]\n\n", 0.1);
-        println("To see all available commands at any time, type [ help ].", 0.1);
-        println("To end your journey prematurely, type [ exit ].\n", 0.1);
-        println("Prepare yourself...", 0.1);
-        println("═══════════════════════════════════════════════════════════════════════════════════════", 0.1);
+        println("       - Use the commands: [ status ] and [ inventory ]\n\n", wait);
+        println("To see all available commands at any time, type [ help ].", wait);
+        println("To end your journey prematurely, type [ exit ].\n", wait);
+        println("Prepare yourself...", wait);
+        println("═══════════════════════════════════════════════════════════════════════════════════════", wait);
         println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
-    // Tutorial Message
-    private void terminalTutorialMessage() {
+    // Welcome message with wait
+    private void tutorialWelcomeMessage() {
         println("                      A Java Dungeon Crawler by Jack McGillivray                       ");
         println("═══════════════════════════════════════════════════════════════════════════════════════");
         println("▖ ▖   ▄▖▖▖▄▖▄▖▄▖▄▖▄▖▖    ▖ ▖");
@@ -102,20 +102,19 @@ public class Game {
         println("Hello, World.. . . . . ............... .  . . . .  .");
         println("Ah what am I saying, you probably already know this isn't just your average powershell.\n");
         println("Anyway, welcome to Terminality, a text-based dungeon crawler.");
-
         println("Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n");
         println("Your experience will consist of three main interactions:\n");
         println("1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
         println("- Use the command: [ move <direction> ]\n");
         println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
-        println("       - Use the command: [ attack ]\n");
+        println("        - Use the command: [ attack ]\n");
         println("3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
         println("       - Use the commands: [ status ] and [ inventory ]\n\n");
         println("To see all available commands at any time, type [ help ].");
         println("To end your journey prematurely, type [ exit ].\n");
         println("Prepare yourself...");
         println("═══════════════════════════════════════════════════════════════════════════════════════");
-        println("\nType 'help' for available commands or 'exit' to quit the game.");
+        println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
     // Help message
@@ -153,21 +152,14 @@ public class Game {
         println("\n You find yourself at the entrance of an ancient graveyard shrouded in mist.\n");
         println("Weathered tombstones and crumbling mausoleums stretch before you, their shadows");
         println("dancing in the pale moonlight that filters through the twisted branches above.");
-        println("");
-        println("A spectral voice whispers through the fog:\n \"Traveler, before you venture forth, you must remember who you are...\"");
-        println("");
-        println("");
-        println("THE PATHS YOU COULD HAVE BEEN:");
-        println("");
+        println("A spectral voice whispers through the fog:\n \"Traveler, before you venture forth, you must remember who you are...\"\n\n");
+        println("THE PATHS YOU COULD HAVE BEEN:\n");
         println("1. KNIGHT - A stalwart warrior with enhanced strength and durability");
-        println("   ♦ High Defense  ♦ Strong Attack  ♦ No Magic");
-        println("");
+        println("   ♦ High Defense  ♦ Strong Attack  ♦ No Magic\n");
         println("2. MAGE - A master of arcane arts with powerful spells but fragile defenses");
-        println("   ♦ Low Health  ♦ Low Weapon Attack  ♦ Powerful Magic");
-        println("");
+        println("   ♦ Low Health  ♦ Low Weapon Attack  ♦ Powerful Magic\n");
         println("3. ROGUE - A nimble trickster who relies on speed and cunning");
-        println("   ♦ Medium Health  ♦ Quick Attacks  ♦ Little Magic");
-        println("");
+        println("   ♦ Medium Health  ♦ Quick Attacks  ♦ Little Magic\n");
         println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘\n");
         println("What is your name, brave soul?\n");
         println("  - Use the command: [ name <your name> ]");
@@ -280,10 +272,13 @@ public class Game {
                     } else {
                         println("Please specify one of the designated classes.");
                     }
-                    println("Your class will be: " + CLASS);
-                    println("\n If you wish to alter your memory, this is your last chance.");
-                    println("However if this is how you choose to remember yourself:");
-                    println("- Use the command: [ begin ]\n");
+
+                    if (!CLASS.isEmpty()) {
+                        println("Your class will be: " + CLASS);
+                        println("\n If you wish to alter your memory, this is your last chance.");
+                        println("However if this is how you choose to remember yourself:");
+                        println("- Use the command: [ begin ]\n");
+                    }
                 }
 
                 if (input.equals("begin")) {
@@ -312,7 +307,7 @@ public class Game {
     private void clearScreen() {
         display.setText("");
         tutorialTitleMessage();
-        terminalTutorialMessage();
+        tutorialWelcomeMessage();
     }
 
     // Custom println method to display text in the UI display area.
@@ -392,12 +387,12 @@ public class Game {
                         characterArea.setText(knight1);
                         characterArea.setCaretPosition(0);
                     });
-                    Thread.sleep(2500); //delay till each breath.
+                    Thread.sleep(1500); //delay till each breath.
                     SwingUtilities.invokeLater(() -> {
                         characterArea.setText(knight2);
                         characterArea.setCaretPosition(0);
                     });
-                    Thread.sleep(1250); // different delay to make it look more dynamic
+                    Thread.sleep(750); // different delay to make it look more dynamic
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
