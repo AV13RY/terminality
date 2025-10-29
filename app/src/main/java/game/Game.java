@@ -79,7 +79,7 @@ public class Game {
         println("Your experience will consist of three main interactions:\n", wait);
         println("1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
         println("- Use the command: [ move <direction> ]\n", wait);
-        println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
+        println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will start automatically. \n    It is turn-based.");
         println("        - Use the command: [ attack ]\n", wait);
         println("3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
         println("       - Use the commands: [ status ] and [ inventory ]\n\n", wait);
@@ -106,7 +106,7 @@ public class Game {
         println("Your experience will consist of three main interactions:\n");
         println("1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
         println("- Use the command: [ move <direction> ]\n");
-        println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will begin automatically. \n    It is turn-based.");
+        println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will start automatically. \n    It is turn-based.");
         println("        - Use the command: [ attack ]\n");
         println("3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
         println("       - Use the commands: [ status ] and [ inventory ]\n\n");
@@ -158,15 +158,17 @@ public class Game {
         println("   ♦ High Defense  ♦ Strong Attack  ♦ No Magic\n");
         println("2. MAGE - A master of arcane arts with powerful spells but fragile defenses");
         println("   ♦ Low Health  ♦ Low Weapon Attack  ♦ Powerful Magic\n");
-        println("3. ROGUE - A nimble trickster who relies on speed and cunning");
-        println("   ♦ Medium Health  ♦ Quick Attacks  ♦ Little Magic\n");
+        println("3. REAPER - An embodiment of living death, fast scythe wielder.");
+        println("   ♦ Medium Health  ♦ Quick Attacks  ♦ Some Magic\n");
         println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘\n");
         println("What is your name, brave soul?\n");
         println("  - Use the command: [ name <your name> ]");
     }
 
     // Knight ASCII Art method
-    private void displayKnightCharacter() {
+    private void displayCharacter(String CLASS) {
+
+        // KNIGHTS
         String knight1 = """
                                         {}
                                        .--.     \s
@@ -212,11 +214,155 @@ public class Game {
                                    /____/\\____\\\
                 """;
 
-        //as this is an animation, a new thread is created to run the animation without blocking the main thread.
-        Thread idleAnimationThread = idleAnimation(knight1, knight2);
-        idleAnimationThread.start();
-    }
+        // MAGES
+        String mage1 = """
+                                         ____\s
+                                       .'* *.'
+                                    __/_*_*(_
+                                   / _______ \\
+                                  _\\_)/___\\(_/_\s
+                                 / _((\\- -/))_ \\
+                                 \\ \\())(-)(()/ /
+                                  ' \\(((()))/ '
+                                 / ' \\)).))/ ' \\
+                                / _ \\ - | - /_  \\
+                               (   ( .;''';. .'  )
+                               _\\"__ /    )\\ __"/_
+                                 \\/  \\   ' /  \\/
+                                  .'  '...' ' )
+                                   / /  |  \\ \\
+                                  / .   .   . \\
+                                 /   .     .   \\
+                                /   /   |   \\   \\
+                              .'   /    b    '.  '.
+                          _.-'    /     Bb     '-. '-._\s
+                      _.-'       |      BBb       '-.  '-.\s
+                     (___________\\____.dBBBb.________)____)
+                """;
 
+        String mage2 = """
+                       ⋆.ೃ࿔.             ____\s
+                                       .'* *.'
+                                    __/_*_*(_               ⟡
+                          ⟡ ݁₊ .    / _______ \\   ⟡
+                                  _\\_)/___\\(_/_\s
+                                 / _((\\- -/))_ \\        ⋆.ೃ࿔.
+                    ⋆.ೃ࿔*:･      \\ \\())(o)(()/ /
+                                  ' \\(((()))/ '
+                                / /' \\)).))/ ' \\ \\
+                               / _/ \\ - | - /_  \\ \\  ⟡
+                              (  / ( .;''';. .'  | )
+                         ⟡    \\"_\\_  /𖦹꩜.ೃ࿔\\ _ _/ /
+                                \\/ \\ \\⋆𖦹⋆ˎˊ˗/  \\/   ⟡ ݁₊ .
+                                  .'  \\｡𖦹°★/' )
+                            ⟡      / /  |  \\ \\
+                                  / .   .   . \\      ⋆.ೃ࿔.
+                       ⋆.ೃ࿔.     /   .     .   \\
+                                /   /   |   \\   \\
+                              .'   /    b    '.  '.       ⟡
+                          _.-'    /     Bb     '-. '-._\s
+                      _.-'       |      BBb       '-.  '-.\s
+                     (___________\\____.dBBBb.________)____)
+                """;
+
+        String reaper1 = """
+                                                                 .""--..__
+                                             _                     []       ``-.._
+                                          .'` `'.                  ||__           `-._
+                                         /    ,-.\\                 ||_ ```---..__     `-.
+                                        /    /:::\\\\               /|//}          ``--._  `.
+                                        |    |:::||              |////}                `-. \\
+                                        |    |:::||             //'///                    `.\\
+                                        |    |:::||            //  ||'                      `|
+                                        /    |:::|/        _,-//\\  ||
+                                       /`    |:::|`-,__,-'`  |/  \\ ||
+                                     /`  |   |'' ||           \\   |||
+                                   /`    \\   |   ||            |  /||
+                                 |`       |  |   |)            \\ | ||
+                                |          \\ |   /      ,.__    \\| ||
+                                /           `         /`    `\\   | ||
+                               |                     /        \\  / ||
+                               |                     |        | /  ||
+                               /         /           |        `(   ||
+                              /          .           /          )  ||
+                             |            \\          |     ________||
+                            /             |          /     `-------.|
+                           |\\            /          |              ||
+                           \\/`-._       |           /              ||
+                            //   `.    /`           |              ||
+                           //`.    `. |             \\              ||
+                          ///\\ `-._  )/             |              ||
+                         //// )   .(/               |              ||
+                         ||||   ,'` )               /              //
+                         ||||  /                    /             ||\s
+                         `\\\\` /`                    |             //\s
+                             |`                     \\            || \s
+                            /                        |           // \s
+                          /`                          \\         //  \s
+                        /`                            |        ||   \s
+                        `-.___,-.      .-.        ___,'        (/   \s
+                                 `---'`   `'----'`
+                """;
+
+        String reaper2 = """
+                                                        ༒︎       .""--..__
+                                      ༒︎      _                    []       ``-.._
+                                           .'` `'.                 ||__           `-._
+                                          /  .""\".\\                ||_ ```---..__     `-.
+                                         /  /_  _`\\\\    ༒︎        /|//}          ``--._  `.
+                                         | |(_)(_)||             |////}                `-. \\
+                           ༒︎            | |  /\\  )|            //'///                    `.\\
+                                         | |L====J |            // ||'                      `|
+                                        /  /'-..-' /        _,-//\\ ||                       𓄼
+                                       /   |  :: | |_.__,-'`  |/  \\||                      ۵
+                                     /`|   `\\-::.| |          \\   |||    ༒︎                𓄹
+                                   /`  `|   /    | |           |  /||
+                            ༒︎   |`     \\   |    / /           \\ | ||                       ۵
+                                |        `\\_|    |/     ,.__    \\| ||
+                                /           `         /`    `\\   | ||                      ۵
+                               |                     /        \\  / ||
+                               |                     |        | /  ||
+                         ༒︎    /         /           |        `(   ||
+                              /          .           /          )  ||
+                             |            \\          |     ________||
+                            /             |          /     `-------.|
+                           |\\            /          |              ||
+                           \\/`-._       |           /              ||
+                            //   `.    /`           |              ||
+                           //`.    `. |             \\              ||
+                          ///\\ `-._  )/             |              ||
+                         //// )   .(/               |              ||
+                         ||||   ,'` )               /              //
+                         ||||  /                    /             ||\s
+                         `\\\\` /`                    |             //\s
+                             |`                     \\            || \s
+                            /                        |           // \s
+                          /`                          \\         //  \s
+                        /`                            |        ||   \s
+                        `-.___,-.      .-.        ___,'        (/   \s
+                                 `---'`   `'----'`
+                """;
+        //as this is an animation, a new thread is created to run the animation without blocking the main thread.
+
+        Thread idleAnimationThread;
+
+        switch (CLASS) {
+            case "knight":
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                idleAnimationThread = idleAnimation(knight1, knight2, 1500, 750);
+                idleAnimationThread.start();
+                break;
+            case "mage":
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                idleAnimationThread = idleAnimation(mage1, mage2, 1500, 750);
+                idleAnimationThread.start();
+                break;
+            case "reaper":
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 9));
+                idleAnimationThread = idleAnimation(reaper1, reaper2, 2500, 1250);
+                idleAnimationThread.start();
+        }
+    }
 
     // COMMAND METHODS ------------------------------------------------------------------------------------------------
     // Method to process different commands that are inputted by the user.e
@@ -239,10 +385,7 @@ public class Game {
                     terminalHelpMessage();
                 } else if (input.equals("clear")) {
                     clearScreen();
-                } else if (input.equals("status")) {
-                    // player.displayStatus();
                 } else if (input.equals("start")) {
-                    displayKnightCharacter();
                     currentRoom = new Room("Graveyard", "A dark and eerie graveyard.");
 
                     display.setText("");
@@ -258,17 +401,20 @@ public class Game {
                     NAME = input.replace("name", "").toLowerCase().trim();
                     println("\nYour name will be: " + NAME);
                     println("\nAnd what will your class be?");
-                    println("- Use the command: [ class <knight,mage,rogue> ]");
+                    println("- Use the command: [ class <knight,mage,reaper> ]");
                 }
 
                 if (input.startsWith("class")) {
                     String replace = input.replace("class", "").toLowerCase().trim();
                     if (input.contains("knight")) {
                         CLASS = replace;
+                        displayCharacter(CLASS);
                     } else if (input.contains("mage")) {
                         CLASS = replace;
-                    } else if (input.contains("rogue")) {
+                        displayCharacter(CLASS);
+                    } else if (input.contains("reaper")) {
                         CLASS = replace;
+                        displayCharacter(CLASS);
                     } else {
                         println("Please specify one of the designated classes.");
                     }
@@ -277,12 +423,12 @@ public class Game {
                         println("Your class will be: " + CLASS);
                         println("\n If you wish to alter your memory, this is your last chance.");
                         println("However if this is how you choose to remember yourself:");
-                        println("- Use the command: [ begin ]\n");
+                        println("- Use the command: [ start ]\n");
                     }
                 }
 
-                if (input.equals("begin")) {
-                    println(NAME + ", a " + CLASS + " from the Lands Between is ready to begin their journey.");
+                if (input.equals("start")) {
+                    println(NAME + ", a " + CLASS + " from the Lands Between is ready to start their journey.");
                     switch (CLASS) {
                         case "knight":
                             player = new Player(NAME, Player.KNIGHT);
@@ -292,8 +438,8 @@ public class Game {
                             player = new Player(NAME, Player.MAGE);
                             println(player.getStatus());
                             break;
-                        case "rogue":
-                            player = new Player(NAME, Player.ROGUE);
+                        case "reaper":
+                            player = new Player(NAME, Player.REAPER);
                             println(player.getStatus());
                             break;
                     }
@@ -379,25 +525,34 @@ public class Game {
 
     // Method to create a new thread for the idle animation of the character.
     @SuppressWarnings("BusyWait") // just stops the warning for sleeping
-    private Thread idleAnimation(String knight1, String knight2) {
+    private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2) {
+        String tempCLASS = CLASS;
+
         Thread animationThread = new Thread(() -> {
-            while (true) {
+            while (tempCLASS.equals(CLASS)) {
                 try {
                     SwingUtilities.invokeLater(() -> {
-                        characterArea.setText(knight1);
-                        characterArea.setCaretPosition(0);
+                        // Checks the tempCLASS again for a reason here (and below).
+                        // Stops the one frame overlap with old class image when loop runs for final time.
+                        if (tempCLASS.equals(CLASS)) {
+                            characterArea.setText(character1);
+                            characterArea.setCaretPosition(0);
+                        }
                     });
-                    Thread.sleep(1500); //delay till each breath.
+                    Thread.sleep(milliWaitTime1); //delay till each breath.
                     SwingUtilities.invokeLater(() -> {
-                        characterArea.setText(knight2);
-                        characterArea.setCaretPosition(0);
+                        if (tempCLASS.equals(CLASS)) {
+                            characterArea.setText(character2);
+                            characterArea.setCaretPosition(0);
+                        }
                     });
-                    Thread.sleep(750); // different delay to make it look more dynamic
+                    Thread.sleep(milliWaitTime2); // different delay to make it look more dynamic
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
                 }
             }
+
         });
         animationThread.setDaemon(true); // makes the thread a 'background' thread so closing works properly.
         return animationThread;
@@ -437,6 +592,7 @@ public class Game {
 
         // Update the character area initialization
         characterArea = new JTextArea();
+        leftScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         characterArea.setEditable(false);
         characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         characterArea.setBackground(BLACK);
@@ -444,7 +600,9 @@ public class Game {
         // Center the text in the character area
         characterArea.setMargin(new Insets(50, 50, 50, 50));
         JScrollPane rightScroll = new JScrollPane(characterArea);
+        rightScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         rightScroll.setPreferredSize(new Dimension(480, frame.getHeight()));
+        centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.setBackground(DEFAULT2);

@@ -11,7 +11,7 @@ public class Player extends Character {
     // Class constants for different player types
     public static final String KNIGHT = "Knight";
     public static final String MAGE = "Mage";
-    public static final String ROGUE = "Rogue";
+    public static final String REAPER = "reaper";
 
     // Constructor
     public Player(String name, String playerClass) {
@@ -45,7 +45,7 @@ public class Player extends Character {
                 this.mana = 100;
                 break;
 
-            case ROGUE:
+            case REAPER:
                 this.maxHealth = 80;
                 this.currentHealth = 80;
                 this.attack = 12;
@@ -66,15 +66,15 @@ public class Player extends Character {
         }
     }
 
-    // Magic attack method (for Mage and Rogue)
+    // Magic attack method (for Mage and reaper)
     public int castSpell(int manaCost) {
         if (mana >= manaCost) {
             mana -= manaCost;
             // Magic damage calculation based on class
             if (playerClass.equals(MAGE)) {
                 return 25; // Powerful magic for mage
-            } else if (playerClass.equals(ROGUE)) {
-                return 10; // Little magic for rogue
+            } else if (playerClass.equals(REAPER)) {
+                return 10; // Little magic for reaper
             }
         }
         return 0; // No damage if not enough mana or no magic ability
@@ -106,7 +106,7 @@ public class Player extends Character {
                 mana = maxMana;
                 break;
 
-            case ROGUE:
+            case REAPER:
                 maxHealth += 10;
                 currentHealth = maxHealth;
                 attack += 2;
