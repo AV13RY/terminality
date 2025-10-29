@@ -15,7 +15,8 @@ public class Game {
     // Section Declarations
     private JTextArea display;
     private JTextField terminal;
-    private JTextArea characterArea;  // Add this field
+    private JTextArea characterArea;
+    private JTextArea statsArea;
 
     // Game state variables
     private Room currentRoom;
@@ -41,7 +42,8 @@ public class Game {
         initializeUI();
         initializeWorld();
         tutorialTitleMessage();
-        tutorialWelcomeMessage(0.1);
+        tutorialWelcomeMessage();
+        testing("reaper");
     }
 
     // Main Method
@@ -165,7 +167,7 @@ public class Game {
         println("  - Use the command: [ name <your name> ]");
     }
 
-    // Knight ASCII Art method
+    // ASCII Art method
     private void displayCharacter(String CLASS) {
 
         // KNIGHTS
@@ -364,6 +366,12 @@ public class Game {
         }
     }
 
+    private void displayStats(String name) {
+        
+        println(player.displayStatus(), statsArea);
+
+    }
+
     // COMMAND METHODS ------------------------------------------------------------------------------------------------
     // Method to process different commands that are inputted by the user.e
     private void processCommand(String input) {
@@ -443,11 +451,15 @@ public class Game {
                             println(player.getStatus());
                             break;
                     }
+
+                    displayStats(NAME);
+
                 }
                 break;
         }
 
     }
+
 
     // Clear Method
     private void clearScreen() {
@@ -455,6 +467,7 @@ public class Game {
         tutorialTitleMessage();
         tutorialWelcomeMessage();
     }
+
 
     // Custom println method to display text in the UI display area.
     public void println(String text) {
@@ -466,6 +479,11 @@ public class Game {
         display.append(" " + text + "\n");
         display.setCaretPosition(display.getDocument().getLength());
         wait(waitTime);
+    }
+
+    public void println(String text, JTextArea area) {
+        area.append(" " + text + "\n");
+        area.setCaretPosition(area.getDocument().getLength());
     }
 
     // UI Methods -----------------------------------------------------------------------------------------------------
@@ -567,43 +585,58 @@ public class Game {
         frame.setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel(new BorderLayout());
 
+        // Left sidebar
         JTextArea sidebarArea = new JTextArea();
         sidebarArea.setEditable(false);
         sidebarArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         sidebarArea.setBackground(BLACK);
         sidebarArea.setForeground(DEFAULT);
+        sidebarArea.setMargin(new Insets(20, 20, 20, 20));
         JScrollPane leftScroll = new JScrollPane(sidebarArea);
-        leftScroll.setPreferredSize(new Dimension(300, frame.getHeight()));
+        leftScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        leftScroll.setPreferredSize(new Dimension(250, frame.getHeight()));
 
+        // Center display
         display = new JTextArea();
         display.setEditable(false);
         display.setFont(new Font("Monospaced", Font.PLAIN, 14));
         display.setBackground(BLACK);
         display.setForeground(DEFAULT);
-
+        display.setMargin(new Insets(20, 20, 20, 20));
         JScrollPane centerScroll = new JScrollPane(display);
-        centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        // Set the default viewport view position to the top
-        centerScroll.getViewport().setViewPosition(new Point(0, 0));
+        centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setPreferredSize(new Dimension(705, 600));
-        centerPanel.add(centerScroll, BorderLayout.CENTER);
+        // Right panel - split into two sections
+        JPanel rightPanel = new JPanel(new GridLayout(2, 1, 0, 10)); // 2 rows, 1 column, 10px gap
+        rightPanel.setBackground(BLACK);
 
-        // Update the character area initialization
+        // Character area (top half)
         characterArea = new JTextArea();
-        leftScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         characterArea.setEditable(false);
         characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         characterArea.setBackground(BLACK);
         characterArea.setForeground(DEFAULT);
-        // Center the text in the character area
-        characterArea.setMargin(new Insets(50, 50, 50, 50));
-        JScrollPane rightScroll = new JScrollPane(characterArea);
-        rightScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        rightScroll.setPreferredSize(new Dimension(480, frame.getHeight()));
-        centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        characterArea.setMargin(new Insets(20, 50, 20, 50));
+        JScrollPane characterScroll = new JScrollPane(characterArea);
+        characterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+        // Stats area (bottom half)
+        statsArea = new JTextArea();
+        statsArea.setEditable(false);
+        statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
+        statsArea.setBackground(BLACK);
+        statsArea.setForeground(WHITE);
+        statsArea.setMargin(new Insets(10, 10, 10, 10));
+        JScrollPane statsScroll = new JScrollPane(statsArea);
+        statsScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        statsScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+
+        // Add both areas to right panel
+        rightPanel.add(characterScroll);
+        rightPanel.add(statsScroll);
+        rightPanel.setPreferredSize(new Dimension(480, frame.getHeight()));
+
+        // Input panel
         JPanel inputPanel = new JPanel(new BorderLayout());
         inputPanel.setBackground(DEFAULT2);
 
@@ -614,15 +647,16 @@ public class Game {
 
         terminal = new JTextField();
         terminal.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        terminal.setBackground(BLACK);
+        terminal.setBackground(DEFAULT2);
         terminal.setForeground(WHITE);
         terminal.setCaretColor(DEFAULT);
         terminal.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 10));
         inputPanel.add(terminal, BorderLayout.CENTER);
 
+        // Assemble main panel
         mainPanel.add(leftScroll, BorderLayout.WEST);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.add(rightScroll, BorderLayout.EAST);
+        mainPanel.add(centerScroll, BorderLayout.CENTER);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(inputPanel, BorderLayout.SOUTH);
 
         frame.add(mainPanel);
@@ -640,5 +674,19 @@ public class Game {
     private void initializeWorld() {
         // Set the starting room
         currentRoom = new Room("Tutorial", "Area when the user opens the game for the first time.");
+    }
+
+    private void testing(String CLASS) {
+        terminal.setText("start");
+        terminal.postActionEvent();
+        wait(0.2);
+        terminal.setText("name aviery");
+        terminal.postActionEvent();
+        wait(0.2);
+        terminal.setText("class " + CLASS);
+        terminal.postActionEvent();
+        wait(0.2);
+        terminal.setText("start");
+        terminal.postActionEvent();
     }
 }
