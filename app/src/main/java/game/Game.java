@@ -72,34 +72,6 @@ public class Game {
         println("═══════════════════════════════════════════════════════════════════════════════════════");
     }
 
-
-    // Welcome message
-    private void tutorialWelcomeMessage(double wait) {
-        println("                      A Java Dungeon Crawler by Jack McGillivray                       ");
-        println("═══════════════════════════════════════════════════════════════════════════════════════");
-        println("▖ ▖   ▄▖▖▖▄▖▄▖▄▖▄▖▄▖▖    ▖ ▖");
-        println("▝▖▝▖  ▐ ▌▌▐ ▌▌▙▘▐ ▌▌▌   ▞ ▞ ");
-        println("▞ ▞   ▐ ▙▌▐ ▙▌▌▌▟▖▛▌▙▖  ▝▖▝▖\n");
-
-
-        println("Hello, World.. . . . . ............... .  . . . .  .", wait);
-        println("Ah what am I saying, you probably already know this isn't just your average powershell.\n", wait);
-        println("Anyway, welcome to Terminality, a text-based dungeon crawler.", wait);
-        println("Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.\n", wait);
-        println("Your experience will consist of three main interactions:\n", wait);
-        println("1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.");
-        println("- Use the command: [ move <direction> ]\n", wait);
-        println("2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will start automatically. \n    It is turn-based.");
-        println("        - Use the command: [ attack ]\n", wait);
-        println("3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.");
-        println("       - Use the commands: [ status ] and [ inventory ]\n\n", wait);
-        println("To see all available commands at any time, type [ help ].", wait);
-        println("To end your journey prematurely, type [ exit ].\n", wait);
-        println("Prepare yourself...", wait);
-        println("═══════════════════════════════════════════════════════════════════════════════════════", wait);
-        println("\n Type 'help' for available commands or 'exit' to quit the game.");
-    }
-
     // Welcome message with wait
     private void tutorialWelcomeMessage() {
         println("                      A Java Dungeon Crawler by Jack McGillivray                       ");
@@ -127,18 +99,39 @@ public class Game {
         println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
-    // Help message
-    private void terminalHelpMessage() {
+    // Terminal Help message
+    private void tutorialHelpMessage() {
         println("\nAVAILABLE COMMANDS:");
-        println("- move [direction] : Navigate to an adjacent room");
-        println("- attack           : Start or continue combat with the room's enemy");
-        println("- status           : terminal your current health and equipped gear");
-        println("- inventory        : View items in your backpack");
-        println("- colour [color]   : Change text color (red, green, blue, yellow, cyan, magenta, white)");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
         println("- clear            : Clear the terminal screen");
-        println("- help             : terminal this help message");
+        println("- help             : Display this help message");
+        println("- exit             : Quit the game\n");
         println("- start            : Start the game");
-        println("- exit             : Quit the game");
+
+    }
+
+    private void graveyardHelpMessage() {
+        println("\nAVAILABLE COMMANDS:");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
+        println("- clear            : Clear the terminal screen");
+        println("- help             : Display this help message");
+        println("- exit             : Quit the game\n");
+        println("- name             : Set your player name.");
+        println("- class            : Set your player class (Knight, Mage, or Reaper).");
+        println("- proceed          : Proceed onwards.");
+
+    }
+
+    private void churchHelpMessage() {
+        println("\nAVAILABLE COMMANDS:");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
+        println("- clear            : Clear the terminal screen");
+        println("- help             : Display this help message");
+        println("- start            : Start the game");
+        println("- exit             : Quit the game\n");
+        println("- choose           : Choose between the options given.");
+        println("- inventory        : View the player inventory.");
+
     }
 
 
@@ -503,13 +496,12 @@ public class Game {
                 break;
             case "reaper":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 9));
-                idleAnimationThread = idleAnimation(reaper1, reaper2, 2500, 1250);
+                idleAnimationThread = idleAnimation(reaper1, reaper2, 2500, 150);
                 idleAnimationThread.start();
         }
     }
 
-    private void displayStats(String name) {
-
+    private void displayStats() {
         println(player.displayStatus(), statsArea);
 
     }
@@ -521,30 +513,38 @@ public class Game {
         println("\n > " + input);
         updateCommandHistory(input);
 
+        if (input.startsWith("colour ")) {
+            String[] parts = input.split(" ", 2);
+            if (parts.length > 1) {
+                changeTextColor(parts[1]);
+            } else {
+                println("Please specify a color. Available colors: red, green, blue, yellow, cyan, magenta, white");
+            }
+        } else if (input.equals("exit")) {
+            System.exit(0);
+        } else if (input.equals("help")) {
+            switch (currentRoom.getName()) {
+                case "tutorial":
+                    tutorialHelpMessage();
+                case "graveyard":
+                    graveyardHelpMessage();
+                case "church":
+                    churchHelpMessage();
+            }
+        } else if (input.equals("clear")) {
+            clearScreen();
+        } else {
+            println("Unknown command. Type 'help' for available commands.");
+        }
 
         switch (currentRoom.getName()) {
             case "tutorial":
-                if (input.startsWith("colour ")) {
-                    String[] parts = input.split(" ", 2);
-                    if (parts.length > 1) {
-                        changeTextColor(parts[1]);
-                    } else {
-                        println("Please specify a color. Available colors: red, green, blue, yellow, cyan, magenta, white");
-                    }
-                } else if (input.equals("exit")) {
-                    System.exit(0);
-                } else if (input.equals("help")) {
-                    terminalHelpMessage();
-                } else if (input.equals("clear")) {
-                    clearScreen();
-                } else if (input.equals("start")) {
+                if (input.equals("start")) {
                     currentRoom = new Room("Graveyard", "A dark and eerie graveyard.");
 
                     display.setText("");
                     graveyardTitleMessage();
                     graveyardIntroMessage();
-                } else {
-                    println("Unknown command. Type 'help' for available commands.");
                 }
                 break;
             case "graveyard":
@@ -575,11 +575,11 @@ public class Game {
                         println("Your class will be: " + CLASS);
                         println("\n If you wish to alter your memory, this is your last chance.");
                         println("However if this is how you choose to remember yourself:");
-                        println("- Use the command: [ start ]\n");
+                        println("- Use the command: [ proceed ]\n");
                     }
                 }
 
-                if (input.equals("start")) {
+                if (input.equals("proceed")) {
                     println(NAME + ", a " + CLASS + " from the Lands Between is ready to start their journey.");
                     switch (CLASS) {
                         case "knight":
@@ -631,8 +631,21 @@ public class Game {
     // Clear Method
     private void clearScreen() {
         display.setText("");
-        tutorialTitleMessage();
-        tutorialWelcomeMessage();
+
+        switch (currentRoom.getName()) {
+            case "tutorial":
+                tutorialTitleMessage();
+                tutorialWelcomeMessage();
+                break;
+            case "graveyard":
+                graveyardTitleMessage();
+                graveyardIntroMessage();
+                break;
+            case "church":
+                churchTitleMessage();
+                churchIntroMessage(CLASS);
+                break;
+        }
     }
 
 
@@ -652,6 +665,13 @@ public class Game {
         area.append(" " + text + "\n");
         area.setCaretPosition(area.getDocument().getLength());
     }
+
+    public void println(String text, JTextArea area, double waitTime) {
+        area.append(" " + text + "\n");
+        area.setCaretPosition(area.getDocument().getLength());
+        wait(waitTime);
+    }
+
 
     // UI Methods -----------------------------------------------------------------------------------------------------
     // Method to change the text color
@@ -782,6 +802,7 @@ public class Game {
         display.setMargin(new Insets(20, 20, 20, 20));
         JScrollPane centerScroll = new JScrollPane(display);
         centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        centerScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
         // Right panel - split into two sections
         JPanel rightPanel = new JPanel(new GridLayout(2, 1, 0, 10)); // 2 rows, 1 column, 10px gap
@@ -792,7 +813,7 @@ public class Game {
         characterArea.setEditable(false);
         characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         characterArea.setBackground(BLACK);
-        characterArea.setForeground(DEFAULT);
+        characterArea.setForeground(Color.LIGHT_GRAY);
         characterArea.setMargin(new Insets(20, 50, 20, 50));
         JScrollPane characterScroll = new JScrollPane(characterArea);
         characterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -898,7 +919,7 @@ public class Game {
 
         if (chosenWeapon != null) {
             player.addWeapon(chosenWeapon);
-            displayStats(NAME); // Update stats display
+            displayStats(); // Update stats display
 
             println("\n" + chosenWeapon.getName() + " has been added to your inventory and equipped!");
             println("\nThe spectral overseer nods approvingly.");
@@ -923,7 +944,6 @@ public class Game {
             int cmdNumber = i + 1;
 
             // Determine command type for coloring/branching
-            String branch = "│";
             String node = "○";
 
             // Special nodes for certain commands
@@ -942,8 +962,8 @@ public class Game {
             // Build the visualization
             String str = "  ╟─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n";
             if (i == commandHistory.size() - 1) {
-                // Most recent command (HEAD)
-                sidebarArea.append("  ╔═ HEAD\n");
+                // Most recent command (CURRENT)
+                sidebarArea.append("  ╔═ CURRENT\n");
                 sidebarArea.append("  ║\n");
                 sidebarArea.append(str);
             } else if (i == 0) {
@@ -956,7 +976,7 @@ public class Game {
                 // Middle commands
                 sidebarArea.append("  ║\n");
 
-                // Add branch indicators for special sequences
+                // Add branch indicators
                 if (i < commandHistory.size() - 1) {
                     String nextCmd = commandHistory.get(i + 1);
                     String prevCmd = commandHistory.get(i - 1);
@@ -1009,7 +1029,7 @@ public class Game {
         terminal.setText("class " + CLASS);
         terminal.postActionEvent();
         wait(0.2);
-        terminal.setText("start");
+        terminal.setText("proceed");
         terminal.postActionEvent();
     }
 }
