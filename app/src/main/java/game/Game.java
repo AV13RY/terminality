@@ -1,10 +1,13 @@
 package game;
 
 import characters.Player;
+import items.Weapon;
 import world.Room;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -17,8 +20,13 @@ public class Game {
     private JTextField terminal;
     private JTextArea characterArea;
     private JTextArea statsArea;
+    private JTextArea sidebarArea;
 
-    // Game state variables
+    // Log Declarations
+    private List<String> commandHistory;
+    private int commandCount;
+
+    // Game state Declarations
     private Room currentRoom;
     private Player player;
     private String NAME = "";
@@ -39,8 +47,8 @@ public class Game {
     // CORE METHODS ---------------------------------------------------------------------------------------------------
     // Game Constructor
     public Game() {
-        initializeUI();
-        initializeWorld();
+        initialiseUI();
+        initialiseWorld();
         tutorialTitleMessage();
         tutorialWelcomeMessage();
         testing("reaper");
@@ -166,6 +174,140 @@ public class Game {
         println("What is your name, brave soul?\n");
         println("  - Use the command: [ name <your name> ]");
     }
+
+    private void graveyardMovementMessage() {
+        println("*YOU BEGIN TO MOVE TO THE NEXT ROOM.*");
+    }
+
+    private void churchTitleMessage() {
+
+        println("      ▄████████     ▄█    █▄    ███    █▄     ▄████████  ▄████████    ▄█    █▄     ");
+        println("      ███    ██    ███    ███   ███    ███   ███    ███ ███    ███   ███    ███    ");
+        println("      ███    █▀    ███    ███   ███    ███   ███    ███ ███    █▀    ███    ███   ");
+        println("      ███         ▄███▄▄▄▄███▄▄ ███    ███  ▄███▄▄▄▄██▀ ███         ▄███▄▄▄▄███▄▄ ");
+        println("      ███        ▀▀███▀▀▀▀███▀  ███    ███ ▀▀███▀▀▀▀▀   ███        ▀▀███▀▀▀▀███▀  ");
+        println("      ███    █▄    ███    ███   ███    ███ ▀██████████▄ ███    █▄    ███    ███   ");
+        println("      ███    ███   ███    ███   ███    ███   ███    ███ ███    ███   ███    ███   ");
+        println("      ████████▀    ███    █▀    ████████▀    ███    ███ ████████▀    ███    █▀    ");
+        println("                                             ▀▀█    ██▀                         \n");
+        println("❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚\n");
+    }
+
+    private void churchIntroMessage(String CLASS) {
+        println("\n You push open the heavy wooden doors and step into the abandoned church. Dust motes dance");
+        println("in the colored light streaming through stained glass windows, casting ethereal patterns");
+        println("across the crumbling pews and debris-strewn floor.\n");
+        println("                                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⡀⠀⠀⠀");
+        println("                         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⡀⠀⡀⠀⠂⡀⢀⢰⠀⢂⠀⠀⠀⠀⠀⠀⠀⠀");
+        println("                         ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣐⣬⣄⣷⡀⢸⡃⡘⡸⡄⢸⠀⠀⡇⠀⢠⠀⠀⠀");
+        println("                         ⠀⠀⠀⠀⠀⣠⡴⠚⢉⢍⢂⣼⣴⣿⣿⣿⣷⣷⣷⣣⣏⣆⣼⠀⠀⠄⠀⠀⠀");
+        println("                         ⠀⠀⠀⢠⡞⠋⠀⡑⣮⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⣷⣼⣆⣌⡠⢁⡤");
+        println("                         ⠀⠀⣰⠋⠀⣀⣺⣾⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁");
+        println("                         ⠀⡼⠁⢀⣿⣿⣿⡿⣿⡛⣿⣿⣿⡷⢸⣿⠀⠀⠀⠀⣹⣿⣿⣿⣿⣟⠣⠀⠀");
+        println("                         ⡰⠁⢀⣼⣿⠟⢿⡇⠹⣿⣿⣿⠟⠀⢠⡿⠀⠀⣠⣾⡿⣿⡥⠊⠁⠀⠀⠀⠀");
+        println("                         ⠁⢠⣾⠟⠁⠀⠈⠳⢿⣦⣠⣤⣦⣼⠟⠁⣠⣾⣿⣿⣟⠍⠒⠀⠠⠀⠀⠀⠀");
+        println("                         ⢠⡟⠁⢀⣀⣀⣀⣀⡀⠈⣉⣉⣡⣤⣶⣿⡿⡿⡿⡻⠥⠑⡀⠀⠀⠀⠀⠀⠀");
+        println("                         ⠏⡠⠚⠉⠋⢍⠋⢫⠋⠛⢹⢻⡟⠻⣟⢏⠌⢊⡌⠌⠄⠀⠀⠀⠀⠀⠀⠀⠀");
+        println("                         ⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠘⠂⠘⠂⠿⠈⠀⠀⠀⠘⠀⠀⠀⠀⠀⠀\n\n⠀");
+
+        println("At the altar, a spectre materializes - an overseer of sort.");
+        println("Its hollow voice echoes through the sacred halls:\n");
+        println("\"Ah, a " + CLASS + " has remembered their path.");
+        println("You will need more than courage to survive what lies beyond these walls.\"\n");
+        println("【﻿ＴＨＥ　ＥＹＥ　ＧＬＯＷＳ】\n");
+
+        switch (CLASS) {
+            case "knight":
+                println("                              ✥  ARMAMENTS OF VIRTUE  ✥                                  \n");
+                println("                                                                             .-.           ");
+                println("                                                                            {{#}}          ");
+                println("                                                            {}               8@8           ");
+                println("        |\\                                                .::::.             888          ");
+                println("        | \\        /|                                 @\\\\/W\\/\\/W\\//@         8@8     ");
+                println("        |  \\____  / |                                  \\\\/^\\/\\/^\\//     _    )8(    _");
+                println("       /|__/AMMA\\/  |                                   \\_O_{}_O_/     (@)__/8@8\\__(@)  ");
+                println("     /AMMMMMMMMMMM\\_|                              ____________________ `~\"-=):(=-\"~`   ");
+                println(" ___/AMMMMMMMMMMMMMMA                             |<><><>  |  |  <><><>|     |.|           ");
+                println("\\   |MVKMMM/ .\\MMMMM\\                             |<>      |  |      <>|     |S|        ");
+                println(" \\__/MMMMMM\\  /MMMMMM---                          |<>      |  |      <>|     |'|         ");
+                println("  |MMMMMMMMMMMMMMMMMM|  /                         |<>   .--------.   <>|     |.|           ");
+                println("  |MMMM/. \\MM.--MMMMMM\\/                          |     |   ()   |     |     |P|         ");
+                println("  /\\MMM\\  /MM\\  |MMMMMM   ___                     |_____| (O\\/O) |_____|     |'|       ");
+                println(" /  |MMMMMMMMM\\ |MMMMMM--/   \\-.                  |     \\   /\\   /     |     |.|       ");
+                println("/___/MMMMMMMMMM\\|M.--M/___/_|   \\                 |------\\  \\/  /------|     |U|       ");
+                println("     \\VMM/\\MMMMMMM\\  |      /\\ \\/                 |       '.__.'       |     |'|      ");
+                println("      \\V/  \\MMMMMMM\\ |     /_  /                  |        |  |        |     |.|        ");
+                println("        |  /MMMV'   \\|    |/ _/                   :        |  |        :     |N|          ");
+                println("        | /              _/  /                     \\       |  |       /      |'|          ");
+                println("        |/              /| \\'                       \\<>    |  |    <>/       |.|         ");
+                println("                       /_  /                         \\<>   |  |   <>/        |K|          ");
+                println("                       /  /                           `\\<> |  | <>/'         |'|          ");
+                println("                                                        `-.|__|.-`           \\ /          ");
+                println("                                                                              ^          \n");
+
+
+                println("            1. MACE                                      2. SWORD & SHIELD                 ");
+                println("A virulent ball of swinging death.               The bastion of any successful knight.     ");
+                println(" ♦ Offensive Focus  ♦ High Damage                   ♦ Well-rounded  ♦ Good Damage      \n\n");
+                break;
+
+            case "mage":
+                println("                              ✥  CONDUITS OF ARCANE POWER  ✥                             \n");
+                println("⠀                                                        ⠀⠀⠀⠀⢤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣄⠀         ");
+                println("      _.--._  _.--._                                    ⠀⠀⠀⠀⠀⠀⠈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⠀⠀⠀⠀      ");
+                println(",-=.-\":;:;:;\\':;:;:;\"-._                             ⠀⣤⡀⠀⠀⠀⠀⠀⠀⠀⣸⣏⣽⣷⣶⣶⣦⣤⣄⡀⣠⡶⠶⢶⣶⠿⠀⠀⠀⠀ ");
+                println("\\\\\\:;:;:;:;:;\\:;:;:;:;:;\\                          ⠀⠈⠛⢦⡀⠀⠀⠀⣠⣶⠟⢋⣁⣤⣤⣤⣤⣄⣉⠛⢿⣦⡀⠈⢿⡄⠀⠀⠀⠀ ");
+                println(" \\\\\\:;:;:;:;:;\\:;:;:;:;:;\\                         ⠀⠀⣠⡞⠁⠀⢠⣾⠋⢀⣴⡿⠛⢁⠙⢿⣿⣿⡻⢷⣤⡈⠻⣦⡾⠃⠀⠀⠀⠀ ");
+                println("  \\\\\\:;:;:;:;:;\\:;:;:;:;:;\\                        ⠀⠀⠛⠻⠶⣤⡿⢁⡄⠘⠋⠀⣴⣿⣿⣷⣿⣿⣿⣦⠉⠳⢄⠹⣧⠀⠀⠀⠀⠀ ");
+                println("   \\\\\\:;:;:;:;:;\\:;::;:;:;:\\                       ⠀⠀⠀⠀⠀⣿⠁⣼⣿⣶⣤⡄⠀⢹⣿⡿⠿⠿⠛⠛⠃⢀⣀⡀⢹⡇⠀⠀⢀⠀ ");
+                println("    \\\\\\;:;::;:;:;\\:;:;:;::;:\\                      ⠀⣤⡀⠀⢸⣿⠀⣿⣿⣿⠿⠿⠀⠸⣿⣷⣤⡀⠐⣿⣿⣿⣿⡇⢸⣿⠀⣰⡟⠀ ");
+                println("     \\\\\\;;:;:_:--:\\:_:--:_;:;\\                     ⠀⠈⠛⠿⠛⣿⠀⠀⠀⢀⣀⣤⣤⣄⡈⠙⢿⣿⣦⣌⠻⣿⣿⠇⢸⣿⣾⠏⠀⠀ ");
+                println("      \\\\_.-\"      :      \"-._\\                      ⠀⠀⠀⢀⣹⣧⠘⢦⣄⠉⠻⣿⣿⣿⡷⣦⣭⣿⣿⣷⣬⠋⢠⡿⠉⠁⠀⠀⠀ ");
+                println("       \\`_..--\"\"---.;.--\"\"--..=>                   ⠀⢶⡟⠛⠉⠹⣷⡀⠉⢠⣤⣬⣿⣿⣿⣎⠙⢿⣿⠿⠃⣠⡿⠁⠀⠀⠀⠀⠀  ");
+                println("                    \"                             ⠀⣀⣈⣷⡀⠀⠀⠈⠻⣦⣄⡙⠛⠶⠶⠦⠤⠄⠀⣁⣤⡾⠿⣦⡀⠀⠀⠀⠀⠀      ");
+                println("                                                  ⠀⠋⠉⠉⠁⠀⠀⠀⠀⠀⢹⡛⠷⠶⣶⣶⡶⠶⢿⣿⣅⡀⠀⣨⠟⠂⠀⠀⠀⠀       ");
+                println("                                                     ⠀⠀⠀⠀⠐⣶⡶⠿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⣧⡀⠀⠀⠀⠀⠀       ");
+                println("                                                     ⠀⠀⠀⠀⠀⠈⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠀⠀⠀⠀⠀     \n");
+
+                println("           1. GRIMOIRE                                     2. UNSTABLE ORB                 ");
+                println("An ancient tome of forbidden knowledge.          A chaotic orb of pure annihilation.       ");
+                println("  ♦ Mana Intensive  ♦ High Damage                ♦ Mana Efficient  ♦ Quick Casting     \n\n");
+                break;
+
+            case "reaper":
+                println("                              ✥  INSTRUMENTS OF DEATH  ✥                                 \n");
+                println("                              ⠀⠀⠀                  ⠀⠀     ⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀         ");
+                println("                              ⠀⠀⠀⠀                      ⣠⣴⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣷⣤⡀⠀         ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀               ⠀⢀⣾⡟⡍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⡙⣿⡄            ");
+                println("⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⡀⠀⠀⠀ ⠀               ⠀⣸⣿⠃⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠇⣹⣿            ");
+                println("⠀⠀⣿⣷⠀⣿⣿⣿⣿⣿⣿⣿⡿⠟⠛⠛⠉⠉⠉⠉⠉⠉⠙⠛⠻⢿⣷⡀⠀⠀⠀               ⠀⣿⣿⡆⢚⢄⣀⣠⠤⠒⠈⠁⠀⠀⠈⠉⠐⠢⢄⡀⣀⢞⠀⣾⣿            ");
+                println("⠀⠀⢿⣿⠀⢹⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠀⠀               ⠀⠸⣿⣿⣅⠄⠙⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡟⠑⣄⣽⣿⡟            ");
+                println("⠀⠀⠸⣿⡇⠈⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠘⢿⣿⣟⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠱⣾⣿⣿⠏⠀            ");
+                println("⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⣸⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡉⢻⠀⠀            ");
+                println("⠀⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢿⠀⢃⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠁⢸⠀⠀            ");
+                println("⠀⠀⣀⣠⣴⡿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢸⢰⡿⢘⣦⣤⣀⠑⢦⡀⠀⣠⠖⣁⣤⣴⡊⢸⡇⡼⠀⠀            ");
+                println("⠀⠈⠛⠛⠉⠀⠈⠛⢿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠾⡅⣿⣿⣿⣿⣿⠌⠁⠀⠁⢺⣿⣿⣿⣿⠆⣇⠃⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢀⠂⠘⢿⣿⣿⡿⠀⣰⣦⠀⠸⣿⣿⡿⠋⠈⢀⠀⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⠀⢠⣿⢻⣆⠀⠀⠀⠀⠀⠀⣸⠀⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠈⠓⠶⣶⣦⠤⠀⠘⠋⠘⠋⠀⠠⣴⣶⡶⠞⠃⠀⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀⠀⣿⢹⣷⠦⢀⠤⡤⡆⡤⣶⣿⢸⠇⠀⠀⠀⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀⢰⡀⠘⢯⣳⢶⠦⣧⢷⢗⣫⠇⠀⡸⠀⠀⠀⠀⠀            ");
+                println("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠁⠀⠀⠀⠀  ⠀               ⠀⠀⠀⠀⠀⠀⠀⠑⢤⡀⠈⠋⠛⠛⠋⠉⢀⡠⠒⠁⠀⠀⠀⠀⠀            ");
+                println("                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀                      ⠀⠹⢦⠀⢀⣀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀         ");
+                println("                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  ⠀    ⠈⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀       \n");
+
+                println("               1. SCYTHE                                     2. DEATH MAGIC                ");
+                println("The cold, clean edge all mortals must meet.        A dark conduit for siphoning souls.     ");
+                println("     ♦ Non-Magic Based  ♦ High Damage                ♦ Magic Based  ♦ Strong Spells    \n\n");
+                break;
+        }
+
+        println("\"Choose wisely, " + NAME + ". This decision will shape your journey through the darkness.\"\n");
+        println("❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚\n\n");
+        println("Which weapon calls to you?");
+        println("  - Use the command: [ choose <1 or 2> ]");
+    }
+
 
     // ASCII Art method
     private void displayCharacter(String CLASS) {
@@ -367,7 +509,7 @@ public class Game {
     }
 
     private void displayStats(String name) {
-        
+
         println(player.displayStatus(), statsArea);
 
     }
@@ -377,6 +519,8 @@ public class Game {
     private void processCommand(String input) {
         // Display inputted command in display area.
         println("\n > " + input);
+        updateCommandHistory(input);
+
 
         switch (currentRoom.getName()) {
             case "tutorial":
@@ -440,22 +584,45 @@ public class Game {
                     switch (CLASS) {
                         case "knight":
                             player = new Player(NAME, Player.KNIGHT);
-                            println(player.getStatus());
                             break;
                         case "mage":
                             player = new Player(NAME, Player.MAGE);
-                            println(player.getStatus());
                             break;
                         case "reaper":
                             player = new Player(NAME, Player.REAPER);
-                            println(player.getStatus());
                             break;
                     }
 
-                    displayStats(NAME);
+                    graveyardMovementMessage();
+                    currentRoom = new Room("Church", "An ancient church, emanating an unusual presence");
+                    display.setText("");
+                    churchTitleMessage();
+                    churchIntroMessage(CLASS);
 
                 }
                 break;
+            case "church":
+                if (input.startsWith("choose ")) {
+                    String choice = input.replace("choose", "").trim();
+                    if (choice.equals("1") || choice.equals("2")) {
+                        handleWeaponChoice(choice);
+                    } else {
+                        println("Please choose either 1 or 2.");
+                    }
+                } else if (input.equals("inventory")) {
+                    println("\n═══ INVENTORY ═══");
+                    for (Weapon weapon : player.getInventory()) {
+                        String equipped = weapon.equals(player.getEquippedWeapon()) ? " [EQUIPPED]" : "";
+                        println("• " + weapon.getName() + equipped);
+                        println("  " + weapon.getDescription());
+                        println("  Damage: " + weapon.getDamage() + " (" + weapon.getType() + ")");
+                    }
+                } else {
+                    println("Unknown command. Please Try Again.");
+                }
+
+                break;
+
         }
 
     }
@@ -578,7 +745,7 @@ public class Game {
 
     // INITIALISATION METHODS -----------------------------------------------------------------------------------------
 
-    private void initializeUI() {
+    private void initialiseUI() {
         JFrame frame = new JFrame("Terminality");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
@@ -586,14 +753,24 @@ public class Game {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         // Left sidebar
-        JTextArea sidebarArea = new JTextArea();
+        sidebarArea = new JTextArea();
         sidebarArea.setEditable(false);
-        sidebarArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        sidebarArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         sidebarArea.setBackground(BLACK);
-        sidebarArea.setForeground(DEFAULT);
-        sidebarArea.setMargin(new Insets(20, 20, 20, 20));
+        sidebarArea.setForeground(Color.LIGHT_GRAY);
+        sidebarArea.setMargin(new Insets(10, 0, 10, 10));
+
+        // Initialize command history
+        commandHistory = new ArrayList<>();
+        commandCount = 0;
+
+        // Add initial header to sidebar
+        sidebarArea.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
+        sidebarArea.append(" ═══════════════════════════════════════\n\n");
+
         JScrollPane leftScroll = new JScrollPane(sidebarArea);
         leftScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        leftScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         leftScroll.setPreferredSize(new Dimension(250, frame.getHeight()));
 
         // Center display
@@ -626,7 +803,7 @@ public class Game {
         statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
         statsArea.setBackground(BLACK);
         statsArea.setForeground(WHITE);
-        statsArea.setMargin(new Insets(10, 10, 10, 10));
+        statsArea.setMargin(new Insets(0, 10, 0, 10));
         JScrollPane statsScroll = new JScrollPane(statsArea);
         statsScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         statsScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
@@ -671,10 +848,156 @@ public class Game {
         terminal.requestFocus();
     }
 
-    private void initializeWorld() {
+    private void initialiseWorld() {
         // Set the starting room
         currentRoom = new Room("Tutorial", "Area when the user opens the game for the first time.");
     }
+
+    // NEED CATEGORY -------------------------------------------------------------------------------------------------
+
+    private void handleWeaponChoice(String choice) {
+        Weapon chosenWeapon = null;
+
+        switch (CLASS) {
+            case "knight":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Mace", 15, "A virulent ball of swinging death.", "physical");
+                    println("\nYou grasp the MACE, feeling its weight and power.");
+                    println("The weapon pulses with righteous fury as you swing it experimentally.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Sword & Shield", 12, "The bastion of any successful knight.", "physical");
+                    println("\nYou take up the SWORD & SHIELD, feeling their perfect balance.");
+                    println("The blade gleams with deadly purpose while the shield promises protection.");
+                }
+                break;
+
+            case "mage":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Grimoire", 20, "An ancient tome of forbidden knowledge.", "magic");
+                    println("\nYou open the GRIMOIRE, its pages crackling with arcane energy.");
+                    println("Forbidden knowledge floods your mind as the tome accepts you as its master.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Unstable Orb", 18, "A chaotic orb of pure annihilation.", "magic");
+                    println("\nYou grasp the UNSTABLE ORB, feeling its chaotic energy surge through you.");
+                    println("The orb pulses erratically, barely contained destruction at your fingertips.");
+                }
+                break;
+
+            case "reaper":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Scythe", 25, "The cold, clean edge all mortals must meet.", "physical");
+                    println("\nYou grip the SCYTHE, its blade singing a song of endings.");
+                    println("The weapon feels like an extension of death itself in your hands.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Death Magic", 17, "A dark conduit for siphoning souls.", "magic");
+                    println("\nYou channel DEATH MAGIC, feeling the cold touch of the void.");
+                    println("Dark energy swirls around you, hungry for the essence of life.");
+                }
+                break;
+        }
+
+        if (chosenWeapon != null) {
+            player.addWeapon(chosenWeapon);
+            displayStats(NAME); // Update stats display
+
+            println("\n" + chosenWeapon.getName() + " has been added to your inventory and equipped!");
+            println("\nThe spectral overseer nods approvingly.");
+            println("\"Your choice is made. May it serve you well in the trials ahead.\"");
+            println("\nThe overseer fades away, and you notice a door at the back of the church beginning to glow...");
+            println("\nType [ move north ] to proceed to the next area.");
+
+        }
+    }
+
+    private void updateCommandHistory(String command) {
+        commandHistory.add(command);
+        commandCount++;
+
+        // Clear and rebuild the display
+        sidebarArea.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
+        sidebarArea.append(" ═══════════════════════════════════════\n\n");
+
+        // Display commands in reverse order with git-style branching
+        for (int i = commandHistory.size() - 1; i >= 0; i--) {
+            String cmd = commandHistory.get(i);
+            int cmdNumber = i + 1;
+
+            // Determine command type for coloring/branching
+            String branch = "│";
+            String node = "○";
+
+            // Special nodes for certain commands
+            if (cmd.startsWith("start")) {
+                node = "◆"; // Diamond for start commands
+            } else if (cmd.startsWith("move")) {
+                node = "→"; // Arrow for movement
+            } else if (cmd.startsWith("attack")) {
+                node = "⚔"; // Sword for combat
+            } else if (cmd.startsWith("name") || cmd.startsWith("class")) {
+                node = "★"; // Star for character creation
+            } else if (cmd.equals("help") || cmd.equals("clear")) {
+                node = "◌"; // Hollow circle for utility commands
+            }
+
+            // Build the visualization
+            String str = "  ╟─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n";
+            if (i == commandHistory.size() - 1) {
+                // Most recent command (HEAD)
+                sidebarArea.append("  ╔═ HEAD\n");
+                sidebarArea.append("  ║\n");
+                sidebarArea.append(str);
+            } else if (i == 0) {
+                // First command (root)
+                sidebarArea.append("  ║\n");
+                sidebarArea.append(str);
+                sidebarArea.append("  ║\n");
+                sidebarArea.append("  ╚═ ORIGIN\n");
+            } else {
+                // Middle commands
+                sidebarArea.append("  ║\n");
+
+                // Add branch indicators for special sequences
+                if (i < commandHistory.size() - 1) {
+                    String nextCmd = commandHistory.get(i + 1);
+                    String prevCmd = commandHistory.get(i - 1);
+
+                    // Branch merge/split visualization
+                    if (isCommandTypeChange(cmd, nextCmd)) {
+                        sidebarArea.append("  ╠═╗\n");
+                        sidebarArea.append("  ║ ╚─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n");
+                    } else if (isCommandTypeChange(prevCmd, cmd)) {
+                        sidebarArea.append("  ╠═╝\n");
+                        sidebarArea.append(str);
+                    } else {
+                        sidebarArea.append(str);
+                    }
+                } else {
+                    sidebarArea.append(str);
+                }
+            }
+        }
+
+        // Add summary at bottom
+        sidebarArea.append("\n  ───────────────\n");
+        sidebarArea.append("  Total: " + commandCount + " commands\n");
+
+        // Auto-scroll to top
+        sidebarArea.setCaretPosition(0);
+    }
+
+    // Helper method to detect command type changes
+    private boolean isCommandTypeChange(String cmd1, String cmd2) {
+        return !getCommandType(cmd1).equals(getCommandType(cmd2));
+    }
+
+    private String getCommandType(String cmd) {
+        if (cmd.startsWith("move")) return "movement";
+        if (cmd.startsWith("attack")) return "combat";
+        if (cmd.startsWith("name") || cmd.startsWith("class") || cmd.startsWith("choose")) return "character";
+        if (cmd.equals("help") || cmd.equals("clear") || cmd.startsWith("colour")) return "utility";
+        return "other";
+    }
+
 
     private void testing(String CLASS) {
         terminal.setText("start");

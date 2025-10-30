@@ -1,5 +1,10 @@
 package characters;
 
+import items.Weapon;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player extends Character {
     // Player-specific attributes
     private String playerClass;
@@ -7,6 +12,8 @@ public class Player extends Character {
     private int maxMana;
     private int level;
     private int experience;
+    private List<Weapon> inventory;
+    private Weapon equippedWeapon;
 
     // Class constants for different player types
     public static final String KNIGHT = "Knight";
@@ -19,6 +26,8 @@ public class Player extends Character {
         this.playerClass = playerClass;
         this.level = 1;
         this.experience = 0;
+        this.inventory = new ArrayList<>();
+        this.equippedWeapon = null;
 
         // Set stats based on chosen class
         initializeClassStats();
@@ -149,6 +158,7 @@ public class Player extends Character {
         status.append("Name: ").append(name).append("\n");
 
         status.append("Class: ").append(playerClass).append("\n");
+        status.append("Subclass Weapon: ").append(equippedWeapon != null ? equippedWeapon.getName() : "None").append("\n");
         status.append("Level: ").append(level).append("\n");
         status.append("Experience: ").append(experience).append("/100\n");
         status.append("\nVitals:\n");
@@ -187,4 +197,26 @@ public class Player extends Character {
     public int getCurrentHealth() {
         return currentHealth;
     }
+
+    public void addWeapon(Weapon weapon) {
+        inventory.add(weapon);
+        if (equippedWeapon == null) {
+            equippedWeapon = weapon; // Auto-equip if no weapon equipped
+        }
+    }
+
+    public void equipWeapon(Weapon weapon) {
+        if (inventory.contains(weapon)) {
+            equippedWeapon = weapon;
+        }
+    }
+
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public List<Weapon> getInventory() {
+        return inventory;
+    }
+
 }
