@@ -1,5 +1,10 @@
 package characters;
 
+import items.Weapon;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player extends Character {
     // Player-specific attributes
     private String playerClass;
@@ -7,6 +12,8 @@ public class Player extends Character {
     private int maxMana;
     private int level;
     private int experience;
+    private List<Weapon> inventory;
+    private Weapon equippedWeapon;
 
     // Class constants for different player types
     public static final String KNIGHT = "Knight";
@@ -19,6 +26,8 @@ public class Player extends Character {
         this.playerClass = playerClass;
         this.level = 1;
         this.experience = 0;
+        this.inventory = new ArrayList<>();
+        this.equippedWeapon = null;
 
         // Set stats based on chosen class
         initializeClassStats();
@@ -141,23 +150,27 @@ public class Player extends Character {
     }
 
     // Display detailed status (for the status command)
-    public void displayStatus() {
-        System.out.println("\n═══════════════════════════════════════");
-        System.out.println("         CHARACTER STATUS");
-        System.out.println("═══════════════════════════════════════");
-        System.out.println("Name: " + name);
-        System.out.println("Class: " + playerClass);
-        System.out.println("Level: " + level);
-        System.out.println("Experience: " + experience + "/100");
-        System.out.println("\nVitals:");
-        System.out.println("  Health: " + currentHealth + "/" + maxHealth);
+    public String displayStatus() {
+        StringBuilder status = new StringBuilder();
+        status.append("\n══════════════════════════════════════\n");
+        status.append("           CHARACTER STATUS\n");
+        status.append("══════════════════════════════════════\n");
+        status.append("Name: ").append(name).append("\n");
+
+        status.append("Class: ").append(playerClass).append("\n");
+        status.append("Subclass Weapon: ").append(equippedWeapon != null ? equippedWeapon.getName() : "None").append("\n");
+        status.append("Level: ").append(level).append("\n");
+        status.append("Experience: ").append(experience).append("/100\n");
+        status.append("\nVitals:\n");
+        status.append("  Health: ").append(currentHealth).append("/").append(maxHealth).append("\n");
         if (maxMana > 0) {
-            System.out.println("  Mana: " + mana + "/" + maxMana);
+            status.append("  Mana: ").append(mana).append("/").append(maxMana).append("\n");
         }
-        System.out.println("\nStats:");
-        System.out.println("  Attack: " + attack);
-        System.out.println("  Defense: " + defense);
-        System.out.println("═══════════════════════════════════════");
+        status.append("\nStats:\n");
+        status.append("  Attack: ").append(attack).append("\n");
+        status.append("  Defense: ").append(defense).append("\n");
+        status.append("═══════════════════════════════════════");
+        return status.toString();
     }
 
     // Getters
@@ -184,4 +197,26 @@ public class Player extends Character {
     public int getCurrentHealth() {
         return currentHealth;
     }
+
+    public void addWeapon(Weapon weapon) {
+        inventory.add(weapon);
+        if (equippedWeapon == null) {
+            equippedWeapon = weapon; // Auto-equip if no weapon equipped
+        }
+    }
+
+    public void equipWeapon(Weapon weapon) {
+        if (inventory.contains(weapon)) {
+            equippedWeapon = weapon;
+        }
+    }
+
+    public Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    public List<Weapon> getInventory() {
+        return inventory;
+    }
+
 }
