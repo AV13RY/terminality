@@ -1,9 +1,14 @@
 package characters;
 
+import items.Accessory;
+import items.Armor;
+import items.Item;
 import items.Weapon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Player extends Character {
     // Player-specific attributes
@@ -12,8 +17,11 @@ public class Player extends Character {
     private int maxMana;
     private int level;
     private int experience;
-    private List<Weapon> inventory;
+    private List<Item> inventory;
+    private Map<Armor.ArmorType, Armor> equippedArmor;
     private Weapon equippedWeapon;
+    private Accessory equippedAccessory;
+    private int gold;
 
     // Class constants for different player types
     public static final String KNIGHT = "Knight";
@@ -27,7 +35,9 @@ public class Player extends Character {
         this.level = 1;
         this.experience = 0;
         this.inventory = new ArrayList<>();
+        this.equippedArmor = new HashMap<>();
         this.equippedWeapon = null;
+        this.gold = 0;
 
         // Set stats based on chosen class
         initializeClassStats();
@@ -87,11 +97,6 @@ public class Player extends Character {
             }
         }
         return 0; // No damage if not enough mana or no magic ability
-    }
-
-    // Restore mana
-    public void restoreMana(int amount) {
-        mana = Math.min(mana + amount, maxMana);
     }
 
     // Level up method
@@ -215,8 +220,98 @@ public class Player extends Character {
         return equippedWeapon;
     }
 
-    public List<Weapon> getInventory() {
+    public List<Item> getInventory() {
         return inventory;
     }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void addGold(int amount) {
+        gold += amount;
+    }
+
+    public void addItem(Item item) {
+        inventory.add(item);
+    }
+
+    public boolean useItem(Item item) {
+        if (inventory.contains(item)) {
+            if (item.use(this)) {
+                if (item.getType() == Item.ItemType.CONSUMABLE) {
+                    inventory.remove(item); // Remove consumables after use
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean equipArmor(Armor armor) {
+        if (inventory.contains(armor)) {
+            Armor previousArmor = equippedArmor.get(armor.getArmorType());
+            if (previousArmor != null) {
+                // Unequip previous armor
+                inventory.add(previousArmor);
+            }
+            equippedArmor.put(armor.getArmorType(), armor);
+            inventory.remove(armor);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean equipAccessory(Accessory accessory) {
+        if (inventory.contains(accessory)) {
+            if (equippedAccessory != null) {
+                // Unequip previous accessory
+                inventory.add(equippedAccessory);
+            }
+            equippedAccessory = accessory;
+            inventory.remove(accessory);
+            applyAccessoryBonus(accessory);
+            return true;
+        }
+        return false;
+    }
+
+    private void applyAccessoryBonus(Accessory accessory) {
+        switch (accessory.getStatBonus()) {
+            case ATTACK -> this.attack += accessory.getBonusAmount();
+            case DEFENSE -> this.defense += accessory.getBonusAmount();
+            case HEALTH -> {
+                this.maxHealth += accessory.getBonusAmount();
+                this.currentHealth += accessory.getBonusAmount();
+            }
+            case MANA -> this.maxMana += accessory.getBonusAmount();
+            // Critical would need additional implementation
+        }
+    }
+
+    public int getTotalDefense() {
+        int totalDefense = defense;
+        for (Armor armor : equippedArmor.values()) {
+            totalDefense += armor.getDefenseBonus();
+        }
+        return totalDefense;
+    }
+
+    public void restoreMana(int amount) {
+        mana = Math.min(mana + amount, maxMana);
+    }
+
+    public List<Item> getFullInventory() {
+        return inventory;
+    }
+
+    public Map<Armor.ArmorType, Armor> getEquippedArmor() {
+        return equippedArmor;
+    }
+
+    public Accessory getEquippedAccessory() {
+        return equippedAccessory;
+    }
+
 
 }

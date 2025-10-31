@@ -1,32 +1,26 @@
 package items;
 
-public class Weapon {
-    private String name;
-    private int damage;
-    private String description;
-    private String type; // "physical" or "magic"
+public class Weapon extends Item {
+    private int attackBonus;
 
-    public Weapon(String name, int damage, String description, String type) {
-        this.name = name;
-        this.damage = damage;
-        this.description = description;
-        this.type = type;
+    public Weapon(String name, int attackBonus, String description, Rarity rarity, int value) {
+        super(name, description, ItemType.WEAPON, rarity, value);
+        this.attackBonus = attackBonus;
     }
 
-    // Getters
-    public String getName() {
-        return name;
+    public int getAttackBonus() {
+        return attackBonus;
     }
 
-    public int getDamage() {
-        return damage;
+    @Override
+    public boolean use(characters.Player player) {
+        // Weapons are equipped, not "used" like consumables
+        // This could auto-equip the weapon or return false
+        return false;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getType() {
-        return type;
+    @Override
+    public String toString() {
+        return String.format("%s (ATK +%d) [%s]", getName(), attackBonus, getRarity());
     }
 }
