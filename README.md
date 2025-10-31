@@ -2,81 +2,193 @@
 
 ![Terminality Logo](https://i.vgy.me/GBzj6O.png)
 
-
 ![Language Logo](https://img.shields.io/badge/Language-Java-blue)
-![Application Logo](https://img.shields.io/badge/Type-Console%20Application-orange)
+![Application Logo](https://img.shields.io/badge/Type-GUI%20Application-orange)
 ![Game Type Logo](https://img.shields.io/badge/Style-Text%20Based%20RPG-green)
 
 ## Overview
 
-**Terminality** is a text-based, command-line dungeon crawler game developed in **pure Java**. The project was created for the 6G4Z0044: Introduction to Programming module, by **Jack McGillivray**.
+**Terminality** is a text-based dungeon crawler game with a custom terminal-style GUI developed in **Java Swing**.
 
-The goal is to guide a player through their journey, engaging in turn-based combat, managing items, and utilizing the player's core stats to survive the dungeon, gather and upgrade loot, and eventually defeat the final boss.
+It was Created for the 6G4Z0044: Introduction to Programming module by **Jack McGillivray**.
+
+Players embark on a journey through procedurally generated dungeons, engaging in turn-based combat, managing inventory,
+and utilizing character-specific abilities to survive encounters and ultimately defeat the final boss.
 
 ## Key Features
 
 ### Core Programming Concepts
 
-* **Console I/O:** All user interaction is managed through typed commands and text output.
-* **Selection & Loops:** Extensive use of `if/else` and `switch` statements for command parsing and combat resolution, encapsulated within a persistent **Game Loop**.
-* **Methods & Objects:** The code is modularized using distinct methods and is built around key classes: `Player`, various `Enemy` types, `Room`, and `Item`.
-* **Arrays/Lists:** Dynamic collection types (e.g., `ArrayList`) are used for managing the player's inventory and the list of enemies within a room.
-* **Testing:** A dedicated class is used to verify the correctness of core logic, such as damage calculation and character instantiation.
+* **Custom GUI Terminal:** Built with Java Swing, featuring multiple panels for game display, character visualization,
+  stats, and command history.
+* **Command Parser:** Sophisticated input processing system handling various game commands through text input.
+* **Procedural Generation:** Dynamic dungeon layout creation using the `MapBuilder` class for unique playthroughs.
+* **State Management:** Complex game state handling including combat, exploration, and character creation phases.
+* **Collections & Data Structures:** Extensive use of `HashMap`, `ArrayList`, and other collections for inventory, room
+  management, and game data.
 
-### Advanced OOP & Style
+### Advanced Features
 
-* **Inheritance:** An **Abstract `Character`** class provides a blueprint for both the `Player` and the various specialized `Enemy` subclasses (e.g., `Goblin`, `Ogre`, `Boss`).
-* **Encapsulation:** Strict control over data integrity is enforced using private fields and public getter/setter methods across all major classes.
-* **Interfaces:** The **`IEquippable`** interface is implemented by different item classes (`Sword`, `Shield`) to ensure polymorphic handling of gear.
-* **Appropriate Package Structure:** Code is professionally organized into logical packages.
+* **Character Classes:** Three unique playable classes with distinct playstyles:
+    - **Knight:** High defense warrior with sword/mace options
+    - **Mage:** Glass cannon spellcaster with grimoire/orb choices
+    - **Reaper:** Balanced fighter with scythe/death magic abilities
 
-* **Self-directed Code Management:** **Git / GitHub** version control software was used throughout the development of the programme to manage feature implementation and maintain code integrity.
+* **Combat System:**
+    - Turn-based combat with attack/flee options
+    - Enemy AI with unique attack patterns
+    - Boss encounters with multiple phases
+    - Damage calculation incorporating equipment bonuses
+
+* **Item System:**
+    - Multiple item types: Weapons, Armor, Accessories, Consumables
+    - Rarity tiers: Common, Uncommon, Rare, Legendary
+    - Equipment management with stat bonuses
+    - Chest loot system with rarity-based rewards
+
+* **Visual Features:**
+    - ASCII art for characters, titles, and scenes
+    - Animated character sprites using threading
+    - Color-coded terminal output
+    - Interactive map display with room symbols
+
+### Technical Implementation
+
+* **Object-Oriented Design:**
+    - Abstract `Character` base class for Player and Enemy inheritance
+    - `Item` hierarchy with specialized subclasses
+    - `Room` and `MapBuilder` for world generation
+    - Interface usage for equipment handling
+
+* **Multi-threading:** Separate threads for character animations to maintain responsive gameplay
+
+* **Event-Driven Architecture:** Swing event listeners for real-time command processing
 
 ## Getting Started
 
 ### Prerequisites
 
-You need a **Java Development Kit (JDK)** installed on your machine (Java 17 or higher recommended) to run.
+- **Java Development Kit (JDK)** 17 or higher
+- **Gradle** (for build management)
 
 ### How to Run
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone git@github.com:AV13RY/terminality.git
-    ```
-2.  **Navigate to the Source Directory:**
-    ```bash
-    cd Terminality/src
-    ```
-3.  **Compile and Run (Standard Command Line):**
-    ```bash
-    # You may need to adjust the path to your main class
-    javac com/terminality/game/*.java com/terminality/characters/*.java com/terminality/world/*.java
-    java com.terminality.game.Game
-    ```
-    *(Note: If using an IDE like IntelliJ or VS Code, use the integrated 'Run' feature.)*
+1. **Clone the Repository:**
+   ```bash
+   git clone https://github.com/AV13RY/terminality.git
+   cd terminality
+   ```
+2. **Run with IDE built in functionality.**
 
-## In-Game Commands
+OR
 
-Control your character by typing commands when prompted. Commands are case-insensitive.
+2. **Build with Gradle:**
+   ```bash
+   ./gradlew build
+   ```
 
-| Command | Purpose | Example |
-| :--- | :--- | :--- |
-| `move [direction]` | Navigate to an adjacent room. | `move north` |
-| `attack` | Start or continue combat with the room's enemy. | `attack` |
-| `status` | Display the player's current health and equipped gear. | `status` |
-| `inventory` | View items in the player's backpack. | `inventory` |
-| `help` | List all available commands. | `help` |
-| `exit` | Quit the game. | `exit` |
+3. **Run the Game:**
+   ```bash
+   ./gradlew run
+   ```
+
+   Or run the JAR directly:
+   ```bash
+   java -jar app/build/libs/app.jar
+   ```
+
+## Game Commands
+
+### System Commands
+
+| Command          | Purpose                        | Example      |
+|------------------|--------------------------------|--------------|
+| `colour [color]` | Change terminal text color     | `colour red` |
+| `clear`          | Clear the terminal display     | `clear`      |
+| `help`           | Display context-sensitive help | `help`       |
+| `exit`           | Quit the game                  | `exit`       |
+
+### Character Creation
+
+| Command        | Purpose                | Example        |
+|----------------|------------------------|----------------|
+| `start`        | Begin the game         | `start`        |
+| `name [name]`  | Set character name     | `name Jack`    |
+| `class [type]` | Choose character class | `class knight` |
+| `choose [1/2]` | Select starting weapon | `choose 1`     |
+| `proceed`      | Continue to next area  | `proceed`      |
+
+### Exploration
+
+| Command            | Purpose              | Example      |
+|--------------------|----------------------|--------------|
+| `move [direction]` | Navigate rooms       | `move north` |
+| `look`             | Examine current room | `look`       |
+| `map`              | Display dungeon map  | `map`        |
+| `open [#]`         | Open a chest         | `open 1`     |
+
+### Combat
+
+| Command  | Purpose              | Example  |
+|----------|----------------------|----------|
+| `attack` | Attack current enemy | `attack` |
+| `flee`   | Attempt to escape    | `flee`   |
+
+### Character Management
+
+| Command     | Purpose                  | Example     |
+|-------------|--------------------------|-------------|
+| `status`    | View character stats     | `status`    |
+| `inventory` | View items and equipment | `inventory` |
+| `use [#]`   | Use consumable item      | `use 1`     |
+| `equip [#]` | Equip armor/accessory    | `equip 2`   |
 
 ## Project Structure
 
-{{{{{{{{NEED TO ADD}}}}}}}}
+```
+terminality/
+├── app/
+│   └── src/
+│       └── main/
+│           └── java/
+│               ├── game/
+│               │   └── Game.java          # Main game class with GUI
+│               ├── characters/
+│               │   ├── Character.java     # Abstract base class
+│               │   ├── Player.java        # Player implementation
+│               │   ├── Enemy.java         # Enemy base class
+│               │   ├── Boss.java          # Boss enemy type
+│               │   └── [Other enemies]    # Goblin, Skeleton, etc.
+│               ├── items/
+│               │   ├── Item.java          # Item base class
+│               │   ├── Weapon.java        # Weapon implementation
+│               │   ├── Armor.java         # Armor with types
+│               │   ├── Accessory.java     # Stat-boosting items
+│               │   └── [Consumables]      # Potions, etc.
+│               └── world/
+│                   ├── Room.java          # Room representation
+│                   ├── MapBuilder.java    # Dungeon generation
+│                   └── Chest.java         # Loot containers
+├── build.gradle                           # Gradle build configuration
+└── README.md                              # This file
+```
+
+## Map Legend
+
+When viewing the in-game map:
+
+- `[◉]` - Your current position
+- `[·]` - Visited room
+- `[?]` - Unexplored room
+- `[T]` - Treasure room
+- `[B]` - Boss room
+- `─/│` - Room connections
+
 ## Author
 
-**[Jack McGillivray]**
-Software Engineer & Degree Apprentice.
+**Jack McGillivray**  
+Software Engineer & Degree Apprentice
 
 ## License
 
-This project is submitted solely for academic assessment.
+This project is submitted for academic assessment as part of the 6G4Z0044: Introduction to Programming module.
