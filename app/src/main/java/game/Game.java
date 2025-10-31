@@ -17,19 +17,19 @@ import java.util.concurrent.TimeUnit;
 public class Game {
 
 
-    // GAME VARIABLES -------------------------------------------------------------------------------------------------
-    // Section Declarations
+    //------------------------------------------------------------------------------------------------- GAME VARIABLES
+    //                                                                                                GUI DECLARATIONS
     private JTextArea display;
     private JTextField terminal;
     private JTextArea characterArea;
     private JTextArea statsArea;
     private JTextArea commandLog;
 
-    // Log Declarations
+    //                                                                                        COMMAND LOG DECLARATIONS
     private List<String> commandHistory;
     private int commandCount;
 
-    // Game state Declarations
+    //                                                                                         GAME STATE DECLARATIONS
     private MapBuilder mapBuilder;
     private Room currentRoom;
     private Player player;
@@ -37,10 +37,9 @@ public class Game {
     private String CLASS = "";
     private Enemy currentEnemy;
     private boolean inCombat;
-    private Random random;
+    private final Random random;
 
-
-    // Color Declarations
+    //                                                                                             COLOUR DECLARATIONS
     private final Color RED = Color.RED;
     private final Color GREEN = Color.GREEN;
     private final Color BLUE = Color.BLUE;
@@ -49,47 +48,74 @@ public class Game {
     private final Color MAGENTA = Color.MAGENTA;
     private final Color WHITE = Color.WHITE;
     private final Color BLACK = Color.BLACK;
-    private final Color GRAY = Color.LIGHT_GRAY;
     private final Color DEFAULT = new Color(0xD8125B);
     private final Color DEFAULT2 = new Color(0x424549);
     private final Color DEFAULT3 = new Color(0x4b0019);
 
-    // CORE METHODS ---------------------------------------------------------------------------------------------------
-    // Game Constructor
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                GAME CONSTRUCTOR
     public Game() {
-        initialiseUI();
-        initialiseWorld();
-        tutorialTitleMessage();
-        tutorialWelcomeMessage();
 
-        // Initialise combat variables
         this.inCombat = false;
         this.currentEnemy = null;
         this.random = new Random();
 
-        //        testing("reaper");
+        initialiseUI();
+        initialiseWorld();
+        tutorialTitleMessage();
+        tutorialIntroMessage();
+
+        testing("reaper"); // temporary testing
     }
 
-    // Main Method
+    //                                                                                                     MAIN METHOD
     public static void main(String[] args) {
         Game game = new Game();
     }
 
-    // TEXT METHODS ---------------------------------------------------------------------------------------------------
-    // Tutorial ASCII Art Title
+    //--------------------------------------------------------------------------------------------------- TEXT METHODS
+    //                                                                                                ASCII ART TITLES
     private void tutorialTitleMessage() {
         println("");
-        println("████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗");
-        println("╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝");
-        println("   ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║     ██║   ██║    ╚████╔╝");
-        println("   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║     ██║   ██║     ╚██╔╝");
-        println("   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗██║   ██║      ██║");
-        println("   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝ \n");
+        println("████████╗███████╗██████╗ ███╗   ███╗██╗███╗   ██╗ █████╗ ██╗     ██╗████████╗██╗   ██╗ ");
+        println("╚══██╔══╝██╔════╝██╔══██╗████╗ ████║██║████╗  ██║██╔══██╗██║     ██║╚══██╔══╝╚██╗ ██╔╝ ");
+        println("   ██║   █████╗  ██████╔╝██╔████╔██║██║██╔██╗ ██║███████║██║     ██║   ██║    ╚████╔╝  ");
+        println("   ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║██║██║╚██╗██║██╔══██║██║     ██║   ██║     ╚██╔╝   ");
+        println("   ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗██║   ██║      ██║    ");
+        println("   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚═╝      ╚═╝  \n");
         println("═══════════════════════════════════════════════════════════════════════════════════════");
     }
 
-    // Welcome message with wait
-    private void tutorialWelcomeMessage() {
+    private void graveyardTitleMessage() {
+        println("     ▄████  ██▀███   ▄▄▄    ██▒   █▓▓█████▓██   ██▓ ▄▄▄       ██▀███  ▓█████▄     ");
+        println("     ██▒ ▀█▒▓██ ▒ ██▒▒████▄ ▓██░   █▒▓█   ▀ ▒██  ██▒▒████▄    ▓██ ▒ ██▒▒██▀ ██▌   ");
+        println("     ▒██░▄▄▄░▓██ ░▄█ ▒▒██  ▀█▄▓██  █▒░▒███    ▒██ ██░▒██  ▀█▄  ▓██ ░▄█ ▒░██   █▌  ");
+        println("     ░▓█  ██▓▒██▀▀█▄  ░██▄▄▄▄██▒██ █░░▒▓█  ▄  ░ ▐██▓░░██▄▄▄▄██ ▒██▀▀█▄  ░▓█▄   ▌  ");
+        println("     ░▒▓███▀▒░██▓ ▒██▒ ▓█   ▓██▒▒▀█░  ░▒████▒ ░ ██▒▓░ ▓█   ▓██▒░██▓ ▒██▒░▒████▓   ");
+        println("     ░▒   ▒ ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▐░  ░░ ▒░ ░  ██▒▒▒  ▒▒   ▓▒█░░ ▒▓ ░▒▓░ ▒▒▓  ▒    ");
+        println("     ░   ░   ░▒ ░ ▒░  ▒   ▒▒ ░░ ░░   ░ ░  ░▓██ ░▒░   ▒   ▒▒ ░  ░▒ ░ ▒░ ░ ▒  ▒     ");
+        println("     ░ ░   ░   ░░   ░   ░   ▒     ░░     ░   ▒ ▒ ░░    ░   ▒     ░░   ░  ░ ░  ░   ");
+        println("           ░    ░           ░  ░   ░     ░  ░░ ░           ░  ░   ░        ░      ");
+        println("                                  ░          ░ ░                         ░      \n");
+        println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘");
+    }
+
+    private void churchTitleMessage() {
+
+        println("      ▄████████     ▄█    █▄    ███    █▄     ▄████████  ▄████████    ▄█    █▄             ");
+        println("      ███    ██    ███    ███   ███    ███   ███    ███ ███    ███   ███    ███            ");
+        println("      ███    █▀    ███    ███   ███    ███   ███    ███ ███    █▀    ███    ███            ");
+        println("      ███         ▄███▄▄▄▄███▄▄ ███    ███  ▄███▄▄▄▄██▀ ███         ▄███▄▄▄▄███▄▄          ");
+        println("      ███        ▀▀███▀▀▀▀███▀  ███    ███ ▀▀███▀▀▀▀▀   ███        ▀▀███▀▀▀▀███▀           ");
+        println("      ███    █▄    ███    ███   ███    ███ ▀██████████▄ ███    █▄    ███    ███            ");
+        println("      ███    ███   ███    ███   ███    ███   ███    ███ ███    ███   ███    ███            ");
+        println("      ████████▀    ███    █▀    ████████▀    ███    ███ ████████▀    ███    █▀             ");
+        println("                                             ▀▀█    ██▀                                  \n");
+        println("❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚\n");
+    }
+
+    //                                                                                                  INTRO MESSAGES
+    private void tutorialIntroMessage() {
         println("                      A Java Dungeon Crawler by Jack McGillivray                       ");
         println("═══════════════════════════════════════════════════════════════════════════════════════");
         println("▖ ▖   ▄▖▖▖▄▖▄▖▄▖▄▖▄▖▖    ▖ ▖");
@@ -115,58 +141,6 @@ public class Game {
         println("\n Type 'help' for available commands or 'exit' to quit the game.");
     }
 
-    // Terminal Help message
-    private void tutorialHelpMessage() {
-        println("\nAVAILABLE COMMANDS:");
-        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
-        println("- clear            : Clear the terminal screen");
-        println("- help             : Display this help message");
-        println("- exit             : Quit the game\n");
-        println("- start            : Start the game");
-
-    }
-
-    private void graveyardHelpMessage() {
-        println("\nAVAILABLE COMMANDS:");
-        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
-        println("- clear            : Clear the terminal screen");
-        println("- help             : Display this help message");
-        println("- exit             : Quit the game\n");
-        println("- name             : Set your player name.");
-        println("- class            : Set your player class (Knight, Mage, or Reaper).");
-        println("- proceed          : Proceed onwards.");
-
-    }
-
-    private void churchHelpMessage() {
-        println("\nAVAILABLE COMMANDS:");
-        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
-        println("- clear            : Clear the terminal screen");
-        println("- help             : Display this help message");
-        println("- start            : Start the game");
-        println("- exit             : Quit the game\n");
-        println("- choose           : Choose between the options given.");
-        println("- inventory        : View the player inventory.");
-
-    }
-
-
-    // Graveyard Methods
-
-    private void graveyardTitleMessage() {
-        println("     ▄████  ██▀███   ▄▄▄    ██▒   █▓▓█████▓██   ██▓ ▄▄▄       ██▀███  ▓█████▄ ");
-        println("     ██▒ ▀█▒▓██ ▒ ██▒▒████▄ ▓██░   █▒▓█   ▀ ▒██  ██▒▒████▄    ▓██ ▒ ██▒▒██▀ ██▌");
-        println("     ▒██░▄▄▄░▓██ ░▄█ ▒▒██  ▀█▄▓██  █▒░▒███    ▒██ ██░▒██  ▀█▄  ▓██ ░▄█ ▒░██   █▌");
-        println("     ░▓█  ██▓▒██▀▀█▄  ░██▄▄▄▄██▒██ █░░▒▓█  ▄  ░ ▐██▓░░██▄▄▄▄██ ▒██▀▀█▄  ░▓█▄   ▌");
-        println("     ░▒▓███▀▒░██▓ ▒██▒ ▓█   ▓██▒▒▀█░  ░▒████▒ ░ ██▒▓░ ▓█   ▓██▒░██▓ ▒██▒░▒████▓ ");
-        println("     ░▒   ▒ ░ ▒▓ ░▒▓░ ▒▒   ▓▒█░░ ▐░  ░░ ▒░ ░  ██▒▒▒  ▒▒   ▓▒█░░ ▒▓ ░▒▓░ ▒▒▓  ▒ ");
-        println("     ░   ░   ░▒ ░ ▒░  ▒   ▒▒ ░░ ░░   ░ ░  ░▓██ ░▒░   ▒   ▒▒ ░  ░▒ ░ ▒░ ░ ▒  ▒ ");
-        println("     ░ ░   ░   ░░   ░   ░   ▒     ░░     ░   ▒ ▒ ░░    ░   ▒     ░░   ░  ░ ░  ░ ");
-        println("           ░    ░           ░  ░   ░     ░  ░░ ░           ░  ░   ░        ░    ");
-        println("                                  ░          ░ ░                         ░      \n");
-        println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘");
-    }
-
     private void graveyardIntroMessage() {
         println("\n You find yourself at the entrance of an ancient graveyard shrouded in mist.\n");
         println("Weathered tombstones and crumbling mausoleums stretch before you, their shadows");
@@ -182,24 +156,6 @@ public class Game {
         println("⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘\n");
         println("What is your name, brave soul?\n");
         println("  - Use the command: [ name <your name> ]");
-    }
-
-    private void graveyardMovementMessage() {
-        println("*YOU BEGIN TO MOVE TO THE NEXT ROOM.*");
-    }
-
-    private void churchTitleMessage() {
-
-        println("      ▄████████     ▄█    █▄    ███    █▄     ▄████████  ▄████████    ▄█    █▄     ");
-        println("      ███    ██    ███    ███   ███    ███   ███    ███ ███    ███   ███    ███    ");
-        println("      ███    █▀    ███    ███   ███    ███   ███    ███ ███    █▀    ███    ███   ");
-        println("      ███         ▄███▄▄▄▄███▄▄ ███    ███  ▄███▄▄▄▄██▀ ███         ▄███▄▄▄▄███▄▄ ");
-        println("      ███        ▀▀███▀▀▀▀███▀  ███    ███ ▀▀███▀▀▀▀▀   ███        ▀▀███▀▀▀▀███▀  ");
-        println("      ███    █▄    ███    ███   ███    ███ ▀██████████▄ ███    █▄    ███    ███   ");
-        println("      ███    ███   ███    ███   ███    ███   ███    ███ ███    ███   ███    ███   ");
-        println("      ████████▀    ███    █▀    ████████▀    ███    ███ ████████▀    ███    █▀    ");
-        println("                                             ▀▀█    ██▀                         \n");
-        println("❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚\n");
     }
 
     private void churchIntroMessage(String CLASS) {
@@ -317,8 +273,231 @@ public class Game {
         println("  - Use the command: [ choose <1 or 2> ]");
     }
 
+    //                                                                                                     DISPLAY MAP
+    private void displayMap() {
+        println("\n═══════════════ MAP ═══════════════\n");
 
-    // ASCII Art method
+        // Find map bounds
+        int minX = 0, maxX = 0, minY = 0, maxY = 0;
+        for (Room room : mapBuilder.getAllRooms().values()) {
+            minX = Math.min(minX, room.getX());
+            maxX = Math.max(maxX, room.getX());
+            minY = Math.min(minY, room.getY());
+            maxY = Math.max(maxY, room.getY());
+        }
+
+        // Display map from top to bottom
+        for (int y = maxY; y >= minY; y--) {
+            StringBuilder mapRow = new StringBuilder();
+            StringBuilder connectionRow = new StringBuilder();
+
+            for (int x = minX; x <= maxX; x++) {
+                String coordKey = x + "," + y;
+                Room room = mapBuilder.getAllRooms().get(coordKey);
+
+                if (room != null) {
+                    // Determine room symbol
+                    String symbol;
+                    if (room == currentRoom) {
+                        symbol = "[◉]"; // Current position
+                    } else if (room.getType() == Room.RoomType.BOSS) {
+                        symbol = "[B]"; // Boss room
+                    } else if (room.getType() == Room.RoomType.TREASURE) {
+                        symbol = "[T]"; // Treasure room
+                    } else if (room.isVisited()) {
+                        symbol = "[·]"; // Visited room
+                    } else {
+                        symbol = "[?]"; // Unvisited room
+                    }
+
+                    mapRow.append(symbol);
+
+                    // Add horizontal connections
+                    if (room.getExit("east") != null) {
+                        mapRow.append("─");
+                    } else {
+                        mapRow.append(" ");
+                    }
+
+                    // Add vertical connections
+                    if (room.getExit("south") != null) {
+                        connectionRow.append(" │ ");
+                    } else {
+                        connectionRow.append("   ");
+                    }
+                    connectionRow.append(" ");
+                } else {
+                    mapRow.append("    ");
+                    connectionRow.append("    ");
+                }
+            }
+
+            println("  " + mapRow.toString());
+            if (y > minY) {
+                println("  " + connectionRow.toString());
+            }
+        }
+
+        println("\nLegend: [◉]=You [·]=Visited [?]=Unexplored [T]=Treasure [B]=Boss");
+        println("═══════════════════════════════════");
+    }
+
+    //                                                                                            DISPLAY PLAYER STATS
+    private void displayStats() {
+        statsArea.setText("");
+        println(player.displayStatus(), statsArea);
+
+    }
+
+    //                                                                                           DISPLAY COMBAT STATUS
+    private void displayCombatStatus() {
+        println("\n═══ COMBAT STATUS ═══");
+        println("Your HP: " + player.getCurrentHealth() + "/" + player.getMaxHealth());
+
+        if (player.getMaxMana() > 0) {
+            println("Your MP: " + player.getMana() + "/" + player.getMaxMana());
+        }
+
+        println(currentEnemy.getName() + " HP: " + currentEnemy.getCurrentHealth() + "/" + currentEnemy.getMaxHealth());
+
+        // Show boss phase if applicable
+        if (currentEnemy instanceof Boss boss) {
+            println("Boss Phase: " + boss.getPhase());
+        }
+
+        println("═══════════════════");
+    }
+
+    //                                                                                            DISPLAY CURRENT ROOM
+    private void displayCurrentRoom() {
+        println("\n═══ " + currentRoom.getName().toUpperCase() + " ═══");
+        println(currentRoom.getDescription());
+
+        // Show exits
+        println("\nExits: " + String.join(", ", currentRoom.getExits().keySet()));
+
+        if (currentRoom.hasEnemies()) {
+            println("\nEnemies present:");
+            for (Enemy enemy : currentRoom.getEnemies()) {
+                println("- " + enemy.getName() + " (HP: " + enemy.getCurrentHealth() + ")");
+            }
+        }
+
+        // Show accessible chests
+        if (currentRoom.hasAccessibleChests()) {
+            println("\nChests available:");
+            for (Chest chest : currentRoom.getChests()) {
+                if (!chest.isOpened()) {
+                    println("- " + chest.getRarity() + " chest");
+                }
+            }
+        }
+    }
+
+    //                                                                                        DISPLAY PLAYER INVENTORY
+    private void displayInventory() {
+        println("\n═══ INVENTORY ═══");
+
+        // Equipped items
+        println("\n⚔️ EQUIPPED:");
+        if (player.getEquippedWeapon() != null) {
+            println("  Weapon: " + player.getEquippedWeapon().getName());
+        }
+
+        for (Map.Entry<Armor.ArmorType, Armor> entry : player.getEquippedArmor().entrySet()) {
+            println("  " + entry.getKey() + ": " + entry.getValue().getName() + " (+" + entry.getValue().getDefenseBonus() + " def)");
+        }
+
+        if (player.getEquippedAccessory() != null) {
+            Accessory acc = player.getEquippedAccessory();
+            println("  Accessory: " + acc.getName() + " (+" + acc.getBonusAmount() + " " + acc.getStatBonus().name() + ")");
+        }
+
+        // Inventory items
+        println("\n🎒 BACKPACK:");
+        if (player.getFullInventory().isEmpty()) {
+            println("  Empty");
+        } else {
+            Map<Item.ItemType, List<Item>> itemsByType = new HashMap<>();
+            for (Item item : player.getFullInventory()) {
+                itemsByType.computeIfAbsent(item.getType(), k -> new ArrayList<>()).add(item);
+            }
+
+            for (Map.Entry<Item.ItemType, List<Item>> entry : itemsByType.entrySet()) {
+                println("\n  " + entry.getKey() + ":");
+                for (int i = 0; i < entry.getValue().size(); i++) {
+                    Item item = entry.getValue().get(i);
+                    println("    [" + (i + 1) + "] " + item.toString());
+                }
+            }
+        }
+
+        println("\n💰 Gold: " + player.getGold());
+        println("═════════════════");
+    }
+
+    //                                                                                                   HELP MESSAGES
+    private void tutorialHelpMessage() {
+        println("\nAVAILABLE COMMANDS:");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
+        println("- clear            : Clear the terminal screen");
+        println("- help             : Display this help message");
+        println("- exit             : Quit the game\n");
+        println("- start            : Start the game");
+
+    }
+
+    private void graveyardHelpMessage() {
+        println("\nAVAILABLE COMMANDS:");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
+        println("- clear            : Clear the terminal screen");
+        println("- help             : Display this help message");
+        println("- exit             : Quit the game\n");
+        println("- name             : Set your player name.");
+        println("- class            : Set your player class (Knight, Mage, or Reaper).");
+        println("- proceed          : Proceed onwards.");
+
+    }
+
+    private void churchHelpMessage() {
+        println("\nAVAILABLE COMMANDS:");
+        println("- colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)");
+        println("- clear            : Clear the terminal screen");
+        println("- help             : Display this help message");
+        println("- start            : Start the game");
+        println("- exit             : Quit the game\n");
+        println("- choose           : Choose between the options given.");
+        println("- inventory        : View the player inventory.");
+
+    }
+
+    private void inGameHelpMessage() {
+        println("\n═══ AVAILABLE COMMANDS ═══");
+        println("EXPLORATION:");
+        println("  move [direction] - Move to another room (north/south/east/west)");
+        println("  look            - Examine the current room");
+        println("  map             - Display the dungeon map");
+        println("");
+        println("COMBAT:");
+        println("  attack          - Attack the current enemy");
+        println("  flee            - Attempt to escape combat");
+        println("");
+        println("CHARACTER:");
+        println("  status          - View your character stats");
+        println("  inventory       - View your inventory");
+        println("");
+        println("ITEMS:");
+        println("  use [#]         - Use a consumable item");
+        println("  equip [#]       - Equip armor or accessory");
+        println("  open [#]        - Open a chest");
+        println("");
+        println("SYSTEM:");
+        println("  help            - Display this help message");
+        println("  exit            - Quit the game");
+        println("═════════════════════════");
+    }
+
+    //                                                                                             CHARACTER ASCII ART
     private void displayCharacter(String CLASS) {
 
         // KNIGHTS
@@ -517,19 +696,14 @@ public class Game {
         }
     }
 
-    private void displayStats() {
-        statsArea.setText("");
-        println(player.displayStatus(), statsArea);
 
-    }
+    //--------------------------------------------------------------------------------------------- PROCESSING METHODS
 
-    // COMMAND METHODS ------------------------------------------------------------------------------------------------
-    // Method to process different commands that are inputted by the user.e
+    //                                                                                      GENERAL COMMAND PROCESSING
     private void processCommand(String input) {
-        // Display inputted command in display area.
-        println("\n > " + input);
-        updateCommandHistory(input);
 
+        println("\n > " + input); // displays the inputted command in display area.
+        updateCommandHistory(input);
 
         if (mapBuilder != null) {
             processGameCommand(input);
@@ -618,13 +792,11 @@ public class Game {
                             player = new Player(NAME, Player.REAPER);
                             break;
                     }
-
-                    graveyardMovementMessage();
+                    println("*YOU BEGIN TO MOVE TO THE NEXT ROOM.*");
                     currentRoom = new Room("Church", "An ancient church, emanating an unusual presence", 0, 0, Room.RoomType.START);
                     display.setText("");
                     churchTitleMessage();
                     churchIntroMessage(CLASS);
-
                 }
                 break;
             case "church":
@@ -642,35 +814,68 @@ public class Game {
                 } else {
                     println("Unknown command. Please Try Again.");
                 }
-
-                break;
-
-        }
-
-    }
-
-
-    // Clear Method
-    private void clearScreen() {
-        display.setText("");
-
-        switch (currentRoom.getName()) {
-            case "tutorial":
-                tutorialTitleMessage();
-                tutorialWelcomeMessage();
-                break;
-            case "graveyard":
-                graveyardTitleMessage();
-                graveyardIntroMessage();
-                break;
-            case "church":
-                churchTitleMessage();
-                churchIntroMessage(CLASS);
                 break;
         }
     }
 
+    //                                                                                      IN-GAME COMMAND PROCESSING
+    private void processGameCommand(String input) {
 
+        if (inCombat && !input.equalsIgnoreCase("flee") && !input.equalsIgnoreCase("status") && !input.equalsIgnoreCase("inventory") && !input.equalsIgnoreCase("help")) {
+            if (input.equalsIgnoreCase("attack")) {
+                performCombat();
+            } else {
+                println("You're in combat! You must attack or flee!");
+            }
+            return;
+        }
+
+        // Common commands available anywhere
+        if (input.equals("help")) {
+            inGameHelpMessage();
+            return;
+        } else if (input.equals("map")) {
+            displayMap();
+            return;
+        } else if (input.equals("status")) {
+            displayStats();
+            return;
+        } else if (input.equals("inventory")) {
+            displayInventory();
+            return;
+        } else if (input.startsWith("use ")) {
+            String itemId = input.substring(4).trim();
+            useItem(itemId);
+        } else if (input.startsWith("equip ")) {
+            String itemId = input.substring(6).trim();
+            equipItem(itemId);
+        }
+
+        // Combat commands
+        if (inCombat) {
+            if (input.equals("flee")) {
+                attemptFlee();
+            } else {
+                println("You're in combat! Use 'attack' to fight or 'flee' to escape!");
+            }
+            return;
+        }
+
+        // Movement commands
+        if (input.startsWith("move ")) {
+            String direction = input.substring(5).trim();
+            movePlayer(direction);
+        } else if (input.equals("look")) {
+            displayCurrentRoom();
+        } else if (input.startsWith("open ")) {
+            String target = input.substring(5).trim();
+            openChest(target);
+        } else {
+            println("Unknown command. Type 'help' for available commands.");
+        }
+    }
+
+    //                                                                                          DISPLAY PROCESSING
     // Custom println method to display text in the UI display area.
     public void println(String text) {
         display.append(" " + text + "\n");
@@ -688,15 +893,534 @@ public class Game {
         area.setCaretPosition(area.getDocument().getLength());
     }
 
-    public void println(String text, JTextArea area, double waitTime) {
-        area.append(" " + text + "\n");
-        area.setCaretPosition(area.getDocument().getLength());
-        wait(waitTime);
+    //                                                                                        PROCESSING WEAPON CHOICE
+    private void handleWeaponChoice(String choice) {
+        Weapon chosenWeapon = null;
+
+        switch (CLASS) {
+            case "knight":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Mace", 15, "A virulent ball of swinging death.", Item.Rarity.COMMON, 10);
+                    println("\nYou grasp the MACE, feeling its weight and power.");
+                    println("The weapon pulses with righteous fury as you swing it experimentally.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Sword & Shield", 12, "The bastion of any successful knight.", Item.Rarity.COMMON, 10);
+                    println("\nYou take up the SWORD & SHIELD, feeling their perfect balance.");
+                    println("The blade gleams with deadly purpose while the shield promises protection.");
+                }
+                break;
+
+            case "mage":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Grimoire", 20, "An ancient tome of forbidden knowledge.", Item.Rarity.COMMON, 10);
+                    println("\nYou open the GRIMOIRE, its pages crackling with arcane energy.");
+                    println("Forbidden knowledge floods your mind as the tome accepts you as its master.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Unstable Orb", 18, "A chaotic orb of pure annihilation.", Item.Rarity.COMMON, 10);
+                    println("\nYou grasp the UNSTABLE ORB, feeling its chaotic energy surge through you.");
+                    println("The orb pulses erratically, barely contained destruction at your fingertips.");
+                }
+                break;
+
+            case "reaper":
+                if (choice.equals("1")) {
+                    chosenWeapon = new Weapon("Scythe", 25, "The cold, clean edge all mortals must meet.", Item.Rarity.COMMON, 10);
+                    println("\nYou grip the SCYTHE, its blade singing a song of endings.");
+                    println("The weapon feels like an extension of death itself in your hands.");
+                } else if (choice.equals("2")) {
+                    chosenWeapon = new Weapon("Death Magic", 17, "A dark conduit for siphoning souls.", Item.Rarity.COMMON, 10);
+                    println("\nYou channel DEATH MAGIC, feeling the cold touch of the void.");
+                    println("Dark energy swirls around you, hungry for the essence of life.");
+                }
+                break;
+        }
+
+        if (chosenWeapon != null) {
+            player.addWeapon(chosenWeapon);
+            displayStats(); // Update stats display
+
+            println("\n 【 " + chosenWeapon.getName() + " has been added to your inventory and equipped! 】\n\n");
+            println("\nThe spectral overseer nods approvingly.\n");
+            println("\"Your choice is made. May it serve you well in the trials ahead.\"\n");
+            println("\nThe overseer dissipates, and you notice a door at the back of the church beckoning to you.");
+            println("\nType [ proceed ] to begin the dungeon.");
+
+        }
     }
 
+    //                                                                                              COMMAND PROCESSING
+    private void updateCommandHistory(String command) {
+        commandHistory.add(command);
+        commandCount++;
 
-    // UI Methods -----------------------------------------------------------------------------------------------------
-    // Method to change the text color
+        // Clear and rebuild the display
+        commandLog.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
+        commandLog.append(" ═══════════════════════════════════════\n\n");
+
+        // Display commands in reverse order with git-style branching
+        for (int i = commandHistory.size() - 1; i >= 0; i--) {
+            String cmd = commandHistory.get(i);
+            int cmdNumber = i + 1;
+
+            // Determine command type for coloring/branching
+            String node = "○";
+
+            // Special nodes for certain commands
+            if (cmd.startsWith("start")) {
+                node = "◆"; // Diamond for start commands
+            } else if (cmd.startsWith("move")) {
+                node = "→"; // Arrow for movement
+            } else if (cmd.startsWith("attack")) {
+                node = "⚔"; // Sword for combat
+            } else if (cmd.startsWith("name") || cmd.startsWith("class")) {
+                node = "★"; // Star for character creation
+            } else if (cmd.equals("help") || cmd.equals("clear")) {
+                node = "◌"; // Hollow circle for utility commands
+            }
+
+            // Build the visualization
+            String str = "  ╟─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n";
+            if (i == commandHistory.size() - 1) {
+                // Most recent command (CURRENT)
+                commandLog.append("  ╔═ CURRENT\n");
+                commandLog.append("  ║\n");
+                commandLog.append(str);
+            } else if (i == 0) {
+                // First command (root)
+                commandLog.append("  ║\n");
+                commandLog.append(str);
+                commandLog.append("  ║\n");
+                commandLog.append("  ╚═ ORIGIN\n");
+            } else {
+                // Middle commands
+                commandLog.append("  ║\n");
+
+                // Add branch indicators
+                if (i < commandHistory.size() - 1) {
+                    String nextCmd = commandHistory.get(i + 1);
+                    String prevCmd = commandHistory.get(i - 1);
+
+                    // Branch merge/split visualization
+                    if (isCommandTypeChange(cmd, nextCmd)) {
+                        commandLog.append("  ╠═╗\n");
+                        commandLog.append("  ║ ╚─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n");
+                    } else if (isCommandTypeChange(prevCmd, cmd)) {
+                        commandLog.append("  ╠═╝\n");
+                        commandLog.append(str);
+                    } else {
+                        commandLog.append(str);
+                    }
+                } else {
+                    commandLog.append(str);
+                }
+            }
+        }
+
+        // Add summary at bottom
+        commandLog.append("\n  ───────────────\n");
+        commandLog.append("  Total: " + commandCount + " commands\n");
+
+        // Auto-scroll to top
+        commandLog.setCaretPosition(0);
+    }
+
+    private boolean isCommandTypeChange(String cmd1, String cmd2) {
+        return !getCommandType(cmd1).equals(getCommandType(cmd2)); //checks if the type of cmd has changed for branches
+    }
+
+    private String getCommandType(String cmd) {
+        if (cmd.startsWith("move")) return "movement";
+        if (cmd.startsWith("attack") || cmd.equals("flee") || cmd.startsWith("open") || cmd.startsWith("use") || cmd.startsWith("equip"))
+            return "combat";
+        if (cmd.startsWith("name") || cmd.startsWith("class") || cmd.startsWith("choose")) return "character";
+        if (cmd.equals("help") || cmd.equals("clear") || cmd.startsWith("colour") || cmd.equals("look") || cmd.equals("map") || cmd.equals("inventory"))
+            return "utility";
+        return "other";
+    }
+
+    //                                                                                        PROCESSING STARTING GAME
+    private void startAdventure() {
+        println("\nGenerating dungeon layout...");
+        mapBuilder = new MapBuilder();
+        currentRoom = mapBuilder.generateMap();
+        currentRoom.setVisited(true);
+
+        println("\nYou step through the church doors into the dungeon beyond...");
+        displayCurrentRoom();
+        displayMap();
+    }
+
+    //                                                                                      PROCESSING PLAYER MOVEMENT
+    private void movePlayer(String direction) {
+        Room nextRoom = currentRoom.getExit(direction);
+
+        if (nextRoom != null) {
+            // Check if we're in combat
+            if (inCombat) {
+                println("You can't leave while in combat! Defeat your enemies first!");
+                return;
+            }
+
+            // Move to the next room
+            currentRoom = nextRoom;
+            currentRoom.setVisited(true);
+
+            // Clear display and show new room
+            display.setText("");
+            displayCurrentRoom();
+
+            // Update stats display
+            displayStats();
+
+            // Check for enemies and start combat
+            if (currentRoom.hasEnemies()) {
+                checkForCombat();
+            }
+        } else {
+            println("You can't go that way!");
+        }
+
+    }
+
+    //                                                                                       PROCESSING PLAYER FLEEING
+    private void attemptFlee() {
+        if (!inCombat) {
+            println("You're not in combat!");
+            return;
+        }
+
+        Random rand = new Random();
+        if (rand.nextDouble() < 0.5) { // 50% chance to flee
+            println("You successfully flee from combat!");
+            inCombat = false;
+            currentEnemy = null;
+
+            // Move to a random adjacent room
+            List<String> exits = new ArrayList<>(currentRoom.getExits().keySet());
+            if (!exits.isEmpty()) {
+                String randomExit = exits.get(rand.nextInt(exits.size()));
+                println("You run " + randomExit + "!");
+                movePlayer(randomExit);
+            }
+        } else {
+            println("You failed to escape!");
+            println("\n" + currentEnemy.getAttackMessage());
+            int damage = Math.max(1, currentEnemy.getAttackDamage() - player.getDefense());
+            player.takeDamage(damage);
+            println("You take " + damage + " damage while trying to flee!");
+
+            if (player.getCurrentHealth() <= 0) {
+                handlePlayerDeath();
+            } else {
+                displayCombatStatus();
+            }
+        }
+    }
+
+    //                                                                                        PROCESSING OPENING CHEST
+    private void openChest(String chestIdentifier) {
+        if (!currentRoom.hasAccessibleChests()) {
+            println("There are no chests to open here, or enemies are still present!");
+            return;
+        }
+
+        List<Chest> unopenedChests = new ArrayList<>();
+        for (Chest chest : currentRoom.getChests()) {
+            if (!chest.isOpened()) {
+                unopenedChests.add(chest);
+            }
+        }
+
+        if (unopenedChests.isEmpty()) {
+            println("All chests in this room have already been opened.");
+            return;
+        }
+
+        Chest targetChest = null;
+        try {
+            int chestNum = Integer.parseInt(chestIdentifier);
+            if (chestNum > 0 && chestNum <= unopenedChests.size()) {
+                targetChest = unopenedChests.get(chestNum - 1);
+            }
+        } catch (NumberFormatException e) {
+            targetChest = unopenedChests.getFirst();
+        }
+
+        if (targetChest != null) {
+            println("\n📦 Opening " + targetChest.getRarity().name() + " chest...");
+            List<Item> items = targetChest.open();
+
+            println("You found:");
+            for (Item item : items) {
+                println("  • " + item.toString() + " - " + item.getDescription());
+                player.addItem(item);
+            }
+
+            // Also add some gold based on chest rarity
+            int goldAmount = switch (targetChest.getRarity()) {
+                case COMMON -> 10 + random.nextInt(20);
+                case UNCOMMON -> 30 + random.nextInt(40);
+                case RARE -> 70 + random.nextInt(60);
+                case LEGENDARY -> 150 + random.nextInt(100);
+            };
+
+            player.addGold(goldAmount);
+            println("  • " + goldAmount + " gold");
+        } else {
+            println("Invalid chest number. Use 'open 1', 'open 2', etc.");
+        }
+    }
+
+    //                                                                                        PROCESSING USING AN ITEM
+    private void useItem(String itemIdentifier) {
+        List<Item> consumables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.CONSUMABLE).toList();
+
+        if (consumables.isEmpty()) {
+            println("You have no consumable items to use.");
+            return;
+        }
+
+        try {
+            int itemNum = Integer.parseInt(itemIdentifier) - 1;
+            if (itemNum >= 0 && itemNum < consumables.size()) {
+                Item item = consumables.get(itemNum);
+
+                if (player.useItem(item)) {
+                    println("You used " + item.getName() + "!");
+                    displayStats();
+
+                    if (item instanceof HealthPotion) {
+                        println("You recovered " + ((HealthPotion) item).getHealAmount() + " health!");
+                    } else if (item instanceof ManaPotion) {
+                        println("You recovered " + ((ManaPotion) item).getManaAmount() + " mana!");
+                    }
+                } else {
+                    println("You can't use that item right now.");
+                }
+            } else {
+                println("Invalid item number.");
+            }
+        } catch (NumberFormatException e) {
+            println("Please specify an item number. Use 'inventory' to see your items.");
+        }
+    }
+
+    //                                                                                       PROCESSING EQUIPPING ITEM
+    private void equipItem(String itemIdentifier) {
+        List<Item> equipables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.ARMOR || item.getType() == Item.ItemType.ACCESSORY).toList();
+
+        if (equipables.isEmpty()) {
+            println("You have no equipment to equip.");
+            return;
+        }
+
+        try {
+            int itemNum = Integer.parseInt(itemIdentifier) - 1;
+            if (itemNum >= 0 && itemNum < equipables.size()) {
+                Item item = equipables.get(itemNum);
+
+                if (player.useItem(item)) {
+                    println("You equipped " + item.getName() + "!");
+                    displayStats(); // Update stats display
+                } else {
+                    println("Failed to equip item.");
+                }
+            } else {
+                println("Invalid item number.");
+            }
+        } catch (NumberFormatException e) {
+            println("Please specify an item number. Use 'inventory' to see your items.");
+        }
+    }
+
+    //                                                                                      PROCESSING RESTARTING GAME
+    private void restartGame() {
+        // Reset all game state
+        NAME = "";
+        CLASS = "";
+        player = null;
+        mapBuilder = null;
+        currentEnemy = null;
+        inCombat = false;
+        commandHistory.clear();
+        commandCount = 0;
+
+        // Reset UI
+        display.setText("");
+        characterArea.setText("");
+        statsArea.setText("");
+        commandLog.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
+        commandLog.append(" ═══════════════════════════════════════\n\n");
+
+        // Re-initialize
+        initialiseWorld();
+
+        // Remove death event listener and restore normal command processing
+        terminal.removeActionListener(terminal.getActionListeners()[0]);
+        terminal.addActionListener(e -> {
+            String input = terminal.getText().trim().toLowerCase();
+            processCommand(input);
+            terminal.setText("");
+        });
+
+        // Show tutorial again
+        tutorialTitleMessage();
+        tutorialIntroMessage();
+    }
+
+    //------------------------------------------------------------------------------------------------- COMBAT METHODS
+
+    //                                                                                             CHECKING FOR COMBAT
+    private void checkForCombat() {
+        if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
+            currentEnemy = currentRoom.getEnemies().getFirst(); // Get first enemy
+            inCombat = true;
+            println("\n⚔️ COMBAT INITIATED!");
+            println("You encounter a " + currentEnemy.getName() + "!");
+            println(currentEnemy.getEnemyType());
+            displayCombatStatus();
+        }
+    }
+
+    //                                                                                               PERFORMING COMBAT
+    private void performCombat() {
+        // Player attacks
+        int playerDamage = calculatePlayerDamage();
+        println("\nYou attack the " + currentEnemy.getName() + " for " + playerDamage + " damage!");
+        currentEnemy.takeDamage(playerDamage);
+
+        // Check if enemy is defeated
+        if (!currentEnemy.isAlive()) {
+            println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
+
+            // Give rewards
+            int expGained = currentEnemy.getExperienceValue();
+            int goldGained = random.nextInt(20) + 10;
+            player.gainExperience(expGained);
+            player.addGold(goldGained);
+            println("You gained " + expGained + " EXP and " + goldGained + " gold!");
+            displayStats();
+
+            // Remove enemy from room
+            currentRoom.getEnemies().remove(currentEnemy);
+
+            // Exit combat
+            inCombat = false;
+            currentEnemy = null;
+
+            if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
+                println("\nThere are more enemies in the room!");
+                checkForCombat();
+            } else {
+                println("\nThe room is now clear of enemies.");
+            }
+            return;
+        }
+
+        // Enemy attacks back
+        int enemyDamage = currentEnemy.getAttack();
+        println("\nThe " + currentEnemy.getName() + " attacks you for " + enemyDamage + " damage!");
+        player.takeDamage(enemyDamage);
+
+        displayStats();
+
+        if (!player.isAlive()) {
+            handlePlayerDeath();
+            return;
+        }
+
+        // Show updated combat status
+        displayCombatStatus();
+    }
+
+    //                                                                                       CALCULATING PLAYER DAMAGE
+    private int calculatePlayerDamage() {
+        int baseDamage = player.getAttack();
+        if (player.getEquippedWeapon() != null) {
+            baseDamage += player.getEquippedWeapon().getAttackBonus();
+        }
+        // Add some randomness (±20%)
+        int variance = (int) (baseDamage * 0.2);
+        return baseDamage + random.nextInt(variance * 2 + 1) - variance;
+    }
+
+    //                                                                                           HANDLING PLAYER DEATH
+    private void handlePlayerDeath() {
+        // Stop any ongoing animations
+        inCombat = false;
+        currentEnemy = null;
+
+        // Clear the display for death screen
+        display.setText("");
+
+        // Display death ASCII art
+        println("\n\n");
+        println("                    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄");
+        println("                    ██░███░█▄░▄██░▄▄▄██░██░██░████░▄▄▀██░▄▄▄░██░▄▄▀");
+        println("                    ██░█░█░██░███░▄▄▄██░██░██░▄▄▄█░██░██░███░██░██░");
+        println("                    ██▄▀▄▀▄██▄███░▀▀▀██░▀▀░██░████░▀▀░██░▀▀▀░██░▀▀░");
+        println("                    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀");
+        println("\n");
+        println("                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀");
+        println("                              ⠀⠀⠀⠀⠀⣀⣤⣶⣿⠿⠟⠛⠉⠉⠉⠛⠻⠿⣿⣶⣤⣀⠀⠀⠀⠀⠀");
+        println("                              ⠀⠀⠀⣠⣾⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣷⣄⠀⠀⠀");
+        println("                              ⠀⢀⣴⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣦⡀⠀");
+        println("                              ⢀⣾⣿⡟⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣤⣤⣄⠀⠀⠀⠀⠀⠹⣿⣷⡀");
+        println("                              ⣾⣿⡟⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⠀⢻⣿⣷");
+        println("                              ⣿⣿⠁⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠈⣿⣿");
+        println("                              ⣿⣿⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⣿⣿");
+        println("                              ⢻⣿⣧⠀⠀⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⣼⣿⡟");
+        println("                              ⠈⢿⣿⣦⠀⠀⠀⠀⠈⠛⠿⠿⠿⠿⠛⠁⠀⠀⠀⠀⠀⠀⣴⣿⡿⠁");
+        println("                              ⠀⠈⢿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣿⡿⠁⠀");
+        println("                              ⠀⠀⠀⠙⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣾⣿⡿⠋⠀⠀⠀");
+        println("                              ⠀⠀⠀⠀⠀⠙⠿⣿⣿⣶⣤⣄⣀⣀⣠⣤⣶⣿⣿⠿⠋⠀⠀⠀⠀⠀");
+        println("                              ⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀");
+        println("\n");
+
+        // Death message based on what killed the player
+        if (currentEnemy != null) {
+            println("         You were slain by " + currentEnemy.getName() + " in the " + currentRoom.getName() + ".");
+        } else {
+            println("         You have fallen in the " + currentRoom.getName() + ".");
+        }
+
+        println("\n");
+        println("         " + NAME + " the " + CLASS.toUpperCase() + " has met their end.");
+        println("         Your journey lasted " + commandCount + " commands.");
+
+        // Display final stats
+        println("\n");
+        println("         ═══════════ FINAL STATISTICS ═══════════");
+        println("         Level: " + player.getLevel());
+        println("         Experience: " + player.getExperience());
+        println("         Gold Collected: " + player.getGold());
+        println("         Rooms Explored: " + countVisitedRooms());
+        println("         ═════════════════════════════════════");
+
+        // Options
+        println("\n\n");
+        println("         Would you like to try again?");
+        println("         Type 'restart' to begin a new adventure");
+        println("         Type 'exit' to quit the game");
+
+        // Disable normal command processing and only accept restart/exit
+        terminal.removeActionListener(terminal.getActionListeners()[0]);
+        terminal.addActionListener(e -> {
+            String input = terminal.getText().trim().toLowerCase();
+            if (input.equals("restart")) {
+                restartGame();
+            } else if (input.equals("exit")) {
+                System.exit(0);
+            } else {
+                println("\n > " + input);
+                println("Please type 'restart' or 'exit'");
+            }
+            terminal.setText("");
+        });
+    }
+
+    //----------------------------------------------------------------------------------------------------- UI METHODS
+    //                                                                                                     TEXT COLOUR
     private void changeTextColor(String colorName) {
         Color newColor;
 
@@ -737,9 +1461,9 @@ public class Game {
         println("Text color changed to " + colorName);
     }
 
-    // MISCELLANEOUS METHODS ------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------ UTILITY METHODS
 
-    // Wait method
+    //                                                                                                     WAIT METHOD
     private void wait(double seconds) {
         CompletableFuture.delayedExecutor((long) (seconds * 1000), TimeUnit.MILLISECONDS).execute(() -> {
         });
@@ -750,7 +1474,8 @@ public class Game {
         }
     }
 
-    // Method to create a new thread for the idle animation of the character.
+    //                                                                                           IDLE ANIMATION THREAD
+    // creates a new thread for the idle animation.
     @SuppressWarnings("BusyWait") // just stops the warning for sleeping
     private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2) {
         String tempCLASS = CLASS;
@@ -785,8 +1510,42 @@ public class Game {
         return animationThread;
     }
 
-    // INITIALISATION METHODS -----------------------------------------------------------------------------------------
+    //                                                                                                    CLEAR SCREEN
+    private void clearScreen() {
+        display.setText("");
 
+        switch (currentRoom.getName()) {
+            case "tutorial":
+                tutorialTitleMessage();
+                tutorialIntroMessage();
+                break;
+            case "graveyard":
+                graveyardTitleMessage();
+                graveyardIntroMessage();
+                break;
+            case "church":
+                churchTitleMessage();
+                churchIntroMessage(CLASS);
+                break;
+        }
+    }
+
+    //                                                                                             COUNT VISITED ROOMS
+    private int countVisitedRooms() {
+        if (mapBuilder == null) return 0;
+
+        int count = 0;
+        for (Room room : mapBuilder.getAllRooms().values()) {
+            if (room.isVisited()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //----------------------------------------------------------------------------------------- INITIALISATION METHODS
+
+    //                                                                                                   INITIALISE UI
     private void initialiseUI() {
         JFrame frame = new JFrame("Terminality");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -890,762 +1649,13 @@ public class Game {
         terminal.requestFocus();
     }
 
+    //                                                                                                 INITIALISE WORLD
     private void initialiseWorld() {
         // Set the starting room
         currentRoom = new Room("Tutorial", "Area when the user opens the game for the first time.", 0, 0, Room.RoomType.START);
     }
 
-    // NEED CATEGORY -------------------------------------------------------------------------------------------------
-
-    private void handleWeaponChoice(String choice) {
-        Weapon chosenWeapon = null;
-
-        switch (CLASS) {
-            case "knight":
-                if (choice.equals("1")) {
-                    chosenWeapon = new Weapon("Mace", 15, "A virulent ball of swinging death.", Item.Rarity.COMMON, 10);
-                    println("\nYou grasp the MACE, feeling its weight and power.");
-                    println("The weapon pulses with righteous fury as you swing it experimentally.");
-                } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Sword & Shield", 12, "The bastion of any successful knight.", Item.Rarity.COMMON, 10);
-                    println("\nYou take up the SWORD & SHIELD, feeling their perfect balance.");
-                    println("The blade gleams with deadly purpose while the shield promises protection.");
-                }
-                break;
-
-            case "mage":
-                if (choice.equals("1")) {
-                    chosenWeapon = new Weapon("Grimoire", 20, "An ancient tome of forbidden knowledge.", Item.Rarity.COMMON, 10);
-                    println("\nYou open the GRIMOIRE, its pages crackling with arcane energy.");
-                    println("Forbidden knowledge floods your mind as the tome accepts you as its master.");
-                } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Unstable Orb", 18, "A chaotic orb of pure annihilation.", Item.Rarity.COMMON, 10);
-                    println("\nYou grasp the UNSTABLE ORB, feeling its chaotic energy surge through you.");
-                    println("The orb pulses erratically, barely contained destruction at your fingertips.");
-                }
-                break;
-
-            case "reaper":
-                if (choice.equals("1")) {
-                    chosenWeapon = new Weapon("Scythe", 25, "The cold, clean edge all mortals must meet.", Item.Rarity.COMMON, 10);
-                    println("\nYou grip the SCYTHE, its blade singing a song of endings.");
-                    println("The weapon feels like an extension of death itself in your hands.");
-                } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Death Magic", 17, "A dark conduit for siphoning souls.", Item.Rarity.COMMON, 10);
-                    println("\nYou channel DEATH MAGIC, feeling the cold touch of the void.");
-                    println("Dark energy swirls around you, hungry for the essence of life.");
-                }
-                break;
-        }
-
-        if (chosenWeapon != null) {
-            player.addWeapon(chosenWeapon);
-            displayStats(); // Update stats display
-
-            println("\n 【 " + chosenWeapon.getName() + " has been added to your inventory and equipped! 】\n\n");
-            println("\nThe spectral overseer nods approvingly.\n");
-            println("\"Your choice is made. May it serve you well in the trials ahead.\"\n");
-            println("\nThe overseer dissipates, and you notice a door at the back of the church beckoning to you.");
-            println("\nType [ proceed ] to begin the dungeon.");
-
-        }
-    }
-
-    private void updateCommandHistory(String command) {
-        commandHistory.add(command);
-        commandCount++;
-
-        // Clear and rebuild the display
-        commandLog.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
-        commandLog.append(" ═══════════════════════════════════════\n\n");
-
-        // Display commands in reverse order with git-style branching
-        for (int i = commandHistory.size() - 1; i >= 0; i--) {
-            String cmd = commandHistory.get(i);
-            int cmdNumber = i + 1;
-
-            // Determine command type for coloring/branching
-            String node = "○";
-
-            // Special nodes for certain commands
-            if (cmd.startsWith("start")) {
-                node = "◆"; // Diamond for start commands
-            } else if (cmd.startsWith("move")) {
-                node = "→"; // Arrow for movement
-            } else if (cmd.startsWith("attack")) {
-                node = "⚔"; // Sword for combat
-            } else if (cmd.startsWith("name") || cmd.startsWith("class")) {
-                node = "★"; // Star for character creation
-            } else if (cmd.equals("help") || cmd.equals("clear")) {
-                node = "◌"; // Hollow circle for utility commands
-            }
-
-            // Build the visualization
-            String str = "  ╟─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n";
-            if (i == commandHistory.size() - 1) {
-                // Most recent command (CURRENT)
-                commandLog.append("  ╔═ CURRENT\n");
-                commandLog.append("  ║\n");
-                commandLog.append(str);
-            } else if (i == 0) {
-                // First command (root)
-                commandLog.append("  ║\n");
-                commandLog.append(str);
-                commandLog.append("  ║\n");
-                commandLog.append("  ╚═ ORIGIN\n");
-            } else {
-                // Middle commands
-                commandLog.append("  ║\n");
-
-                // Add branch indicators
-                if (i < commandHistory.size() - 1) {
-                    String nextCmd = commandHistory.get(i + 1);
-                    String prevCmd = commandHistory.get(i - 1);
-
-                    // Branch merge/split visualization
-                    if (isCommandTypeChange(cmd, nextCmd)) {
-                        commandLog.append("  ╠═╗\n");
-                        commandLog.append("  ║ ╚─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n");
-                    } else if (isCommandTypeChange(prevCmd, cmd)) {
-                        commandLog.append("  ╠═╝\n");
-                        commandLog.append(str);
-                    } else {
-                        commandLog.append(str);
-                    }
-                } else {
-                    commandLog.append(str);
-                }
-            }
-        }
-
-        // Add summary at bottom
-        commandLog.append("\n  ───────────────\n");
-        commandLog.append("  Total: " + commandCount + " commands\n");
-
-        // Auto-scroll to top
-        commandLog.setCaretPosition(0);
-    }
-
-    // Helper method to detect command type changes
-    private boolean isCommandTypeChange(String cmd1, String cmd2) {
-        return !getCommandType(cmd1).equals(getCommandType(cmd2));
-    }
-
-    private String getCommandType(String cmd) {
-        if (cmd.startsWith("move")) return "movement";
-        if (cmd.startsWith("attack")) return "combat";
-        if (cmd.startsWith("name") || cmd.startsWith("class") || cmd.startsWith("choose")) return "character";
-        if (cmd.equals("help") || cmd.equals("clear") || cmd.startsWith("colour")) return "utility";
-        return "other";
-    }
-
-    private void displayMap() {
-        println("\n═══════════════ MAP ═══════════════\n");
-
-        // Find map bounds
-        int minX = 0, maxX = 0, minY = 0, maxY = 0;
-        for (Room room : mapBuilder.getAllRooms().values()) {
-            minX = Math.min(minX, room.getX());
-            maxX = Math.max(maxX, room.getX());
-            minY = Math.min(minY, room.getY());
-            maxY = Math.max(maxY, room.getY());
-        }
-
-        // Display map from top to bottom
-        for (int y = maxY; y >= minY; y--) {
-            StringBuilder mapRow = new StringBuilder();
-            StringBuilder connectionRow = new StringBuilder();
-
-            for (int x = minX; x <= maxX; x++) {
-                String coordKey = x + "," + y;
-                Room room = mapBuilder.getAllRooms().get(coordKey);
-
-                if (room != null) {
-                    // Determine room symbol
-                    String symbol;
-                    if (room == currentRoom) {
-                        symbol = "[◉]"; // Current position
-                    } else if (room.getType() == Room.RoomType.BOSS) {
-                        symbol = "[B]"; // Boss room
-                    } else if (room.getType() == Room.RoomType.TREASURE) {
-                        symbol = "[T]"; // Treasure room
-                    } else if (room.isVisited()) {
-                        symbol = "[·]"; // Visited room
-                    } else {
-                        symbol = "[?]"; // Unvisited room
-                    }
-
-                    mapRow.append(symbol);
-
-                    // Add horizontal connections
-                    if (room.getExit("east") != null) {
-                        mapRow.append("─");
-                    } else {
-                        mapRow.append(" ");
-                    }
-
-                    // Add vertical connections
-                    if (room.getExit("south") != null) {
-                        connectionRow.append(" │ ");
-                    } else {
-                        connectionRow.append("   ");
-                    }
-                    connectionRow.append(" ");
-                } else {
-                    mapRow.append("    ");
-                    connectionRow.append("    ");
-                }
-            }
-
-            println("  " + mapRow.toString());
-            if (y > minY) {
-                println("  " + connectionRow.toString());
-            }
-        }
-
-        println("\nLegend: [◉]=You [·]=Visited [?]=Unexplored [T]=Treasure [B]=Boss");
-        println("═══════════════════════════════════");
-    }
-
-    private void startAdventure() {
-        println("\nGenerating dungeon layout...");
-        mapBuilder = new MapBuilder();
-        currentRoom = mapBuilder.generateMap();
-        currentRoom.setVisited(true);
-
-        println("\nYou step through the church doors into the dungeon beyond...");
-        displayCurrentRoom();
-        displayMap();
-    }
-
-    private void displayCurrentRoom() {
-        println("\n═══ " + currentRoom.getName().toUpperCase() + " ═══");
-        println(currentRoom.getDescription());
-
-        // Show exits
-        println("\nExits: " + String.join(", ", currentRoom.getExits().keySet()));
-
-        if (currentRoom.hasEnemies()) {
-            println("\nEnemies present:");
-            for (Enemy enemy : currentRoom.getEnemies()) {
-                println("- " + enemy.getName() + " (HP: " + enemy.getCurrentHealth() + ")");
-            }
-        }
-
-        // Show accessible chests
-        if (currentRoom.hasAccessibleChests()) {
-            println("\nChests available:");
-            for (Chest chest : currentRoom.getChests()) {
-                if (!chest.isOpened()) {
-                    println("- " + chest.getRarity() + " chest");
-                }
-            }
-        }
-    }
-
-    private void movePlayer(String direction) {
-        Room nextRoom = currentRoom.getExit(direction);
-
-        if (nextRoom != null) {
-            // Check if we're in combat
-            if (inCombat) {
-                println("You can't leave while in combat! Defeat your enemies first!");
-                return;
-            }
-
-            // Move to the next room
-            currentRoom = nextRoom;
-            currentRoom.setVisited(true);
-
-            // Clear display and show new room
-            display.setText("");
-            displayCurrentRoom();
-
-            // Update stats display
-            displayStats();
-
-            // Check for enemies and start combat
-            if (currentRoom.hasEnemies()) {
-                checkForCombat();
-            }
-        } else {
-            println("You can't go that way!");
-        }
-
-    }
-
-    private void processGameCommand(String input) {
-
-        if (inCombat && !input.equalsIgnoreCase("flee") && !input.equalsIgnoreCase("status") && !input.equalsIgnoreCase("inventory") && !input.equalsIgnoreCase("help")) {
-            if (input.equalsIgnoreCase("attack")) {
-                performCombat();
-            } else {
-                println("You're in combat! You must attack or flee!");
-            }
-            return;
-        }
-
-        // Common commands available anywhere
-        if (input.equals("help")) {
-            displayGameHelp();
-            return;
-        } else if (input.equals("map")) {
-            displayMap();
-            return;
-        } else if (input.equals("status")) {
-            displayStats();
-            return;
-        } else if (input.equals("inventory")) {
-            displayInventory();
-            return;
-        } else if (input.startsWith("use ")) {
-            String itemId = input.substring(4).trim();
-            useItem(itemId);
-        } else if (input.startsWith("equip ")) {
-            String itemId = input.substring(6).trim();
-            equipItem(itemId);
-        }
-
-        // Combat commands
-        if (inCombat) {
-            if (input.equals("attack")) {
-                //                processAttack();
-            } else if (input.equals("flee")) {
-                attemptFlee();
-            } else {
-                println("You're in combat! Use 'attack' to fight or 'flee' to escape!");
-            }
-            return;
-        }
-
-        // Movement commands
-        if (input.startsWith("move ")) {
-            String direction = input.substring(5).trim();
-            movePlayer(direction);
-        } else if (input.equals("look")) {
-            displayCurrentRoom();
-        } else if (input.startsWith("open ")) {
-            String target = input.substring(5).trim();
-            openChest(target);
-        } else {
-            println("Unknown command. Type 'help' for available commands.");
-        }
-    }
-
-
-    // Update displayInventory to show all items
-    private void displayInventory() {
-        println("\n═══ INVENTORY ═══");
-
-        // Equipped items
-        println("\n⚔️ EQUIPPED:");
-        if (player.getEquippedWeapon() != null) {
-            println("  Weapon: " + player.getEquippedWeapon().getName());
-        }
-
-        for (Map.Entry<Armor.ArmorType, Armor> entry : player.getEquippedArmor().entrySet()) {
-            println("  " + entry.getKey() + ": " + entry.getValue().getName() + " (+" + entry.getValue().getDefenseBonus() + " def)");
-        }
-
-        if (player.getEquippedAccessory() != null) {
-            Accessory acc = player.getEquippedAccessory();
-            println("  Accessory: " + acc.getName() + " (+" + acc.getBonusAmount() + " " + acc.getStatBonus().name() + ")");
-        }
-
-        // Inventory items
-        println("\n🎒 BACKPACK:");
-        if (player.getFullInventory().isEmpty()) {
-            println("  Empty");
-        } else {
-            Map<Item.ItemType, List<Item>> itemsByType = new HashMap<>();
-            for (Item item : player.getFullInventory()) {
-                itemsByType.computeIfAbsent(item.getType(), k -> new ArrayList<>()).add(item);
-            }
-
-            for (Map.Entry<Item.ItemType, List<Item>> entry : itemsByType.entrySet()) {
-                println("\n  " + entry.getKey() + ":");
-                for (int i = 0; i < entry.getValue().size(); i++) {
-                    Item item = entry.getValue().get(i);
-                    println("    [" + (i + 1) + "] " + item.toString());
-                }
-            }
-        }
-
-        println("\n💰 Gold: " + player.getGold());
-        println("═════════════════");
-    }
-
-    // Update displayStats to show total defense
-    private void displayStats(String name) {
-        statsArea.setText("");
-        println("═══════════════════════════", statsArea);
-        println("  " + name.toUpperCase() + " THE " + CLASS.toUpperCase(), statsArea);
-        println("═══════════════════════════", statsArea);
-        println(" HP: " + player.getCurrentHealth() + "/" + player.getMaxHealth(), statsArea);
-
-        if (player.getMaxMana() > 0) {
-            println(" MP: " + player.getMana() + "/" + player.getMaxMana(), statsArea);
-        }
-
-        println(" ATK: " + player.getAttack(), statsArea);
-        println(" DEF: " + player.getTotalDefense(), statsArea);
-
-        if (player.getEquippedWeapon() != null) {
-            println("\n WEAPON: " + player.getEquippedWeapon().getName(), statsArea);
-            println(" DMG: " + player.getEquippedWeapon().getAttackBonus(), statsArea);
-        }
-
-        println("\n GOLD: " + player.getGold(), statsArea);
-    }
-
-    // Update help to include item commands
-    private void displayGameHelp() {
-        println("\n═══ AVAILABLE COMMANDS ═══");
-        println("EXPLORATION:");
-        println("  move [direction] - Move to another room (north/south/east/west)");
-        println("  look            - Examine the current room");
-        println("  map             - Display the dungeon map");
-        println("");
-        println("COMBAT:");
-        println("  attack          - Attack the current enemy");
-        println("  flee            - Attempt to escape combat");
-        println("");
-        println("CHARACTER:");
-        println("  status          - View your character stats");
-        println("  inventory       - View your inventory");
-        println("");
-        println("ITEMS:");
-        println("  use [#]         - Use a consumable item");
-        println("  equip [#]       - Equip armor or accessory");
-        println("  open [#]        - Open a chest");
-        println("");
-        println("SYSTEM:");
-        println("  help            - Display this help message");
-        println("  exit            - Quit the game");
-        println("═════════════════════════");
-    }
-
-
-    private void attemptFlee() {
-        if (!inCombat) {
-            println("You're not in combat!");
-            return;
-        }
-
-        Random rand = new Random();
-        if (rand.nextDouble() < 0.5) { // 50% chance to flee
-            println("You successfully flee from combat!");
-            inCombat = false;
-            currentEnemy = null;
-
-            // Move to a random adjacent room
-            List<String> exits = new ArrayList<>(currentRoom.getExits().keySet());
-            if (!exits.isEmpty()) {
-                String randomExit = exits.get(rand.nextInt(exits.size()));
-                println("You run " + randomExit + "!");
-                movePlayer(randomExit);
-            }
-        } else {
-            println("You failed to escape!");
-            println("\n" + currentEnemy.getAttackMessage());
-            int damage = Math.max(1, currentEnemy.getAttackDamage() - player.getDefense());
-            player.takeDamage(damage);
-            println("You take " + damage + " damage while trying to flee!");
-
-            //            if (player.getCurrentHealth() <= 0) {
-            //                handlePlayerDeath();
-            //            } else {
-            //                displayCombatStatus();
-            //            }
-        }
-    }
-
-    private void openChest(String chestIdentifier) {
-        if (!currentRoom.hasAccessibleChests()) {
-            println("There are no chests to open here, or enemies are still present!");
-            return;
-        }
-
-        List<Chest> unopenedChests = new ArrayList<>();
-        for (Chest chest : currentRoom.getChests()) {
-            if (!chest.isOpened()) {
-                unopenedChests.add(chest);
-            }
-        }
-
-        if (unopenedChests.isEmpty()) {
-            println("All chests in this room have already been opened.");
-            return;
-        }
-
-        Chest targetChest = null;
-        try {
-            int chestNum = Integer.parseInt(chestIdentifier);
-            if (chestNum > 0 && chestNum <= unopenedChests.size()) {
-                targetChest = unopenedChests.get(chestNum - 1);
-            }
-        } catch (NumberFormatException e) {
-            targetChest = unopenedChests.get(0);
-        }
-
-        if (targetChest != null) {
-            println("\n📦 Opening " + targetChest.getRarity().name() + " chest...");
-            List<Item> items = targetChest.open();
-
-            println("You found:");
-            for (Item item : items) {
-                println("  • " + item.toString() + " - " + item.getDescription());
-                player.addItem(item);
-            }
-
-            // Also add some gold based on chest rarity
-            int goldAmount = switch (targetChest.getRarity()) {
-                case COMMON -> 10 + random.nextInt(20);
-                case UNCOMMON -> 30 + random.nextInt(40);
-                case RARE -> 70 + random.nextInt(60);
-                case LEGENDARY -> 150 + random.nextInt(100);
-            };
-
-            player.addGold(goldAmount);
-            println("  • " + goldAmount + " gold");
-        } else {
-            println("Invalid chest number. Use 'open 1', 'open 2', etc.");
-        }
-    }
-
-    private void useItem(String itemIdentifier) {
-        List<Item> consumables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.CONSUMABLE).toList();
-
-        if (consumables.isEmpty()) {
-            println("You have no consumable items to use.");
-            return;
-        }
-
-        try {
-            int itemNum = Integer.parseInt(itemIdentifier) - 1;
-            if (itemNum >= 0 && itemNum < consumables.size()) {
-                Item item = consumables.get(itemNum);
-
-                if (player.useItem(item)) {
-                    println("You used " + item.getName() + "!");
-                    displayStats();
-
-                    if (item instanceof HealthPotion) {
-                        println("You recovered " + ((HealthPotion) item).getHealAmount() + " health!");
-                    } else if (item instanceof ManaPotion) {
-                        println("You recovered " + ((ManaPotion) item).getManaAmount() + " mana!");
-                    }
-                } else {
-                    println("You can't use that item right now.");
-                }
-            } else {
-                println("Invalid item number.");
-            }
-        } catch (NumberFormatException e) {
-            println("Please specify an item number. Use 'inventory' to see your items.");
-        }
-    }
-
-    private void equipItem(String itemIdentifier) {
-        List<Item> equipables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.ARMOR || item.getType() == Item.ItemType.ACCESSORY).toList();
-
-        if (equipables.isEmpty()) {
-            println("You have no equipment to equip.");
-            return;
-        }
-
-        try {
-            int itemNum = Integer.parseInt(itemIdentifier) - 1;
-            if (itemNum >= 0 && itemNum < equipables.size()) {
-                Item item = equipables.get(itemNum);
-
-                if (player.useItem(item)) {
-                    println("You equipped " + item.getName() + "!");
-                    displayStats(); // Update stats display
-                } else {
-                    println("Failed to equip item.");
-                }
-            } else {
-                println("Invalid item number.");
-            }
-        } catch (NumberFormatException e) {
-            println("Please specify an item number. Use 'inventory' to see your items.");
-        }
-    }
-
-    private void handleEnemyDefeat() {
-        println("\n" + currentEnemy.getDeathMessage());
-        println("Victory! You gained " + currentEnemy.getExperienceValue() + " experience!");
-
-        // Gold drop
-        int goldDrop = currentEnemy.getGoldDrop() + random.nextInt(10);
-        player.addGold(goldDrop);
-        println("You found " + goldDrop + " gold!");
-
-        // Chance for item drop
-        if (random.nextDouble() < 0.3) { // 30% chance for item drop
-            Item.Rarity dropRarity = ItemGenerator.selectRarity();
-            Item droppedItem = ItemGenerator.generateItem(dropRarity);
-            player.addItem(droppedItem);
-            println("The enemy dropped: " + droppedItem.toString() + "!");
-        }
-
-        // Remove enemy from room
-        currentRoom.removeEnemy(currentEnemy);
-        currentEnemy = null;
-        inCombat = false;
-
-        // Check for more enemies
-        if (currentRoom.hasEnemies()) {
-            println("\nAnother enemy approaches!");
-            startCombat();
-        } else {
-            println("\nThe room is now clear of enemies.");
-
-            if (currentRoom.hasAccessibleChests()) {
-                println("You can now access the chests in this room!");
-            }
-        }
-    }
-
-    private void startCombat() {
-        if (currentRoom.hasEnemies()) {
-            currentEnemy = currentRoom.getEnemies().get(0);
-            inCombat = true;
-
-            println("\n⚔️ COMBAT INITIATED ⚔️");
-            println("You encounter a " + currentEnemy.getName() + "!");
-
-            // Special message for boss
-            if (currentEnemy instanceof Boss) {
-                println("\n⚠️ WARNING: BOSS ENCOUNTER! ⚠️");
-                println("The " + currentEnemy.getName() + " towers before you, radiating dark energy!");
-            }
-
-            displayCombatStatus();
-        }
-    }
-
-    private void displayCombatStatus() {
-        println("\n═══ COMBAT STATUS ═══");
-        println("Your HP: " + player.getCurrentHealth() + "/" + player.getMaxHealth());
-
-        if (player.getMaxMana() > 0) {
-            println("Your MP: " + player.getMana() + "/" + player.getMaxMana());
-        }
-
-        println(currentEnemy.getName() + " HP: " + currentEnemy.getCurrentHealth() + "/" + currentEnemy.getMaxHealth());
-
-        // Show boss phase if applicable
-        if (currentEnemy instanceof Boss) {
-            Boss boss = (Boss) currentEnemy;
-            println("Boss Phase: " + boss.getPhase());
-        }
-
-        println("═══════════════════");
-    }
-
-    private void checkForCombat() {
-        if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
-            currentEnemy = currentRoom.getEnemies().get(0); // Get first enemy
-            inCombat = true;
-            println("\n⚔️ COMBAT INITIATED!");
-            println("You encounter a " + currentEnemy.getName() + "!");
-            println(currentEnemy.getEnemyType());
-            displayCombatStatus();
-        }
-    }
-
-    private void performCombat() {
-        // Player attacks
-        int playerDamage = calculatePlayerDamage();
-        println("\nYou attack the " + currentEnemy.getName() + " for " + playerDamage + " damage!");
-        currentEnemy.takeDamage(playerDamage);
-
-        // Check if enemy is defeated
-        if (!currentEnemy.isAlive()) {
-            println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
-
-            // Give rewards
-            int expGained = currentEnemy.getExperienceValue();
-            int goldGained = random.nextInt(20) + 10;
-            player.gainExperience(expGained);
-            player.addGold(goldGained);
-            println("You gained " + expGained + " EXP and " + goldGained + " gold!");
-            displayStats();
-
-            // Remove enemy from room
-            currentRoom.getEnemies().remove(currentEnemy);
-
-            // Exit combat
-            inCombat = false;
-            currentEnemy = null;
-
-            if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
-                println("\nThere are more enemies in the room!");
-                checkForCombat();
-            } else {
-                println("\nThe room is now clear of enemies.");
-            }
-            return;
-        }
-
-        // Enemy attacks back
-        int enemyDamage = currentEnemy.getAttack();
-        println("\nThe " + currentEnemy.getName() + " attacks you for " + enemyDamage + " damage!");
-        player.takeDamage(enemyDamage);
-
-        displayStats();
-        // Check if player is defeated
-        if (!player.isAlive()) {
-            println("\n💀 You have been defeated!");
-            println("GAME OVER");
-            System.exit(0);
-        }
-
-        // Show updated combat status
-        displayCombatStatus();
-    }
-
-    private int calculatePlayerDamage() {
-        int baseDamage = player.getAttack();
-        if (player.getEquippedWeapon() != null) {
-            baseDamage += player.getEquippedWeapon().getAttackBonus();
-        }
-        // Add some randomness (±20%)
-        int variance = (int) (baseDamage * 0.2);
-        return baseDamage + random.nextInt(variance * 2 + 1) - variance;
-    }
-
-    private void fleeCombat() {
-        if (!inCombat) {
-            println("You're not in combat!");
-            return;
-        }
-
-        // 50% chance to flee
-        if (random.nextBoolean()) {
-            println("You successfully fled from combat!");
-            inCombat = false;
-            currentEnemy = null;
-            // Move to a random adjacent room
-            // ... implement flee movement logic
-        } else {
-            println("You failed to flee!");
-            // Enemy gets a free attack
-            int enemyDamage = currentEnemy.getAttack();
-            println("The " + currentEnemy.getName() + " attacks you as you try to flee for " + enemyDamage + " damage!");
-            player.takeDamage(enemyDamage);
-
-            if (!player.isAlive()) {
-                println("\n💀 You have been defeated while fleeing!");
-                println("GAME OVER");
-                System.exit(0);
-            }
-        }
-    }
-
-
+    //---------------------------------------------------------------------------------------------- TEMPORARY TESTING
     private void testing(String CLASS) {
         terminal.setText("start");
         terminal.postActionEvent();
