@@ -3,6 +3,8 @@ package items;
 import characters.Player;
 
 public abstract class Item {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     protected String name;
     protected String description;
     protected ItemType type;
@@ -33,6 +35,8 @@ public abstract class Item {
         }
     }
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Item(String name, String description, ItemType type, Rarity rarity, int value) {
         this.name = name;
         this.description = description;
@@ -41,10 +45,15 @@ public abstract class Item {
         this.value = value;
     }
 
-    // Abstract method for using the item
+    //                                                                                         USE AN ITEM ON A PLAYER
     public abstract boolean use(Player player);
 
-    // Getters
+    @Override
+    public String toString() {
+        return name + " (" + rarity.getName() + ")";
+    }
+
+    //-------------------------------------------------------------------------------------------- GETTERS AND SETTERS
     public String getName() {
         return name;
     }
@@ -63,10 +72,5 @@ public abstract class Item {
 
     public int getValue() {
         return value;
-    }
-
-    @Override
-    public String toString() {
-        return name + " (" + rarity.getName() + ")";
     }
 }

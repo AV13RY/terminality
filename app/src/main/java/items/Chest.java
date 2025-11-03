@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Chest {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     public enum Rarity {
         COMMON("Common", 0.6), UNCOMMON("Uncommon", 0.3), RARE("Rare", 0.08), LEGENDARY("Legendary", 0.02);
 
@@ -21,6 +23,8 @@ public class Chest {
     private List<Item> contents;
     private boolean opened;
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Chest(Rarity rarity) {
         this.rarity = rarity;
         this.contents = new ArrayList<>();
@@ -28,6 +32,7 @@ public class Chest {
         generateContents();
     }
 
+    //                                                                                    GENERATE CONTENTS OF A CHEST
     private void generateContents() {
         Random rand = new Random();
         int itemCount = switch (rarity) {
@@ -45,6 +50,7 @@ public class Chest {
         }
     }
 
+    //                                                                                      OPEN A CHEST AND GET ITEMS
     public List<Item> open() {
         if (!opened) {
             opened = true;
@@ -53,11 +59,12 @@ public class Chest {
         return new ArrayList<>();
     }
 
-    public boolean isOpened() {
-        return opened;
-    }
-
+    //-------------------------------------------------------------------------------------------- GETTERS AND SETTERS
     public Rarity getRarity() {
         return rarity;
+    }
+
+    public boolean isClosed() {
+        return !opened;
     }
 }
