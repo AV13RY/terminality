@@ -53,7 +53,7 @@ public class Player extends Character {
             case KNIGHT:
                 this.maxHealth = 120;
                 this.currentHealth = 120;
-                this.attack = 15;
+                this.attack = 12;
                 this.defense = 10;
                 this.maxMana = 0;
                 this.mana = 0;
@@ -62,7 +62,7 @@ public class Player extends Character {
             case MAGE:
                 this.maxHealth = 60;
                 this.currentHealth = 60;
-                this.attack = 5;
+                this.attack = 20;
                 this.defense = 3;
                 this.maxMana = 100;
                 this.mana = 100;
@@ -71,7 +71,7 @@ public class Player extends Character {
             case REAPER:
                 this.maxHealth = 80;
                 this.currentHealth = 80;
-                this.attack = 12;
+                this.attack = 15;
                 this.defense = 5;
                 this.maxMana = 30;
                 this.mana = 30;
