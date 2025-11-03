@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Room {
+
+    //---------------------------------------------------------------------------------------------------- DECLARATIONS
     private String name;
     private String description;
     private Map<String, Room> exits;
@@ -22,6 +24,8 @@ public class Room {
         START, NORMAL, TREASURE, BOSS, EMPTY
     }
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Room(String name, String description, int x, int y, RoomType type) {
         this.name = name;
         this.description = description;
@@ -34,7 +38,7 @@ public class Room {
         this.visited = false;
     }
 
-    // Add exit connections
+    //                                                                                                 EXIT MANAGEMENT
     public void addExit(String direction, Room room) {
         exits.put(direction, room);
     }
@@ -47,7 +51,7 @@ public class Room {
         return exits;
     }
 
-    // Enemy management
+    //                                                                                                ENEMY MANAGEMENT
     public void addEnemy(Enemy enemy) {
         enemies.add(enemy);
     }
@@ -64,7 +68,7 @@ public class Room {
         enemies.remove(enemy);
     }
 
-    // Chest management
+    //                                                                                                CHEST MANAGEMENT
     public void addChest(Chest chest) {
         chests.add(chest);
     }
@@ -77,7 +81,7 @@ public class Room {
         return !hasEnemies() && !chests.isEmpty();
     }
 
-    // Getters and setters
+    //-------------------------------------------------------------------------------------------- GETTERS AND SETTERS
     public String getName() {
         return name;
     }

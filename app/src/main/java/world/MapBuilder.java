@@ -6,6 +6,8 @@ import items.Chest;
 import java.util.*;
 
 public class MapBuilder {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     private static final int MIN_ROOMS = 25;
     private static final int MAX_ROOMS = 50;
     private static final String[] ROOM_NAMES = {"Dusty Corridor", "Ancient Chamber", "Forgotten Hall", "Cryptic Passage", "Shadow Gallery", "Bone Pit", "Cursed Sanctum", "Dark Alcove", "Ruined Chapel", "Abandoned Vault", "Echoing Cavern", "Silent Tomb"};
@@ -15,11 +17,14 @@ public class MapBuilder {
     private Room startRoom;
     private Room bossRoom;
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public MapBuilder() {
         this.random = new Random();
         this.allRooms = new HashMap<>();
     }
 
+    //                                                                                                    GENERATE MAP
     public Room generateMap() {
         int roomCount = random.nextInt(MAX_ROOMS - MIN_ROOMS + 1) + MIN_ROOMS;
 
@@ -73,17 +78,17 @@ public class MapBuilder {
             }
         }
 
-        // Ensure boss room exists
+        // Check if boss room exists, if not, make one.
         if (bossRoom == null) {
             createBossRoom(roomsToExpand);
         }
 
-        // Add some extra connections for interesting paths
         addExtraConnections();
 
         return startRoom;
     }
 
+    //                                                                          POPULATE ROOMS WITH ENEMIES AND CHESTS
     private void populateRoom(Room room) {
         switch (room.getType()) {
             case NORMAL:
@@ -130,6 +135,7 @@ public class MapBuilder {
         }
     }
 
+    //                                                                                       GENERATE ENEMIES RANDOMLY
     private Enemy generateEnemy() {
         // Generate random enemies based on difficulty
         int type = random.nextInt(3);
@@ -141,6 +147,7 @@ public class MapBuilder {
         };
     }
 
+    //                                                                                        GENERATE CHESTS RANDOMLY
     private Chest generateChest() {
         double roll = random.nextDouble();
         if (roll < 0.6) return new Chest(Chest.Rarity.COMMON);
@@ -149,6 +156,7 @@ public class MapBuilder {
         else return new Chest(Chest.Rarity.LEGENDARY);
     }
 
+    //                                                                                     GENERATE ROOM TYPE RANDOMLY
     private Room.RoomType getRandomRoomType() {
         double roll = random.nextDouble();
         if (roll < 0.1) return Room.RoomType.TREASURE;
@@ -156,6 +164,7 @@ public class MapBuilder {
         else return Room.RoomType.NORMAL;
     }
 
+    //                                                                       GET ROOMS COORDINATES FOR THE MAP DISPLAY
     private int[] getNewCoordinates(int x, int y, String direction) {
         return switch (direction) {
             case "north" -> new int[]{x, y + 1};
@@ -166,6 +175,7 @@ public class MapBuilder {
         };
     }
 
+    //                                                     GET THE OPPOSITE DIRECTION OF A GIVEN DIRECTION FOR FLEEING
     private String getOppositeDirection(String direction) {
         return switch (direction) {
             case "north" -> "south";
@@ -176,6 +186,7 @@ public class MapBuilder {
         };
     }
 
+    //                                                                                       GENERATE ROOM DESCRIPTION
     private String generateDescription(Room.RoomType type) {
         return switch (type) {
             case BOSS -> "A massive chamber with ancient pillars. Dark energy pulses from the center.";
@@ -185,16 +196,15 @@ public class MapBuilder {
         };
     }
 
+    //                                                                                            CREATE THE BOSS ROOM
     private void createBossRoom(List<Room> rooms) {
-        // Find the furthest room from start to place boss
-        // Implementation depends on your needs
     }
 
+    //                                                                                                 ADD EXTRA PATHS
     private void addExtraConnections() {
-        // Add some extra paths between rooms for more interesting navigation
-        // Implementation optional
     }
 
+    //---------------------------------------------------------------------------------------------- GETTERS & SETTERS
     public Map<String, Room> getAllRooms() {
         return allRooms;
     }
