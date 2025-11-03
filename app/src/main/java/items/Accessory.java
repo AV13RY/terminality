@@ -3,7 +3,10 @@ package items;
 import characters.Player;
 
 public class Accessory extends Item {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     private StatBonus statBonus;
+    private int bonusAmount;
 
     public enum StatBonus {
         ATTACK("Attack", "attack"), DEFENSE("Defense", "defense"), HEALTH("Health", "health"), MANA("Mana", "mana"), CRITICAL("Critical", "critical");
@@ -17,14 +20,15 @@ public class Accessory extends Item {
         }
     }
 
-    private int bonusAmount;
-
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Accessory(String name, String description, StatBonus statBonus, int bonusAmount, Rarity rarity) {
         super(name, description, ItemType.ACCESSORY, rarity, calculateValue(bonusAmount, rarity));
         this.statBonus = statBonus;
         this.bonusAmount = bonusAmount;
     }
 
+    //                                                                                 CALCULATE VALUE OF AN ACCESSORY
     private static int calculateValue(int bonusAmount, Rarity rarity) {
         int baseValue = bonusAmount * 15;
         return switch (rarity) {
@@ -40,6 +44,7 @@ public class Accessory extends Item {
         return player.equipAccessory(this);
     }
 
+    //-------------------------------------------------------------------------------------------- GETTERS AND SETTERS
     public StatBonus getStatBonus() {
         return statBonus;
     }

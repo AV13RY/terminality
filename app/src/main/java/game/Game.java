@@ -65,7 +65,7 @@ public class Game {
         tutorialTitleMessage();
         tutorialIntroMessage();
 
-        testing("reaper"); // temporary testing
+        // testing("reaper"); // temporary testing
     }
 
     //                                                                                                     MAIN METHOD
@@ -387,7 +387,7 @@ public class Game {
         if (currentRoom.hasAccessibleChests()) {
             println("\nChests available:");
             for (Chest chest : currentRoom.getChests()) {
-                if (!chest.isOpened()) {
+                if (chest.isClosed()) {
                     println("- " + chest.getRarity() + " chest");
                 }
             }
@@ -1126,7 +1126,7 @@ public class Game {
 
         List<Chest> unopenedChests = new ArrayList<>();
         for (Chest chest : currentRoom.getChests()) {
-            if (!chest.isOpened()) {
+            if (chest.isClosed()) {
                 unopenedChests.add(chest);
             }
         }

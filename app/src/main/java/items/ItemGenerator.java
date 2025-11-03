@@ -3,6 +3,8 @@ package items;
 import java.util.Random;
 
 public class ItemGenerator {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     private static final Random random = new Random();
 
     // Armor name templates
@@ -27,6 +29,8 @@ public class ItemGenerator {
             // LEGENDARY
             {"Crown", "Orb", "Scepter"}};
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                GENERATE AN ITEM
     public static Item generateItem(Item.Rarity rarity) {
         Item.ItemType type = selectItemType(rarity);
 
@@ -34,10 +38,11 @@ public class ItemGenerator {
             case CONSUMABLE -> generateConsumable(rarity);
             case ARMOR -> generateArmor(rarity);
             case ACCESSORY -> generateAccessory(rarity);
-            default -> generateConsumable(rarity); // Fallback
+            default -> generateConsumable(rarity);
         };
     }
 
+    //                                                                                   SELECT AN ITEM TYPE BY RARITY
     private static Item.ItemType selectItemType(Item.Rarity rarity) {
         double roll = random.nextDouble();
 
@@ -53,6 +58,7 @@ public class ItemGenerator {
         }
     }
 
+    //                                                                                           GENERATE A CONSUMABLE
     private static Item generateConsumable(Item.Rarity rarity) {
         // 70% health potion, 30% mana potion
         if (random.nextDouble() < 0.7) {
@@ -62,6 +68,7 @@ public class ItemGenerator {
         }
     }
 
+    //                                                                                         GENERATE AN ARMOR PIECE
     private static Item generateArmor(Item.Rarity rarity) {
         Armor.ArmorType type = Armor.ArmorType.values()[random.nextInt(Armor.ArmorType.values().length)];
 
@@ -85,6 +92,7 @@ public class ItemGenerator {
         return new Armor(name, description, type, defenseBonus, rarity);
     }
 
+    //                                                                                           GENERATE AN ACCESSORY
     private static Item generateAccessory(Item.Rarity rarity) {
         Accessory.StatBonus statBonus = Accessory.StatBonus.values()[random.nextInt(Accessory.StatBonus.values().length)];
 
@@ -104,6 +112,7 @@ public class ItemGenerator {
         return new Accessory(name, description, statBonus, bonusAmount, rarity);
     }
 
+    //                                                                                                 SELECT A RARITY
     public static Item.Rarity selectRarity() {
         double roll = random.nextDouble();
 

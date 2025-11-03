@@ -3,6 +3,8 @@ package items;
 import characters.Player;
 
 public class Armor extends Item {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     private int defenseBonus;
     private ArmorType armorType;
 
@@ -10,12 +12,15 @@ public class Armor extends Item {
         HELMET, CHESTPLATE, LEGGINGS, BOOTS, SHIELD
     }
 
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Armor(String name, String description, ArmorType armorType, int defenseBonus, Rarity rarity) {
         super(name, description, ItemType.ARMOR, rarity, calculateValue(defenseBonus, rarity));
         this.armorType = armorType;
         this.defenseBonus = defenseBonus;
     }
 
+    //                                                                               CALCULATE VALUE OF AN ARMOR PIECE
     private static int calculateValue(int defenseBonus, Rarity rarity) {
         int baseValue = defenseBonus * 10;
         return switch (rarity) {
@@ -26,12 +31,13 @@ public class Armor extends Item {
         };
     }
 
+    //                                                                                          EQUIP A PIECE OF ARMOR
     @Override
     public boolean use(Player player) {
-        // Equip the armor
         return player.equipArmor(this);
     }
 
+    //-------------------------------------------------------------------------------------------- GETTERS AND SETTERS
     public int getDefenseBonus() {
         return defenseBonus;
     }
