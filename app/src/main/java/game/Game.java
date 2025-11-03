@@ -1290,7 +1290,7 @@ public class Game {
         currentEnemy.takeDamage(playerDamage);
 
         // Check if enemy is defeated
-        if (!currentEnemy.isAlive()) {
+        if (currentEnemy.isDead()) {
             println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
 
             // Give rewards
@@ -1324,7 +1324,7 @@ public class Game {
 
         displayStats();
 
-        if (!player.isAlive()) {
+        if (player.isDead()) {
             handlePlayerDeath();
             return;
         }

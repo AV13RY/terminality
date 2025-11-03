@@ -11,26 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 public class Player extends Character {
-    // Player-specific attributes
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
+    //                                                                                           PLAYER SPECIFIC STATS
     private String playerClass;
     private int mana;
     private int maxMana;
     private int level;
     private int experience;
+    private int gold;
+    //                                                                                                PLAYER INVENTORY
     private List<Item> inventory;
     private Map<Armor.ArmorType, Armor> equippedArmor;
     private Weapon equippedWeapon;
     private Accessory equippedAccessory;
-    private int gold;
 
-    // Class constants for different player types
+
+    //                                                                                                 CLASS CONSTANTS
     public static final String KNIGHT = "Knight";
     public static final String MAGE = "Mage";
     public static final String REAPER = "reaper";
 
-    // Constructor
+    //--------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Player(String name, String playerClass) {
-        super(name, 0, 0, 0); // Initialize with base values, will be set by class
+        super(name, 0, 0, 0); // initialises with default values
         this.playerClass = playerClass;
         this.level = 1;
         this.experience = 0;
@@ -39,11 +44,10 @@ public class Player extends Character {
         this.equippedWeapon = null;
         this.gold = 0;
 
-        // Set stats based on chosen class
-        initializeClassStats();
+        initializeClassStats(); // sets stats based on chosen class
     }
 
-    // Initialize stats based on player class
+    //                                                                                 INITIALISE CLASS SPECIFIC STATS
     private void initializeClassStats() {
         switch (playerClass) {
             case KNIGHT:
@@ -72,34 +76,20 @@ public class Player extends Character {
                 this.maxMana = 30;
                 this.mana = 30;
                 break;
-
-            default:
-                // Default to Knight stats if invalid class
-                this.maxHealth = 100;
-                this.currentHealth = 100;
-                this.attack = 10;
-                this.defense = 8;
-                this.maxMana = 0;
-                this.mana = 0;
-                break;
         }
     }
 
-    // Magic attack method (for Mage and reaper)
-    public int castSpell(int manaCost) {
-        if (mana >= manaCost) {
-            mana -= manaCost;
-            // Magic damage calculation based on class
-            if (playerClass.equals(MAGE)) {
-                return 25; // Powerful magic for mage
-            } else if (playerClass.equals(REAPER)) {
-                return 10; // Little magic for reaper
-            }
+    //                                                                                                  ADD EXPERIENCE
+    public void gainExperience(int exp) {
+        experience += exp;
+        // Check if player should level up (every 100 exp)
+        while (experience >= 100) {
+            experience -= 100;
+            levelUp();
         }
-        return 0; // No damage if not enough mana or no magic ability
     }
 
-    // Level up method
+    //                                                                                                     LEVELING UP
     public void levelUp() {
         level++;
         // Increase stats based on class
@@ -131,30 +121,21 @@ public class Player extends Character {
         }
     }
 
-    // Add experience
-    public void gainExperience(int exp) {
-        experience += exp;
-        // Check if player should level up (every 100 exp)
-        while (experience >= 100) {
-            experience -= 100;
-            levelUp();
+    //                                                                                             MAGIC ATTACK METHOD
+    public int castSpell(int manaCost) {
+        if (mana >= manaCost) {
+            mana -= manaCost;
+            // Magic damage calculation based on class
+            if (playerClass.equals(MAGE)) {
+                return 25;
+            } else if (playerClass.equals(REAPER)) {
+                return 10;
+            }
         }
+        return 0; // No damage if not enough mana or no magic ability
     }
 
-    // Override getStatus to include player-specific info
-    @Override
-    public String getStatus() {
-        String baseStatus = super.getStatus();
-        String classInfo = String.format("\nClass: %s | Level: %d | EXP: %d/100", playerClass, level, experience);
-
-        if (maxMana > 0) {
-            classInfo += String.format(" | MP: %d/%d", mana, maxMana);
-        }
-
-        return baseStatus + classInfo;
-    }
-
-    // Display detailed status (for the status command)
+    //                                                                                           DISPLAY PLAYER STATUS
     public String displayStatus() {
         StringBuilder status = new StringBuilder();
         status.append("\n══════════════════════════════════════\n");
@@ -178,10 +159,7 @@ public class Player extends Character {
         return status.toString();
     }
 
-    // Getters
-    public String getPlayerClass() {
-        return playerClass;
-    }
+    //---------------------------------------------------------------------------------------------- GETTERS & SETTERS
 
     public int getMana() {
         return mana;
@@ -199,33 +177,43 @@ public class Player extends Character {
         return experience;
     }
 
-    public int getCurrentHealth() {
-        return currentHealth;
-    }
-
-    public void addWeapon(Weapon weapon) {
-        inventory.add(weapon);
-        if (equippedWeapon == null) {
-            equippedWeapon = weapon; // Auto-equip if no weapon equipped
-        }
-    }
-
-    public void equipWeapon(Weapon weapon) {
-        if (inventory.contains(weapon)) {
-            equippedWeapon = weapon;
-        }
-    }
-
     public Weapon getEquippedWeapon() {
         return equippedWeapon;
+    }
+
+    public int getGold() {
+        return gold;
     }
 
     public List<Item> getInventory() {
         return inventory;
     }
 
-    public int getGold() {
-        return gold;
+    @Override
+    public String getStatus() {
+        String baseStatus = super.getStatus();
+        String classInfo = String.format("\nClass: %s | Level: %d | EXP: %d/100", playerClass, level, experience);
+
+        if (maxMana > 0) {
+            classInfo += String.format(" | MP: %d/%d", mana, maxMana);
+        }
+
+        return baseStatus + classInfo;
+    }
+
+    public int getTotalDefense() {
+        int totalDefense = defense;
+        for (Armor armor : equippedArmor.values()) {
+            totalDefense += armor.getDefenseBonus();
+        }
+        return totalDefense;
+    }
+
+    public void addWeapon(Weapon weapon) {
+        inventory.add(weapon);
+        if (equippedWeapon == null) {
+            equippedWeapon = weapon; // auto-equip if no weapon equipped
+        }
     }
 
     public void addGold(int amount) {
@@ -240,7 +228,7 @@ public class Player extends Character {
         if (inventory.contains(item)) {
             if (item.use(this)) {
                 if (item.getType() == Item.ItemType.CONSUMABLE) {
-                    inventory.remove(item); // Remove consumables after use
+                    inventory.remove(item); // remove consumables after use
                 }
                 return true;
             }
@@ -248,12 +236,17 @@ public class Player extends Character {
         return false;
     }
 
+    public void equipWeapon(Weapon weapon) {
+        if (inventory.contains(weapon)) {
+            equippedWeapon = weapon;
+        }
+    }
+
     public boolean equipArmor(Armor armor) {
         if (inventory.contains(armor)) {
             Armor previousArmor = equippedArmor.get(armor.getArmorType());
             if (previousArmor != null) {
-                // Unequip previous armor
-                inventory.add(previousArmor);
+                inventory.add(previousArmor); // unequip previous armor
             }
             equippedArmor.put(armor.getArmorType(), armor);
             inventory.remove(armor);
@@ -265,8 +258,7 @@ public class Player extends Character {
     public boolean equipAccessory(Accessory accessory) {
         if (inventory.contains(accessory)) {
             if (equippedAccessory != null) {
-                // Unequip previous accessory
-                inventory.add(equippedAccessory);
+                inventory.add(equippedAccessory); // unequip previous accessory first
             }
             equippedAccessory = accessory;
             inventory.remove(accessory);
@@ -285,16 +277,7 @@ public class Player extends Character {
                 this.currentHealth += accessory.getBonusAmount();
             }
             case MANA -> this.maxMana += accessory.getBonusAmount();
-            // Critical would need additional implementation
         }
-    }
-
-    public int getTotalDefense() {
-        int totalDefense = defense;
-        for (Armor armor : equippedArmor.values()) {
-            totalDefense += armor.getDefenseBonus();
-        }
-        return totalDefense;
     }
 
     public void restoreMana(int amount) {

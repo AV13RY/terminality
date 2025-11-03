@@ -3,11 +3,15 @@ package characters;
 import java.util.Random;
 
 public abstract class Enemy extends Character {
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
     protected int experienceValue;
     protected int goldDrop;
     protected String enemyType;
     protected Random random;
 
+    // -------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Enemy(String name, int maxHealth, int attack, int defense, int experienceValue, int goldDrop) {
         super(name, maxHealth, attack, defense);
         this.experienceValue = experienceValue;
@@ -15,20 +19,17 @@ public abstract class Enemy extends Character {
         this.random = new Random();
     }
 
-    // Get attack damage with some randomness
+    //---------------------------------------------------------------------------------------------- GETTERS & SETTERS
+    public abstract String getAttackMessage();
+
+    public abstract String getDeathMessage();
+
     public int getAttackDamage() {
         int baseDamage = this.attack;
-        int variance = (int) (baseDamage * 0.2); // 20% variance
+        int variance = (int) (baseDamage * 0.2); // get attack damage with some variance
         return baseDamage + random.nextInt(variance * 2 + 1) - variance;
     }
 
-    // Enemy-specific attack patterns
-    public abstract String getAttackMessage();
-
-    // Death message
-    public abstract String getDeathMessage();
-
-    // Getters
     public int getExperienceValue() {
         return experienceValue;
     }
