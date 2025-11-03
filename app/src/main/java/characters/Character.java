@@ -1,7 +1,9 @@
 package characters;
 
 public abstract class Character {
-    // Base stats all characters need
+
+    //--------------------------------------------------------------------------------------------------- DECLARATIONS
+    //                                                                                       GENERAL "CHARACTER" STATS
     protected String name;
     protected int maxHealth;
     protected int currentHealth;
@@ -9,7 +11,8 @@ public abstract class Character {
     protected int defense;
     protected boolean isAlive;
 
-    // Constructor
+    // -------------------------------------------------------------------------------------------------- CORE METHODS
+    //                                                                                                     CONSTRUCTOR
     public Character(String name, int maxHealth, int attack, int defense) {
         this.name = name;
         this.maxHealth = maxHealth;
@@ -19,7 +22,7 @@ public abstract class Character {
         this.isAlive = true;
     }
 
-    // Core combat methods
+    //                                                                                                   TAKING DAMAGE
     public void takeDamage(int damage) {
         int actualDamage = Math.max(1, damage - defense);
         currentHealth -= actualDamage;
@@ -29,11 +32,19 @@ public abstract class Character {
         }
     }
 
-    public int calculateDamage() {
-        return attack;
+    //                                                                                           CHECKING ALIVE STATUS
+    public boolean isDead() {
+        return !isAlive;
     }
 
-    // Getters and setters
+    //                                                                                                         HEALING
+    public void heal(int amount) {
+        currentHealth = Math.min(currentHealth + amount, maxHealth);
+    }
+
+
+    // --------------------------------------------------------------------------------------------- GETTERS & SETTERS
+
     public String getName() {
         return name;
     }
@@ -54,16 +65,6 @@ public abstract class Character {
         return defense;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    // Heal method with max health cap
-    public void heal(int amount) {
-        currentHealth = Math.min(currentHealth + amount, maxHealth);
-    }
-
-    // Status display
     public String getStatus() {
         return String.format("%s - HP: %d/%d | ATK: %d | DEF: %d", name, currentHealth, maxHealth, attack, defense);
     }

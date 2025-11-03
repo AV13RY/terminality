@@ -186,7 +186,7 @@ public class MapBuilder {
     }
 
     private void createBossRoom(List<Room> rooms) {
-        // Find furthest room from start to place boss
+        // Find the furthest room from start to place boss
         // Implementation depends on your needs
     }
 
