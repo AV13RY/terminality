@@ -14,15 +14,15 @@ public class Player extends Character {
 
     //--------------------------------------------------------------------------------------------------- DECLARATIONS
     //                                                                                           PLAYER SPECIFIC STATS
-    private String playerClass;
+    private final String playerClass;
     private int mana;
     private int maxMana;
     private int level;
     private int experience;
     private int gold;
     //                                                                                                PLAYER INVENTORY
-    private List<Item> inventory;
-    private Map<Armor.ArmorType, Armor> equippedArmor;
+    private final List<Item> inventory;
+    private final Map<Armor.ArmorType, Armor> equippedArmor;
     private Weapon equippedWeapon;
     private Accessory equippedAccessory;
 
@@ -218,6 +218,10 @@ public class Player extends Character {
 
     public void addGold(int amount) {
         gold += amount;
+    }
+
+    public void removeGold(int amount) {
+        gold -= amount;
     }
 
     public void addItem(Item item) {
