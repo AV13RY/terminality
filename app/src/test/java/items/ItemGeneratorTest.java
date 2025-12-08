@@ -147,19 +147,23 @@ class ItemGeneratorTest {
     @Test
     @DisplayName("Should generate different items for same rarity")
     void shouldGenerateDifferentItemsForSameRarity() {
-        Item item1 = ItemGenerator.generateItem(Item.Rarity.COMMON);
-        Item item2 = ItemGenerator.generateItem(Item.Rarity.COMMON);
-        Item item3 = ItemGenerator.generateItem(Item.Rarity.COMMON);
+        // Generate more items to increase chance of variety
+        Item[] items = new Item[20];
+        for (int i = 0; i < 20; i++) {
+            items[i] = ItemGenerator.generateItem(Item.Rarity.COMMON);
+        }
 
-        // Items should be different (though occasionally they might be the same by chance)
-        // We check that at least some properties differ
-        boolean allSame = item1.getName().equals(item2.getName()) && 
-                         item2.getName().equals(item3.getName()) &&
-                         item1.getType().equals(item2.getType()) &&
-                         item2.getType().equals(item3.getType());
+        // Check that we have at least some variety in item types
+        boolean hasVariety = false;
+        for (int i = 1; i < items.length; i++) {
+            if (!items[0].getType().equals(items[i].getType())) {
+                hasVariety = true;
+                break;
+            }
+        }
 
-        // This test might occasionally fail due to randomness, but should pass most of the time
-        assertFalse(allSame, "Should generate variety of items even for same rarity");
+        // With 20 generations, we should almost always get variety
+        assertTrue(hasVariety, "Should generate variety of items even for same rarity");
     }
 
     @Test
