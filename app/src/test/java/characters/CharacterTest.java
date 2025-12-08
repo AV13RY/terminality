@@ -55,14 +55,14 @@ class CharacterTest {
     //------------------------------------------------------------------------------------------------ TAKE DAMAGE TESTS
     @ParameterizedTest
     @CsvSource({
-        "20, 10",    // damage=20, defense=10 -> actualDamage=10, remaining=110
-        "15, 5",     // damage=15, defense=10 -> actualDamage=5, remaining=115
-        "5, 1",      // damage=5, defense=10 -> actualDamage=1 (min), remaining=119
-        "10, 1"      // damage=10, defense=10 -> actualDamage=1 (min), remaining=119
+        "20, 10",
+        "15, 5",
+        "5, 1",
+        "10, 1"
     })
     @DisplayName("Should take damage correctly with defense calculation")
     void shouldTakeDamageWithDefenseCalculation(int damage, int expectedDamage) {
-        Player testPlayer = new Player("Test", Player.KNIGHT); // Knight has 120 HP, 10 defense
+        Player testPlayer = new Player("Test", Player.KNIGHT);
         int initialHealth = testPlayer.getCurrentHealth();
         
         testPlayer.takeDamage(damage);
@@ -76,7 +76,7 @@ class CharacterTest {
     void shouldEnsureMinimumOneDamage() {
         int initialHealth = player.getCurrentHealth();
         
-        player.takeDamage(5); // 5 damage vs 10 defense should still deal 1 damage
+        player.takeDamage(5);
         
         assertEquals(initialHealth - 1, player.getCurrentHealth());
     }
@@ -84,7 +84,7 @@ class CharacterTest {
     @Test
     @DisplayName("Should set character to dead when health reaches zero")
     void shouldSetCharacterToDeadWhenHealthReachesZero() {
-        goblin.takeDamage(100); // Massive damage
+        goblin.takeDamage(100);
         
         assertEquals(0, goblin.getCurrentHealth());
         assertTrue(goblin.isDead());
@@ -93,7 +93,7 @@ class CharacterTest {
     @Test
     @DisplayName("Should set character to dead when health goes negative")
     void shouldSetCharacterToDeadWhenHealthGoesNegative() {
-        skeleton.takeDamage(200); // Overkill damage
+        skeleton.takeDamage(200);
         
         assertEquals(0, skeleton.getCurrentHealth());
         assertTrue(skeleton.isDead());
@@ -113,8 +113,17 @@ class CharacterTest {
     @Test
     @DisplayName("Should reduce health to zero but not below")
     void shouldReduceHealthToZeroButNotBelow() {
-        player.takeDamage(1000); // Massive overkill
-        
+        player.takeDamage(129);
+        assertEquals(1, player.getCurrentHealth());
+        assertFalse(player.isDead());
+    }
+
+    @Test
+    @DisplayName("Should reduce health to zero but not below and then die")
+    void shouldReduceHealthToZeroButNotBelowAndThenDie() {
+        player.takeDamage(129);
+        assertEquals(1, player.getCurrentHealth());
+        player.takeDamage(1);
         assertEquals(0, player.getCurrentHealth());
         assertTrue(player.isDead());
     }
@@ -139,14 +148,14 @@ class CharacterTest {
     //------------------------------------------------------------------------------------------------------- HEAL TESTS
     @ParameterizedTest
     @CsvSource({
-        "50, 30, 43",    // damage=50, actualDmg=47 -> 60-47=13, 13+30=43
-        "20, 10, 53",    // damage=20, actualDmg=17 -> 60-17=43, 43+10=53
-        "30, 50, 60",    // damage=30, actualDmg=27 -> 60-27=33, 33+50=83 capped at 60
-        "10, 5, 58"      // damage=10, actualDmg=7 -> 60-7=53, 53+5=58
+        "50, 30, 43",
+        "20, 10, 53",
+        "30, 50, 60",
+        "10, 5, 58"
     })
     @DisplayName("Should heal character correctly")
     void shouldHealCharacterCorrectly(int damage, int healAmount, int expectedHealth) {
-        Player testPlayer = new Player("Test", Player.MAGE); // 60 max health, 3 defense
+        Player testPlayer = new Player("Test", Player.MAGE);
         testPlayer.takeDamage(damage);
         
         testPlayer.heal(healAmount);
@@ -160,7 +169,7 @@ class CharacterTest {
         goblin.takeDamage(10);
         int healthBefore = goblin.getCurrentHealth();
         
-        goblin.heal(100); // Massive heal
+        goblin.heal(100);
         
         assertEquals(goblin.getMaxHealth(), goblin.getCurrentHealth());
         assertTrue(goblin.getCurrentHealth() >= healthBefore);
@@ -180,9 +189,7 @@ class CharacterTest {
     @Test
     @DisplayName("Should heal from critical health")
     void shouldHealFromCriticalHealth() {
-        // Player has 120 HP, 10 defense. To leave at 1 HP, need to deal 119 actual damage
-        // actualDamage = max(1, damage - 10), so need damage = 129 to deal 119
-        player.takeDamage(129); // Leaves at 1 HP
+        player.takeDamage(129);
         assertEquals(1, player.getCurrentHealth());
         
         player.heal(50);
@@ -194,17 +201,14 @@ class CharacterTest {
     @Test
     @DisplayName("Heal does not revive dead character")
     void healDoesNotReviveDeadCharacter() {
-        goblin.takeDamage(1000); // Kill the goblin
+        goblin.takeDamage(1000);
         assertTrue(goblin.isDead());
         assertEquals(0, goblin.getCurrentHealth());
         
-        // Note: heal() uses Math.min which will work on 0, resulting in min(0+50, 30) = 30
-        // This is expected behavior - heal() doesn't check if character is dead
         goblin.heal(50);
         
-        // Health is restored but character remains dead (isAlive flag not changed)
         assertEquals(30, goblin.getCurrentHealth());
-        assertTrue(goblin.isDead()); // Still dead because isAlive flag wasn't changed
+        assertTrue(goblin.isDead());
     }
 
     //--------------------------------------------------------------------------------------------------- GET STATUS TESTS
@@ -227,7 +231,6 @@ class CharacterTest {
     @Test
     @DisplayName("Should return Player status with additional class info")
     void shouldReturnPlayerStatusWithClassInfo() {
-        // Player.getStatus() overrides Character.getStatus() to add class info
         String status = player.getStatus();
         
         assertTrue(status.contains("TestPlayer"));
@@ -246,7 +249,7 @@ class CharacterTest {
         String status = goblin.getStatus();
         
         assertTrue(status.contains("Goblin"));
-        assertTrue(status.contains("HP: 22/30")); // 30 - max(1, 10-2) = 30 - 8 = 22
+        assertTrue(status.contains("HP: 22/30"));
         assertTrue(status.contains("ATK: 8"));
         assertTrue(status.contains("DEF: 2"));
     }
