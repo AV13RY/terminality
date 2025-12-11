@@ -164,12 +164,13 @@ public class Messages {
                 AVAILABLE COMMANDS:
                 - colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)
                 - clear            : Clear the terminal screen
-                - help             : Display this help message
                 - start            : Start the game
+                - help             : Display this help message
                 - exit             : Quit the game
                 
                 - choose           : Choose between the options given.
                 - inventory        : View the player inventory.
+                - proceed          : Proceed to the next area.
                 
                 """;
     }
@@ -188,7 +189,6 @@ public class Messages {
                   flee            - Attempt to escape combat
                 
                 CHARACTER:
-                  status          - View your character stats
                   inventory       - View your inventory
                 
                 ITEMS:
@@ -319,7 +319,15 @@ public class Messages {
 
     public static String displayMap() {
         StringBuilder sb = new StringBuilder();
-        sb.append("\n═══════════════ MAP ═══════════════\n\n");
+        final int CONSOLE_WIDTH = 91;
+        String divider = "═".repeat(CONSOLE_WIDTH);
+
+        // centre the map display
+        String title = " MAP ";
+        int titlePadding = (CONSOLE_WIDTH - title.length()) / 2;
+        String centeredTitle = "═".repeat(titlePadding) + title + "═".repeat(CONSOLE_WIDTH - titlePadding - title.length());
+
+        sb.append("\n").append(centeredTitle).append("\n\n");
 
         // Find map bounds
         int minX = 0, maxX = 0, minY = 0, maxY = 0;
@@ -329,6 +337,9 @@ public class Messages {
             minY = Math.min(minY, room.getY());
             maxY = Math.max(maxY, room.getY());
         }
+
+        // Calculate map width for centering
+        int mapWidth = (maxX - minX + 1) * 4;
 
         // Display map from top to bottom
         for (int y = maxY; y >= minY; y--) {
@@ -376,14 +387,21 @@ public class Messages {
                 }
             }
 
-            sb.append("  ").append(mapRow).append("\n");
+            // Center the map rows
+            int padding = (CONSOLE_WIDTH - mapWidth) / 2;
+            String paddingStr = " ".repeat(Math.max(0, padding));
+
+            sb.append(paddingStr).append(mapRow).append("\n");
             if (y > minY) {
-                sb.append("  ").append(connectionRow).append("\n");
+                sb.append(paddingStr).append(connectionRow).append("\n");
             }
         }
 
-        sb.append("\nLegend: [◉]=You [·]=Visited [?]=Unexplored [T]=Treasure [B]=Boss\n");
-        sb.append("═══════════════════════════════════\n");
+        // Center the legend
+        String legend = "Legend: [◉]=You [·]=Visited [?]=Unexplored [T]=Treasure [B]=Boss";
+        int legendPadding = (CONSOLE_WIDTH - legend.length()) / 2;
+        sb.append("\n").append(" ".repeat(Math.max(0, legendPadding))).append(legend).append("\n");
+        sb.append(divider).append("\n");
         return sb.toString();
     }
 

@@ -1,15 +1,11 @@
 package game;
 
-import characters.Player;
-import items.Item;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,7 +135,6 @@ class MessagesTest {
         assertFalse(message.isEmpty());
         assertTrue(message.contains("move"));
         assertTrue(message.contains("attack"));
-        assertTrue(message.contains("status"));
         assertTrue(message.contains("inventory"));
         assertTrue(message.contains("flee"));
         assertTrue(message.contains("open"));
@@ -223,7 +218,7 @@ class MessagesTest {
             Method method = Messages.class.getDeclaredMethod("displayKnightWeapons");
             method.setAccessible(true);
             String message = (String) method.invoke(null);
-            
+
             assertNotNull(message);
             assertFalse(message.isEmpty());
             assertTrue(message.contains("MACE"));
@@ -243,7 +238,7 @@ class MessagesTest {
             Method method = Messages.class.getDeclaredMethod("displayMageWeapons");
             method.setAccessible(true);
             String message = (String) method.invoke(null);
-            
+
             assertNotNull(message);
             assertFalse(message.isEmpty());
             assertTrue(message.contains("GRIMOIRE"));
@@ -263,7 +258,7 @@ class MessagesTest {
             Method method = Messages.class.getDeclaredMethod("displayReaperWeapons");
             method.setAccessible(true);
             String message = (String) method.invoke(null);
-            
+
             assertNotNull(message);
             assertFalse(message.isEmpty());
             assertTrue(message.contains("SCYTHE"));
@@ -337,10 +332,10 @@ class MessagesTest {
         // Test with invalid image number
         String knightMessage = Messages.displayKnight(3);
         assertNotNull(knightMessage);
-        
+
         String mageMessage = Messages.displayMage(3);
         assertNotNull(mageMessage);
-        
+
         String reaperMessage = Messages.displayReaper(3);
         assertNotNull(reaperMessage);
     }
@@ -361,7 +356,7 @@ class MessagesTest {
         assertTrue(Messages.graveyardTitleMessage().contains("▄"));
         assertTrue(Messages.churchTitleMessage().contains("█"));
         assertTrue(Messages.displayDeathArt().contains("█"));
-        
+
         // Test character art contains expected patterns
         assertTrue(Messages.displayKnight(1).length() > 100);
         assertTrue(Messages.displayMage(1).length() > 100);
@@ -384,7 +379,7 @@ class MessagesTest {
         String tutorialIntro = Messages.tutorialIntroMessage();
         String graveyardIntro = Messages.graveyardIntroMessage();
         String churchIntro = Messages.churchIntroMessage("knight");
-        
+
         // All should contain newlines for formatting
         assertTrue(tutorialIntro.contains("\n"));
         assertTrue(graveyardIntro.contains("\n"));
@@ -397,7 +392,7 @@ class MessagesTest {
         // Test with null class
         String nullClassMessage = Messages.churchIntroMessage(null);
         assertNotNull(nullClassMessage);
-        
+
         // Test with empty class
         String emptyClassMessage = Messages.churchIntroMessage("");
         assertNotNull(emptyClassMessage);

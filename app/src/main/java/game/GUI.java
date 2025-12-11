@@ -40,6 +40,7 @@ public class GUI {
     private static Enemy currentEnemy;
     private boolean inCombat;
     private final Random random;
+    private boolean warnedAboutChests; // tracks if we already nagged them about leaving chests behind
 
     //                                                                                             COLOUR DECLARATIONS
     private final Color RED = Color.RED;
@@ -61,13 +62,14 @@ public class GUI {
         this.inCombat = false;
         currentEnemy = null;
         this.random = new Random();
+        this.warnedAboutChests = false;
 
         initialiseUI();
         initialiseWorld();
         println(Messages.tutorialTitleMessage());
         println(Messages.tutorialIntroMessage());
 
-        testing("reaper"); // temporary testing
+        //        testing("reaper"); // temporary testing
     }
 
     //------------------------------------------------------------------------------------------ SPECIFIC TEXT METHODS
@@ -173,8 +175,8 @@ public class GUI {
                     }
 
                     if (!CLASS.isEmpty()) {
-                        println("Your class will be: " + CLASS);
-                        println("\n If you wish to alter your memory, this is your last chance.");
+                        println("Your class will be: " + CLASS + '\n');
+                        println("If you wish to alter your memory, this is your last chance.");
                         println("However if this is how you choose to remember yourself:");
                         println("- Use the command: [ proceed ]\n");
                     }
@@ -457,9 +459,20 @@ public class GUI {
                 return;
             }
 
+            // check for unopened chests and warn once before letting player leave
+            int unopenedCount = countUnopenedChests();
+            if (unopenedCount > 0 && !warnedAboutChests) {
+                String chestWord = unopenedCount == 1 ? "chest" : "chests";
+                println("Are you sure? There's still " + unopenedCount + " " + chestWord + " available to open in this room!");
+                println("Run look to see them. You can also run open {chestNumber} to open them.");
+                warnedAboutChests = true;
+                return;
+            }
+
             // Move to the next room
             currentRoom = nextRoom;
             currentRoom.setVisited(true);
+            warnedAboutChests = false; // reset for the new room
 
             // Clear display and show new room
             display.setText("");
@@ -476,6 +489,15 @@ public class GUI {
             println("You can't go that way!");
         }
 
+    }
+
+    //                                                                                         COUNTING UNOPENED CHESTS
+    private int countUnopenedChests() {
+        int count = 0;
+        for (items.Chest chest : currentRoom.getChests()) {
+            if (chest.isClosed()) count++;
+        }
+        return count;
     }
 
     //                                                                                       PROCESSING PLAYER FLEEING
