@@ -7,6 +7,7 @@ import world.MapBuilder;
 import world.Room;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class GUI {
     private JTextArea display;
     private JTextField terminal;
     private JTextArea characterArea;
-    private JTextArea statsArea;
+    private JTextPane statsArea;
     private JTextArea commandLog;
 
     //                                                                                        COMMAND LOG DECLARATIONS
@@ -41,6 +42,7 @@ public class GUI {
     private boolean inCombat;
     private final Random random;
     private boolean warnedAboutChests; // tracks if we already nagged them about leaving chests behind
+    private boolean showingMinimap; // toggles between status and minimap in the side panel
 
     //                                                                                             COLOUR DECLARATIONS
     private final Color RED = Color.RED;
@@ -63,13 +65,14 @@ public class GUI {
         currentEnemy = null;
         this.random = new Random();
         this.warnedAboutChests = false;
+        this.showingMinimap = false;
 
         initialiseUI();
         initialiseWorld();
         println(Messages.tutorialTitleMessage());
         println(Messages.tutorialIntroMessage());
 
-        //        testing("reaper"); // temporary testing
+        testing("reaper"); // temporary testing
     }
 
     //------------------------------------------------------------------------------------------ SPECIFIC TEXT METHODS
@@ -77,6 +80,138 @@ public class GUI {
     private void displayStats() {
         statsArea.setText("");
         println(player.displayStatus(), statsArea);
+    }
+
+    //                                                                                     DISPLAY MINIMAP IN SIDE PANEL
+    private void displayMinimap() {
+        statsArea.setText("");
+        StyledDocument doc = statsArea.getStyledDocument();
+        
+        // define color styles
+        Style defaultStyle = statsArea.addStyle("default", null);
+        StyleConstants.setForeground(defaultStyle, WHITE);
+        
+        Style dimGrey = statsArea.addStyle("dimGrey", null);
+        StyleConstants.setForeground(dimGrey, new Color(128, 128, 128));
+        
+        Style dimRed = statsArea.addStyle("dimRed", null);
+        StyleConstants.setForeground(dimRed, new Color(180, 80, 80));
+        
+        Style gold = statsArea.addStyle("gold", null);
+        StyleConstants.setForeground(gold, new Color(255, 215, 0));
+        
+        Style blue = statsArea.addStyle("blue", null);
+        StyleConstants.setForeground(blue, new Color(100, 149, 237));
+        
+        Style white = statsArea.addStyle("white", null);
+        StyleConstants.setForeground(white, WHITE);
+        
+        Style green = statsArea.addStyle("green", null);
+        StyleConstants.setForeground(green, new Color(100, 255, 100));
+        
+        try {
+            // title
+            doc.insertString(doc.getLength(), "\n══════════════════════════════════════\n", defaultStyle);
+            doc.insertString(doc.getLength(), "              MINIMAP\n", defaultStyle);
+            doc.insertString(doc.getLength(), "══════════════════════════════════════\n\n", defaultStyle);
+            
+            // find map bounds
+            int minX = 0, maxX = 0, minY = 0, maxY = 0;
+            for (Room room : mapBuilder.getAllRooms().values()) {
+                minX = Math.min(minX, room.getX());
+                maxX = Math.max(maxX, room.getX());
+                minY = Math.min(minY, room.getY());
+                maxY = Math.max(maxY, room.getY());
+            }
+            
+            // display map from top to bottom
+            for (int y = maxY; y >= minY; y--) {
+                for (int x = minX; x <= maxX; x++) {
+                    String coordKey = x + "," + y;
+                    Room room = mapBuilder.getAllRooms().get(coordKey);
+                    
+                    if (room != null) {
+                        Style roomStyle;
+                        String symbol;
+                        
+                        if (room == currentRoom) {
+                            symbol = "[◉]";
+                            roomStyle = green;
+                        } else if (room.getType() == Room.RoomType.BOSS) {
+                            symbol = "[B]";
+                            roomStyle = blue;
+                        } else if (room.getType() == Room.RoomType.TREASURE || room.hasAccessibleChests()) {
+                            symbol = "[T]";
+                            roomStyle = gold;
+                        } else if (!room.isVisited()) {
+                            symbol = "[?]";
+                            roomStyle = dimGrey;
+                        } else if (room.hasEnemies()) {
+                            symbol = "[!]";
+                            roomStyle = dimRed;
+                        } else {
+                            symbol = "[·]";
+                            roomStyle = white;
+                        }
+                        
+                        doc.insertString(doc.getLength(), symbol, roomStyle);
+                        
+                        // horizontal connection
+                        if (room.getExit("east") != null) {
+                            doc.insertString(doc.getLength(), "─", defaultStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), " ", defaultStyle);
+                        }
+                    } else {
+                        doc.insertString(doc.getLength(), "    ", defaultStyle);
+                    }
+                }
+                doc.insertString(doc.getLength(), "\n", defaultStyle);
+                
+                // vertical connections row
+                if (y > minY) {
+                    for (int x = minX; x <= maxX; x++) {
+                        String coordKey = x + "," + y;
+                        Room room = mapBuilder.getAllRooms().get(coordKey);
+                        
+                        if (room != null && room.getExit("south") != null) {
+                            doc.insertString(doc.getLength(), " │  ", defaultStyle);
+                        } else {
+                            doc.insertString(doc.getLength(), "    ", defaultStyle);
+                        }
+                    }
+                    doc.insertString(doc.getLength(), "\n", defaultStyle);
+                }
+            }
+            
+            // legend with colors
+            doc.insertString(doc.getLength(), "\n", defaultStyle);
+            doc.insertString(doc.getLength(), "[◉]", green);
+            doc.insertString(doc.getLength(), "=You ", defaultStyle);
+            doc.insertString(doc.getLength(), "[·]", white);
+            doc.insertString(doc.getLength(), "=Visited\n", defaultStyle);
+            doc.insertString(doc.getLength(), "[?]", dimGrey);
+            doc.insertString(doc.getLength(), "=Unknown ", defaultStyle);
+            doc.insertString(doc.getLength(), "[T]", gold);
+            doc.insertString(doc.getLength(), "=Treasure\n", defaultStyle);
+            doc.insertString(doc.getLength(), "[B]", blue);
+            doc.insertString(doc.getLength(), "=Boss ", defaultStyle);
+            doc.insertString(doc.getLength(), "[!]", dimRed);
+            doc.insertString(doc.getLength(), "=Enemies\n", defaultStyle);
+            doc.insertString(doc.getLength(), "═══════════════════════════════════════", defaultStyle);
+            
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //                                                                                      REFRESH THE SIDE PANEL VIEW
+    private void refreshSidePanel() {
+        if (showingMinimap) {
+            displayMinimap();
+        } else {
+            displayStats();
+        }
     }
 
     //                                                                                     DISPLAY CHARACTER ANIMATION
@@ -252,6 +387,10 @@ public class GUI {
         } else if (input.startsWith("equip ")) {
             String itemId = input.substring(6).trim();
             equipItem(itemId);
+        } else if (input.startsWith("show ")) {
+            String panel = input.substring(5).trim();
+            handleShowCommand(panel);
+            return;
         }
 
         // Combat commands
@@ -288,6 +427,18 @@ public class GUI {
     public void println(String text, JTextArea area) {
         area.append(" " + text + "\n");
         area.setCaretPosition(area.getDocument().getLength());
+    }
+
+    public void println(String text, JTextPane pane) {
+        try {
+            StyledDocument doc = pane.getStyledDocument();
+            Style style = pane.addStyle("default", null);
+            StyleConstants.setForeground(style, WHITE);
+            doc.insertString(doc.getLength(), " " + text + "\n", style);
+            pane.setCaretPosition(doc.getLength());
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
     }
 
     //                                                                                        PROCESSING WEAPON CHOICE
@@ -334,7 +485,7 @@ public class GUI {
 
         if (chosenWeapon != null) {
             player.addWeapon(chosenWeapon);
-            displayStats(); // Update stats display
+            refreshSidePanel(); // Update stats display
 
             println("\n 【 " + chosenWeapon.getName() + " has been added to your inventory and equipped! 】\n\n");
             println("\nThe spectral overseer nods approvingly.\n");
@@ -445,7 +596,9 @@ public class GUI {
         println("\nYou step through the church doors into the dungeon beyond...");
         println(Messages.displayCurrentRoom());
         println(Messages.displayMap());
-
+        
+        showingMinimap = true;
+        refreshSidePanel();
     }
 
     //                                                                                      PROCESSING PLAYER MOVEMENT
@@ -478,8 +631,8 @@ public class GUI {
             display.setText("");
             println(Messages.displayCurrentRoom());
 
-            // Update stats display
-            displayStats();
+            // Update side panel (stats or minimap depending on mode)
+            refreshSidePanel();
 
             // Check for enemies and start combat
             if (currentRoom.hasEnemies()) {
@@ -498,6 +651,21 @@ public class GUI {
             if (chest.isClosed()) count++;
         }
         return count;
+    }
+
+    //                                                                                    PROCESSING SHOW PANEL COMMAND
+    private void handleShowCommand(String panel) {
+        if (panel.equals("minimap")) {
+            showingMinimap = true;
+            displayMinimap();
+            println("Side panel now showing minimap.");
+        } else if (panel.equals("status")) {
+            showingMinimap = false;
+            displayStats();
+            println("Side panel now showing status.");
+        } else {
+            println("Unknown panel. Use 'show minimap' or 'show status'.");
+        }
     }
 
     //                                                                                       PROCESSING PLAYER FLEEING
@@ -605,7 +773,7 @@ public class GUI {
 
                 if (player.useItem(item)) {
                     println("You used " + item.getName() + "!");
-                    displayStats();
+                    refreshSidePanel();
 
                     if (item instanceof HealthPotion) {
                         println("You recovered " + ((HealthPotion) item).getHealAmount() + " health!");
@@ -639,7 +807,7 @@ public class GUI {
 
                 if (player.useItem(item)) {
                     println("You equipped " + item.getName() + "!");
-                    displayStats(); // Update stats display
+                    refreshSidePanel(); // Update stats display
                 } else {
                     println("Failed to equip item.");
                 }
@@ -717,7 +885,7 @@ public class GUI {
             player.gainExperience(expGained);
             player.addGold(goldGained);
             println("You gained " + expGained + " EXP and " + goldGained + " gold!");
-            displayStats();
+            refreshSidePanel();
 
             // Remove enemy from room
             currentRoom.getEnemies().remove(currentEnemy);
@@ -740,7 +908,7 @@ public class GUI {
         println("\nThe " + currentEnemy.getName() + " attacks you for " + enemyDamage + " damage!");
         player.takeDamage(enemyDamage);
 
-        displayStats();
+        refreshSidePanel();
 
         if (player.isDead()) {
             handlePlayerDeath();
@@ -995,8 +1163,8 @@ public class GUI {
         JScrollPane characterScroll = new JScrollPane(characterArea);
         characterScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        // Stats area (bottom bit)
-        statsArea = new JTextArea();
+        // Stats area (bottom bit) - using JTextPane for colored minimap
+        statsArea = new JTextPane();
         statsArea.setEditable(false);
         statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
         statsArea.setBackground(BLACK);

@@ -8,8 +8,10 @@ import java.util.*;
 public class MapBuilder {
 
     //--------------------------------------------------------------------------------------------------- DECLARATIONS
-    private static final int MIN_ROOMS = 25;
-    private static final int MAX_ROOMS = 50;
+    private static final int MIN_ROOMS = 30;
+    private static final int MAX_ROOMS = 40;
+    private static final int MAX_WIDTH = 9; // max columns (fits panel nicely)
+    private static final int MAX_HEIGHT = 7; // max rows (fits panel nicely)
     private static final String[] ROOM_NAMES = {"Dusty Corridor", "Ancient Chamber", "Forgotten Hall", "Cryptic Passage", "Shadow Gallery", "Bone Pit", "Cursed Sanctum", "Dark Alcove", "Ruined Chapel", "Abandoned Vault", "Echoing Cavern", "Silent Tomb"};
 
     private Random random;
@@ -51,6 +53,9 @@ public class MapBuilder {
                 int[] newCoords = getNewCoordinates(currentRoom.getX(), currentRoom.getY(), direction);
                 String coordKey = newCoords[0] + "," + newCoords[1];
 
+                // check if position is within bounds
+                if (!isWithinBounds(newCoords[0], newCoords[1])) continue;
+
                 // Check if position is already occupied
                 if (!allRooms.containsKey(coordKey)) {
                     // Determine room type
@@ -82,6 +87,9 @@ public class MapBuilder {
         if (bossRoom == null) {
             createBossRoom(roomsToExpand);
         }
+
+        // ensure map reaches all edges
+        ensureMapReachesEdges();
 
         addExtraConnections();
 
@@ -186,6 +194,13 @@ public class MapBuilder {
         };
     }
 
+    //                                                                                    CHECK IF COORDS ARE IN BOUNDS
+    private boolean isWithinBounds(int x, int y) {
+        int halfWidth = MAX_WIDTH / 2;
+        int halfHeight = MAX_HEIGHT / 2;
+        return x >= -halfWidth && x <= halfWidth && y >= -halfHeight && y <= halfHeight;
+    }
+
     //                                                                                       GENERATE ROOM DESCRIPTION
     private String generateDescription(Room.RoomType type) {
         return switch (type) {
@@ -198,6 +213,80 @@ public class MapBuilder {
 
     //                                                                                            CREATE THE BOSS ROOM
     private void createBossRoom(List<Room> rooms) {
+    }
+
+    //                                                                              ENSURE MAP REACHES ALL FOUR EDGES
+    private void ensureMapReachesEdges() {
+        int halfWidth = MAX_WIDTH / 2;
+        int halfHeight = MAX_HEIGHT / 2;
+
+        // check current bounds
+        int minX = 0, maxX = 0, minY = 0, maxY = 0;
+        for (Room room : allRooms.values()) {
+            minX = Math.min(minX, room.getX());
+            maxX = Math.max(maxX, room.getX());
+            minY = Math.min(minY, room.getY());
+            maxY = Math.max(maxY, room.getY());
+        }
+
+        // extend to right edge if needed
+        if (maxX < halfWidth) {
+            extendToEdge(halfWidth, random.nextInt(halfHeight * 2 + 1) - halfHeight, "east");
+        }
+        // extend to left edge if needed
+        if (minX > -halfWidth) {
+            extendToEdge(-halfWidth, random.nextInt(halfHeight * 2 + 1) - halfHeight, "west");
+        }
+        // extend to top edge if needed
+        if (maxY < halfHeight) {
+            extendToEdge(random.nextInt(halfWidth * 2 + 1) - halfWidth, halfHeight, "north");
+        }
+        // extend to bottom edge if needed
+        if (minY > -halfHeight) {
+            extendToEdge(random.nextInt(halfWidth * 2 + 1) - halfWidth, -halfHeight, "south");
+        }
+    }
+
+    //                                                                                  EXTEND MAP TO REACH TARGET EDGE
+    private void extendToEdge(int targetX, int targetY, String primaryDirection) {
+        // find the closest existing room to build from
+        Room closest = null;
+        int closestDist = Integer.MAX_VALUE;
+
+        for (Room room : allRooms.values()) {
+            int dist = Math.abs(room.getX() - targetX) + Math.abs(room.getY() - targetY);
+            if (dist < closestDist) {
+                closestDist = dist;
+                closest = room;
+            }
+        }
+
+        if (closest == null) return;
+
+        // build a path from closest room towards the target
+        Room current = closest;
+        while (current.getX() != targetX || current.getY() != targetY) {
+            String direction;
+            if (current.getX() < targetX) direction = "east";
+            else if (current.getX() > targetX) direction = "west";
+            else if (current.getY() < targetY) direction = "north";
+            else direction = "south";
+
+            int[] newCoords = getNewCoordinates(current.getX(), current.getY(), direction);
+            String coordKey = newCoords[0] + "," + newCoords[1];
+
+            if (allRooms.containsKey(coordKey)) {
+                current = allRooms.get(coordKey);
+            } else {
+                // create new room
+                Room newRoom = new Room(ROOM_NAMES[random.nextInt(ROOM_NAMES.length)], generateDescription(Room.RoomType.NORMAL), newCoords[0], newCoords[1], Room.RoomType.NORMAL);
+                current.addExit(direction, newRoom);
+                newRoom.addExit(getOppositeDirection(direction), current);
+                populateRoom(newRoom);
+                allRooms.put(coordKey, newRoom);
+                current = newRoom;
+            }
+        }
     }
 
     //                                                                                                 ADD EXTRA PATHS

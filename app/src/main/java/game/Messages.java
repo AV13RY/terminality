@@ -197,6 +197,7 @@ public class Messages {
                   open [#]        - Open a chest
                 SYSTEM:
                   help            - Display this help message
+                  show [panel]    - Toggle side panel (minimap/status)
                   exit            - Quit the game
                 ═════════════════════════
                 
@@ -402,6 +403,76 @@ public class Messages {
         int legendPadding = (CONSOLE_WIDTH - legend.length()) / 2;
         sb.append("\n").append(" ".repeat(Math.max(0, legendPadding))).append(legend).append("\n");
         sb.append(divider).append("\n");
+        return sb.toString();
+    }
+
+    public static String displayMinimap() {
+        StringBuilder sb = new StringBuilder();
+
+        // title styled like the status panel
+        sb.append("\n══════════════════════════════════════\n");
+        sb.append("              MINIMAP\n");
+        sb.append("══════════════════════════════════════\n\n");
+
+        // find map bounds
+        int minX = 0, maxX = 0, minY = 0, maxY = 0;
+        for (Room room : GUI.getMapBuilder().getAllRooms().values()) {
+            minX = Math.min(minX, room.getX());
+            maxX = Math.max(maxX, room.getX());
+            minY = Math.min(minY, room.getY());
+            maxY = Math.max(maxY, room.getY());
+        }
+
+        // display map from top to bottom
+        for (int y = maxY; y >= minY; y--) {
+            StringBuilder mapRow = new StringBuilder();
+            StringBuilder connectionRow = new StringBuilder();
+
+            for (int x = minX; x <= maxX; x++) {
+                String coordKey = x + "," + y;
+                Room room = GUI.getMapBuilder().getAllRooms().get(coordKey);
+
+                if (room != null) {
+                    String symbol;
+                    if (room == GUI.getCurrentRoom()) {
+                        symbol = "[◉]";
+                    } else if (room.getType() == Room.RoomType.BOSS) {
+                        symbol = "[B]";
+                    } else if (room.getType() == Room.RoomType.TREASURE) {
+                        symbol = "[T]";
+                    } else if (room.isVisited()) {
+                        symbol = "[·]";
+                    } else {
+                        symbol = "[?]";
+                    }
+                    mapRow.append(symbol);
+                    if (room.getExit("east") != null) {
+                        mapRow.append("─");
+                    } else {
+                        mapRow.append(" ");
+                    }
+                    if (room.getExit("south") != null) {
+                        connectionRow.append(" │ ");
+                    } else {
+                        connectionRow.append("   ");
+                    }
+                    connectionRow.append(" ");
+                } else {
+                    mapRow.append("    ");
+                    connectionRow.append("    ");
+                }
+            }
+
+            sb.append(mapRow).append("\n");
+            if (y > minY) {
+                sb.append(connectionRow).append("\n");
+            }
+        }
+
+        sb.append("\n[◉]=You [·]=Visited\n");
+        sb.append("[?]=Unknown [T]=Treasure\n");
+        sb.append("[B]=Boss\n");
+        sb.append("═══════════════════════════════════════");
         return sb.toString();
     }
 
