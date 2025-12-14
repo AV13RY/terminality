@@ -219,17 +219,17 @@ public class GUI {
         Thread idleAnimationThread;
         switch (CLASS) {
             case "knight":
-                characterArea.setFont(new Font("Consolas", Font.PLAIN, 14));
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
                 idleAnimationThread = idleAnimation(Messages.displayKnight(1), Messages.displayKnight(2), 1500, 750);
                 idleAnimationThread.start();
                 break;
             case "mage":
-                characterArea.setFont(new Font("Consolas", Font.PLAIN, 14));
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
                 idleAnimationThread = idleAnimation(Messages.displayMage(1), Messages.displayMage(2), 1500, 750);
                 idleAnimationThread.start();
                 break;
             case "reaper":
-                characterArea.setFont(new Font("Consolas", Font.PLAIN, 9));
+                characterArea.setFont(new Font("Monospaced", Font.PLAIN, 9));
                 idleAnimationThread = idleAnimation(Messages.displayReaper(1), Messages.displayReaper(2), 2500, 150);
                 idleAnimationThread.start();
                 break;
@@ -1121,7 +1121,7 @@ public class GUI {
         // Command Log Area
         commandLog = new JTextArea();
         commandLog.setEditable(false);
-        commandLog.setFont(new Font("Consolas", Font.PLAIN, 12));
+        commandLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
         commandLog.setBackground(DEFAULT3);
         commandLog.setForeground(WHITE);
         commandLog.setMargin(new Insets(10, 0, 10, 10));
@@ -1141,7 +1141,7 @@ public class GUI {
         // Display Area
         display = new JTextArea();
         display.setEditable(false);
-        display.setFont(new Font("Consolas", Font.PLAIN, 14));
+        display.setFont(new Font("Monospaced", Font.PLAIN, 14));
         display.setBackground(BLACK);
         display.setForeground(DEFAULT);
         display.setMargin(new Insets(20, 20, 20, 20));
@@ -1156,7 +1156,7 @@ public class GUI {
         // Character area (top bit)
         characterArea = new JTextArea();
         characterArea.setEditable(false);
-        characterArea.setFont(new Font("Consolas", Font.PLAIN, 14));
+        characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         characterArea.setBackground(BLACK);
         characterArea.setForeground(Color.LIGHT_GRAY);
         characterArea.setMargin(new Insets(20, 50, 20, 50));
@@ -1166,7 +1166,7 @@ public class GUI {
         // Stats area (bottom bit) - using JTextPane for colored minimap
         statsArea = new JTextPane();
         statsArea.setEditable(false);
-        statsArea.setFont(new Font("Consolas", Font.PLAIN, 20));
+        statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
         statsArea.setBackground(BLACK);
         statsArea.setForeground(WHITE);
         statsArea.setMargin(new Insets(0, 10, 0, 10));
@@ -1183,12 +1183,12 @@ public class GUI {
         inputPanel.setBackground(DEFAULT2);
 
         JLabel promptLabel = new JLabel(" > ");
-        promptLabel.setFont(new Font("Consolas", Font.PLAIN, 14));
+        promptLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
         promptLabel.setForeground(WHITE);
         inputPanel.add(promptLabel, BorderLayout.WEST);
 
         terminal = new JTextField();
-        terminal.setFont(new Font("Consolas", Font.PLAIN, 14));
+        terminal.setFont(new Font("Monospaced", Font.PLAIN, 14));
         terminal.setBackground(BLACK);
         terminal.setForeground(WHITE);
         terminal.setCaretColor(DEFAULT);
