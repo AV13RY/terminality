@@ -23,14 +23,14 @@ public class Messages {
     public static String tutorialTitleMessage() {
         if (IS_WINDOWS) {
             return """
-                   
-                    ▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄    ▄▄▄      ▄▄▄ ▄▄▄▄▄ ▄▄▄   ▄▄▄    ▄▄▄▄   ▄▄▄      ▄▄▄▄  ▄▄▄▄▄▄▄ ▄▄▄   ▄▄▄\s
-                    ▀▀███▀▀ ███▀▀▀▀▀ ███▀▀███▄ ████▄ ▄███  ███  ████▄  ██ ▄██▀▀██▄ ███      ███  ▀▀███▀▀ ███   ███\s
-                       ███    ███▄▄      ███▄▄███▀ ███▀██▀███  ███  ███▀█▄██ ███   ███  ███      ███     ███   ▀███▄███▀\s
-                       ███    ███         ███▀▀██▄  ███  ▀▀  ███  ███  ███  ▀███ ███▀▀███ ███       ███    ███      ▀███▀  \s
-                       ███    ▀███████ ███  ▀███ ███      ███ ▄███▄ ███    ███ ███   ███ ██████ ▄███▄  ███        ███   \s
-                       
-                   ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+                    
+                     ▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄    ▄▄▄      ▄▄▄ ▄▄▄▄▄ ▄▄▄   ▄▄▄    ▄▄▄▄   ▄▄▄      ▄▄▄▄  ▄▄▄▄▄▄▄ ▄▄▄   ▄▄▄\s
+                     ▀▀███▀▀ ███▀▀▀▀▀ ███▀▀███▄ ████▄ ▄███  ███  ████▄  ██ ▄██▀▀██▄ ███      ███  ▀▀███▀▀ ███   ███\s
+                        ███    ███▄▄      ███▄▄███▀ ███▀██▀███  ███  ███▀█▄██ ███   ███  ███      ███     ███   ▀███▄███▀\s
+                        ███    ███         ███▀▀██▄  ███  ▀▀  ███  ███  ███  ▀███ ███▀▀███ ███       ███    ███      ▀███▀  \s
+                        ███    ▀███████ ███  ▀███ ███      ███ ▄███▄ ███    ███ ███   ███ ██████ ▄███▄  ███        ███   \s
+                    
+                    ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
                     """;
 
 
@@ -49,21 +49,21 @@ public class Messages {
         if (IS_WINDOWS) {
             return """
                     
-
-                     .d8888b.  8888888b.         d8888 888     888 8888888888 Y88b   d88P     d8888 8888888b.  8888888b. \s
-                    d88P  Y88b 888   Y88b       d88888 888     888 888         Y88b d88P     d88888 888   Y88b 888  "Y88b\s
-                    888    888 888    888      d88P888 888     888 888          Y88o88P     d88P888 888    888 888    888\s
-                    888        888   d88P     d88P 888 Y88b   d88P 8888888       Y888P     d88P 888 888   d88P 888    888\s
-                    888  88888 8888888P"     d88P  888  Y88b d88P  888            888     d88P  888 8888888P"  888    888\s
-                    888    888 888 T88b     d88P   888   Y88o88P   888            888    d88P   888 888 T88b   888    888\s
-                    Y88b  d88P 888  T88b   d8888888888    Y888P    888            888   d8888888888 888  T88b  888  .d88P\s
-                     "Y8888P88 888   T88b d88P     888     Y8P     8888888888     888  d88P     888 888   T88b 8888888P" \s
+                    
+                         .d8888b.  8888888b.         d8888 888     888 8888888888 Y88b   d88P     d8888 8888888b.  8888888b. \s
+                        d88P  Y88b 888   Y88b       d88888 888     888 888         Y88b d88P     d88888 888   Y88b 888  "Y88b\s
+                        888    888 888    888      d88P888 888     888 888          Y88o88P     d88P888 888    888 888    888\s
+                        888        888   d88P     d88P 888 Y88b   d88P 8888888       Y888P     d88P 888 888   d88P 888    888\s
+                        888  88888 8888888P"     d88P  888  Y88b d88P  888            888     d88P  888 8888888P"  888    888\s
+                        888    888 888 T88b     d88P   888   Y88o88P   888            888    d88P   888 888 T88b   888    888\s
+                        Y88b  d88P 888  T88b   d8888888888    Y888P    888            888   d8888888888 888  T88b  888  .d88P\s
+                         "Y8888P88 888   T88b d88P     888     Y8P     8888888888     888  d88P     888 888   T88b 8888888P" \s
                     
                     
                     
-                
-                ⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘
-                """;
+                    
+                    ⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘
+                    """;
         }
 
         return """
@@ -85,18 +85,18 @@ public class Messages {
     public static String churchTitleMessage() {
         if (IS_WINDOWS) {
             return """
-                      ▄████████   ▄█      █▄      ▄█     █▄      ▄████████     ▄████████   ▄█    █▄          \s
-                      ███    ██    ███      ███    ███    ███    ███      ███   ███    ███   ███    ███         \s
-                      ███    █▀    ███      ███    ███    ███    ███      ███   ███    █▀    ███    ███         \s
-                      ███         ▄███▄▄▄▄███▄▄ ███    ███  ▄███▄▄▄▄██▀   ███         ▄███▄▄▄▄███▄▄       \s
-                      ███        ▀▀███▀▀▀▀███▀  ███    ███ ▀▀███▀▀▀▀▀     ███        ▀▀███▀▀▀▀███▀        \s
-                      ███    █▄    ███      ███    ███    ███ ▀██████████▄  ███      █▄   ███    ███         \s
-                      ███    ███   ███     ███    ███    ███     ███    ███    ███    ███   ███    ███         \s
-                      ████████▀    ███   █▀      ████████▀    ███    ███    ████████▀   ███    █▀          \s
-                                                                             ▀▀█    ██▀                                 \s
-                
-                ❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚
-                """;
+                          ▄████████   ▄█      █▄      ▄█     █▄      ▄████████     ▄████████   ▄█    █▄          \s
+                          ███    ██    ███      ███    ███    ███    ███      ███   ███    ███   ███    ███         \s
+                          ███    █▀    ███      ███    ███    ███    ███      ███   ███    █▀    ███    ███         \s
+                          ███         ▄███▄▄▄▄███▄▄ ███    ███  ▄███▄▄▄▄██▀   ███         ▄███▄▄▄▄███▄▄       \s
+                          ███        ▀▀███▀▀▀▀███▀  ███    ███ ▀▀███▀▀▀▀▀     ███        ▀▀███▀▀▀▀███▀        \s
+                          ███    █▄    ███      ███    ███    ███ ▀██████████▄  ███      █▄   ███    ███         \s
+                          ███    ███   ███     ███    ███    ███     ███    ███    ███    ███   ███    ███         \s
+                          ████████▀    ███   █▀      ████████▀    ███    ███    ████████▀   ███    █▀          \s
+                                                                                 ▀▀█    ██▀                                 \s
+                    
+                    ❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚
+                    """;
         }
         return """
                       ▄████████     ▄█    █▄     ▄█    █▄     ▄████████  ▄████████    ▄█    █▄          \s
@@ -118,40 +118,40 @@ public class Messages {
 
         if (IS_WINDOWS) {
             return """
-                                      A Java Dungeon Crawler by Jack McGillivray                      \s
-                ═══════════════════════════════════════════════════════════════════════════════════════
-                
-                    
-                    █████ ██  ██ ██████ ▄████▄ █████▄  ██ ▄████▄ ██    \s
-                      ██    ██  ██    ██     ██   ██ ██▄▄██▄ ██ ██▄▄██ ██    \s
-                      ██    ▀███▀    ██     ▀████▀ ██   ██  ██  ██  ██ ██████\s
+                                          A Java Dungeon Crawler by Jack McGillivray                      \s
+                    ═══════════════════════════════════════════════════════════════════════════════════════
                     
                     
-                Hello, World.. . . . . ............... .  . . . .  .
-                Ah what am I saying, you probably already know this isn't just your average powershell.
-                
-                Anyway, welcome to Terminality, a text-based dungeon crawler.
-                Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.
-                
-                Your experience will consist of three main interactions:
-                
-                1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.
-                - Use the command: [ move <direction> ]
-                
-                2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will start automatically.\s
-                        - Use the command: [ attack ]
-                
-                3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.
-                       - Use the commands: [ status ] and [ inventory ]
-                
-                To see all available commands at any time, type [ help ].
-                To end your journey prematurely, type [ exit ].
-                
-                Prepare yourself...
-                ═══════════════════════════════════════════════════════════════════════════════════════
-                
-                 Type 'help' for available commands or 'exit' to quit the game.
-                """;
+                        █████ ██  ██ ██████ ▄████▄ █████▄  ██ ▄████▄ ██    \s
+                          ██    ██  ██    ██     ██   ██ ██▄▄██▄ ██ ██▄▄██ ██    \s
+                          ██    ▀███▀    ██     ▀████▀ ██   ██  ██  ██  ██ ██████\s
+                    
+                    
+                    Hello, World.. . . . . ............... .  . . . .  .
+                    Ah what am I saying, you probably already know this isn't just your average powershell.
+                    
+                    Anyway, welcome to Terminality, a text-based dungeon crawler.
+                    Your goal is to navigate the crypt, slay its inhabitants, and defeat the final boss.
+                    
+                    Your experience will consist of three main interactions:
+                    
+                    1. >> \uD835\uDDE0\uD835\uDDE2\uD835\uDDE9\uD835\uDDD8\uD835\uDDE0\uD835\uDDD8\uD835\uDDE1\uD835\uDDE7 << When required, you'll be prompted to move between rooms.
+                    - Use the command: [ move <direction> ]
+                    
+                    2. >> \uD835\uDDD6\uD835\uDDE2\uD835\uDDE0\uD835\uDDD5\uD835\uDDD4\uD835\uDDE7 << If an enemy is in the room, combat will start automatically.\s
+                            - Use the command: [ attack ]
+                    
+                    3. >> \uD835\uDDD6\uD835\uDDDB\uD835\uDDD4\uD835\uDDE5\uD835\uDDD4\uD835\uDDD6\uD835\uDDE7\uD835\uDDD8\uD835\uDDE5 << Manage your character's state and gear.
+                           - Use the commands: [ status ] and [ inventory ]
+                    
+                    To see all available commands at any time, type [ help ].
+                    To end your journey prematurely, type [ exit ].
+                    
+                    Prepare yourself...
+                    ═══════════════════════════════════════════════════════════════════════════════════════
+                    
+                     Type 'help' for available commands or 'exit' to quit the game.
+                    """;
         }
 
         return """
@@ -222,7 +222,7 @@ public class Messages {
         return """
                 
                 AVAILABLE COMMANDS:
-                - colour [colour]  : Change text color (default, red, green, blue, yellow, cyan, magenta, white)
+                - colour [colour]  : Change colour (default, red, green, blue, yellow, cyan, magenta, white)
                 - clear            : Clear the terminal screen
                 - help             : Display this help message
                 - exit             : Quit the game
@@ -285,9 +285,10 @@ public class Messages {
                   use [#]         - Use a consumable item
                   equip [#]       - Equip armor or accessory
                   open [#]        - Open a chest
+                
                 SYSTEM:
                   help            - Display this help message
-                  show [panel]    - Toggle side panel (minimap/status)
+                  show [panel]    - Toggle between minimap/status panels. [panel = minimap/status]
                   exit            - Quit the game
                 ═════════════════════════
                 
@@ -379,33 +380,33 @@ public class Messages {
     private static String displayReaperWeapons() {
         if (IS_WINDOWS) {
             return """
-                                              ✥  INSTRUMENTS OF DEATH  ✥                               \s
-                
-                                              ⠀⠀⠀                  ⠀⠀      ⠀⣀⡀⠀⠀⠀⠀⠀    ⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀        \s
-                                              ⠀⠀⠀⠀                      ⣠⣴⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠉⠻⣷⣤⡀⠀        \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀               ⠀  ⢀⣾⡟⡍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠀⠀⠀⠐⡙⣿⡄           \s
-                ⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⡀⠀⠀⠀ ⠀             ⠀⣸⣿⠃⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠀⠇⣹⣿           \s
-                ⠀⠀⣿⣷⠀⣿⣿⣿⣿⣿⣿⣿⡿⠟⠛⠛⠉⠉⠉⠉⠉⠉⠙⠛⠻⢿⣷⡀⠀⠀⠀            ⠀⣿⣿⡆⢚⢄⣀⣠⠤⠒⠈⠁⠀⠈⠉⠐⠢⢄⡀⣀⢞⠀⣾⣿           \s
-                ⠀⠀⢿⣿⠀⢹⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠀⠀               ⠀⠸⣿⣿⣅⠄⠙⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⡟⠑⣄⣽⣿⡟           \s
-                ⠀⠀⠸⣿⡇⠈⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠘⢿⣿⣟⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠱⣾⣿⣿⠏⠀           \s
-                ⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⣸⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀     ⠈⡉⢻⠀⠀           \s
-                ⠀⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢿⠀⢃⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀      ⣰⠁⢸⠀⠀           \s
-                ⠀⠀⣀⣠⣴⡿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢸⢰⡿⢘⣦⣤⣀⠑⢦⡀⠀⣠⠖⣁⣤⣴⡊⢸⡇⡼⠀⠀           \s
-                ⠀⠈⠛⠛⠉⠀⠈⠛⢿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠾⡅⣿⣿⣿⣿⣿⠌⠁⠀⠁⢺⣿⣿⣿⣿⠆⣇⠃⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢀⠂⠘⢿⣿⣿⡿⠀⣰⣦⠀⠸⣿⣿⡿⠋⠈⢀⠀⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⠀ ⢠⣿⢻⣆⠀⠀⠀⠀⠀   ⣸⠀⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠈⠓⠶⣶⣦⠤⠀⠘⠋⠘⠋ ⠀⠠⣴⣶⡶⠞⠃⠀⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀⠀⣿⢹⣷⠦⢀⠤⡤⡆ ⡤⣶⣿⢸⠇⠀⠀⠀⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀ ⢰⡀⠘⢯⣳⢶⠦⣧⢷⢗⣫⠇⠀⡸⠀⠀⠀⠀⠀           \s
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠁⠀⠀⠀⠀  ⠀               ⠀⠀⠀⠀⠀⠀  ⠀⠑⢤⡀⠈⠋⠛⠛⠋⠉⢀⡠⠒⠁⠀⠀⠀⠀⠀           \s
-                                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀                      ⠀⠹⢦⠀⢀⣀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀        \s
-                                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  ⠀    ⠈⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        \s
-                               1. SCYTHE                                     2. DEATH MAGIC               \s
-                The cold, clean edge all mortals must meet.        A dark conduit for siphoning souls.    \s
-                     ♦ Non-Magic Based  ♦ High Damage                ♦ Magic Based  ♦ Strong Spells   \s
-                
-                
-                """;
+                                                  ✥  INSTRUMENTS OF DEATH  ✥                               \s
+                    
+                                                  ⠀⠀⠀                  ⠀⠀      ⠀⣀⡀⠀⠀⠀⠀⠀    ⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀        \s
+                                                  ⠀⠀⠀⠀                      ⣠⣴⡿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀    ⠀⠉⠻⣷⣤⡀⠀        \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀               ⠀  ⢀⣾⡟⡍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠀⠀⠀⠐⡙⣿⡄           \s
+                    ⠀⠀⠀⠀⠀⣀⣠⣤⣴⣶⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⡀⠀⠀⠀ ⠀             ⠀⣸⣿⠃⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠀⠇⣹⣿           \s
+                    ⠀⠀⣿⣷⠀⣿⣿⣿⣿⣿⣿⣿⡿⠟⠛⠛⠉⠉⠉⠉⠉⠉⠙⠛⠻⢿⣷⡀⠀⠀⠀            ⠀⣿⣿⡆⢚⢄⣀⣠⠤⠒⠈⠁⠀⠈⠉⠐⠢⢄⡀⣀⢞⠀⣾⣿           \s
+                    ⠀⠀⢿⣿⠀⢹⣿⣿⡿⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠄⠀⠀               ⠀⠸⣿⣿⣅⠄⠙⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⠀⠀⡟⠑⣄⣽⣿⡟           \s
+                    ⠀⠀⠸⣿⡇⠈⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠘⢿⣿⣟⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   ⠱⣾⣿⣿⠏⠀           \s
+                    ⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⣸⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀     ⠈⡉⢻⠀⠀           \s
+                    ⠀⠀⠀⠀⢻⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢿⠀⢃⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀      ⣰⠁⢸⠀⠀           \s
+                    ⠀⠀⣀⣠⣴⡿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⢸⢰⡿⢘⣦⣤⣀⠑⢦⡀⠀⣠⠖⣁⣤⣴⡊⢸⡇⡼⠀⠀           \s
+                    ⠀⠈⠛⠛⠉⠀⠈⠛⢿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠾⡅⣿⣿⣿⣿⣿⠌⠁⠀⠁⢺⣿⣿⣿⣿⠆⣇⠃⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢀⠂⠘⢿⣿⣿⡿⠀⣰⣦⠀⠸⣿⣿⡿⠋⠈⢀⠀⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⣿⣷⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⢠⠀⠀⠀⠀⠀⠀ ⢠⣿⢻⣆⠀⠀⠀⠀⠀   ⣸⠀⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠈⠓⠶⣶⣦⠤⠀⠘⠋⠘⠋ ⠀⠠⣴⣶⡶⠞⠃⠀⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀⠀⣿⢹⣷⠦⢀⠤⡤⡆ ⡤⣶⣿⢸⠇⠀⠀⠀⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢿⣿⣷⡀⠀⠀⠀⠀⠀⠀⠀               ⠀⠀⠀⠀⠀⠀ ⢰⡀⠘⢯⣳⢶⠦⣧⢷⢗⣫⠇⠀⡸⠀⠀⠀⠀⠀           \s
+                    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠁⠀⠀⠀⠀  ⠀               ⠀⠀⠀⠀⠀⠀  ⠀⠑⢤⡀⠈⠋⠛⠛⠋⠉⢀⡠⠒⠁⠀⠀⠀⠀⠀           \s
+                                                  ⠀⠀⠀⠀⠀⠀⠀⠀⠀                      ⠀⠹⢦⠀⢀⣀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀        \s
+                                                  ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                  ⠀    ⠈⠉⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀        \s
+                                   1. SCYTHE                                     2. DEATH MAGIC               \s
+                    The cold, clean edge all mortals must meet.        A dark conduit for siphoning souls.    \s
+                         ♦ Non-Magic Based  ♦ High Damage                ♦ Magic Based  ♦ Strong Spells   \s
+                    
+                    
+                    """;
         }
         return """
                                               ✥  INSTRUMENTS OF DEATH  ✥                               \s

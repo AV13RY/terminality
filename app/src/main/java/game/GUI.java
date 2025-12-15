@@ -48,17 +48,16 @@ public class GUI {
     private boolean showingMinimap; // toggles between status and minimap in the side panel
 
     //                                                                                             COLOUR DECLARATIONS
-    private final Color RED = Color.RED;
-    private final Color GREEN = Color.GREEN;
-    private final Color BLUE = Color.BLUE;
-    private final Color YELLOW = Color.YELLOW;
-    private final Color CYAN = Color.CYAN;
-    private final Color MAGENTA = Color.MAGENTA;
-    private final Color WHITE = Color.WHITE;
+    private final Color[] RED = {Color.RED, new Color(0x4b0000)};
+    private final Color[] GREEN = {Color.GREEN, new Color(0x004b00)};
+    private final Color[] BLUE = {Color.BLUE, new Color(0x00004b)};
+    private final Color[] YELLOW = {Color.YELLOW, new Color(0x4b4b00)};
+    private final Color[] CYAN = {Color.CYAN, new Color(0x004b4b)};
+    private final Color[] MAGENTA = {Color.MAGENTA, new Color(0x4b004b)};
+    private final Color[] WHITE = {Color.WHITE, new Color(0x424549)};
     private final Color BLACK = Color.BLACK;
-    private final Color DEFAULT = new Color(0xD8125B);
+    private final Color[] DEFAULT = {new Color(0xD8125B), new Color(0x4b0019)};
     private final Color DEFAULT2 = new Color(0x424549);
-    private final Color DEFAULT3 = new Color(0x4b0019);
 
     //--------------------------------------------------------------------------------------------------- CORE METHODS
     //                                                                                                GAME CONSTRUCTOR
@@ -75,7 +74,7 @@ public class GUI {
         println(Messages.tutorialTitleMessage());
         println(Messages.tutorialIntroMessage());
 
-        testing("mage"); // temporary testing
+        //  testing("reaper"); // temporary testing
     }
 
     //------------------------------------------------------------------------------------------ SPECIFIC TEXT METHODS
@@ -92,7 +91,7 @@ public class GUI {
 
         // define color styles
         Style defaultStyle = statsArea.addStyle("default", null);
-        StyleConstants.setForeground(defaultStyle, WHITE);
+        StyleConstants.setForeground(defaultStyle, WHITE[0]);
 
         Style dimGrey = statsArea.addStyle("dimGrey", null);
         StyleConstants.setForeground(dimGrey, new Color(128, 128, 128));
@@ -107,7 +106,7 @@ public class GUI {
         StyleConstants.setForeground(blue, new Color(100, 149, 237));
 
         Style white = statsArea.addStyle("white", null);
-        StyleConstants.setForeground(white, WHITE);
+        StyleConstants.setForeground(white, WHITE[0]);
 
         Style green = statsArea.addStyle("green", null);
         StyleConstants.setForeground(green, new Color(100, 255, 100));
@@ -220,17 +219,23 @@ public class GUI {
         switch (CLASS) {
             case "knight":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                characterArea.setForeground(WHITE[0]);
+                characterArea.setText(Messages.displayKnight(1));
                 idleAnimationThread = idleAnimation(Messages.displayKnight(1), Messages.displayKnight(2), 1500, 750);
                 idleAnimationThread.start();
                 break;
             case "mage":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
+                characterArea.setForeground(new Color(135, 206, 250)); // light blue
+                characterArea.setText(Messages.displayMage(1));
                 idleAnimationThread = idleAnimation(Messages.displayMage(1), Messages.displayMage(2), 1500, 750);
                 idleAnimationThread.start();
                 break;
             case "reaper":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 9));
-                idleAnimationThread = idleAnimation(Messages.displayReaper(1), Messages.displayReaper(2), 2500, 150);
+                characterArea.setForeground(RED[0]);
+                characterArea.setText(Messages.displayReaper(1));
+                idleAnimationThread = idleAnimation(Messages.displayReaper(1), Messages.displayReaper(2), 2500, 150, 1);
                 idleAnimationThread.start();
                 break;
         }
@@ -290,6 +295,11 @@ public class GUI {
                 if (input.startsWith("name")) {
                     NAME = input.replace("name", "").toLowerCase().trim();
                     println("\nYour name will be: " + NAME);
+
+                    if (NAME.equals("matt") || NAME.equals("matthew") || NAME.equals("xi") || NAME.equals("ayah")) {
+                        println("\n✨ Oh hey... thats a cool name... \n I have a cool lecturer whos called that.. huh. Enjoy ;) ✨");
+                    }
+
                     println("\nAnd what will your class be?");
                     println("- Use the command: [ class <knight,mage,reaper> ]");
                 }
@@ -311,7 +321,7 @@ public class GUI {
 
                     if (!CLASS.isEmpty()) {
                         println("Your class will be: " + CLASS + '\n');
-                        println("If you wish to alter your memory, this is your last chance.");
+                        println("\nIf you wish to alter your memory, this is your last chance.\n    - class command can be used again.\n");
                         println("However if this is how you choose to remember yourself:");
                         println("- Use the command: [ proceed ]\n");
                     }
@@ -433,7 +443,7 @@ public class GUI {
         try {
             StyledDocument doc = pane.getStyledDocument();
             Style style = pane.addStyle("default", null);
-            StyleConstants.setForeground(style, WHITE);
+            StyleConstants.setForeground(style, WHITE[0]);
             doc.insertString(doc.getLength(), " " + text + "\n", style);
             pane.setCaretPosition(doc.getLength());
         } catch (BadLocationException e) {
@@ -963,42 +973,42 @@ public class GUI {
     //----------------------------------------------------------------------------------------------------- UI METHODS
     //                                                                                                     TEXT COLOUR
     private void changeTextColor(String colorName) {
-        Color newColor;
+        Color[] colorPair;
 
         switch (colorName.toLowerCase()) {
             case "red":
-                newColor = RED;
+                colorPair = RED;
                 break;
             case "green":
-                newColor = GREEN;
+                colorPair = GREEN;
                 break;
             case "blue":
-                newColor = BLUE;
+                colorPair = BLUE;
                 break;
             case "yellow":
-                newColor = YELLOW;
+                colorPair = YELLOW;
                 break;
             case "cyan":
-                newColor = CYAN;
+                colorPair = CYAN;
                 break;
             case "magenta":
-                newColor = MAGENTA;
+                colorPair = MAGENTA;
                 break;
             case "white":
-                newColor = WHITE;
+                colorPair = WHITE;
                 break;
             case "default":
-                newColor = DEFAULT;
+                colorPair = DEFAULT;
                 break;
             default:
                 println("Unknown color. Available colors: red, green, blue, yellow, cyan, magenta, white, default");
                 return;
         }
 
-        display.setForeground(newColor);
-        terminal.setForeground(newColor);
-        terminal.setCaretColor(newColor);
-        characterArea.setForeground(newColor);
+        display.setForeground(colorPair[0]);
+        terminal.setForeground(colorPair[0]);
+        terminal.setCaretColor(colorPair[0]);
+        commandLog.setBackground(colorPair[1]);
         println("Text color changed to " + colorName);
     }
 
@@ -1043,20 +1053,32 @@ public class GUI {
     // creates a new thread for the idle animation.
     @SuppressWarnings("BusyWait") // just stops the warning for sleeping
     private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2) {
+        return idleAnimation(character1, character2, milliWaitTime1, milliWaitTime2, milliWaitTime1);
+    }
+
+    @SuppressWarnings("BusyWait")
+    private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2, int firstFrameDelay) {
         String tempCLASS = CLASS;
 
         Thread animationThread = new Thread(() -> {
+            boolean firstFrame = true;
             while (tempCLASS.equals(CLASS)) {
                 try {
-                    SwingUtilities.invokeLater(() -> {
-                        // Checks the tempCLASS again for a reason here (and below).
-                        // Stops the one frame overlap with old class image when loop runs for final time.
-                        if (tempCLASS.equals(CLASS)) {
-                            characterArea.setText(character1);
-                            characterArea.setCaretPosition(0);
-                        }
-                    });
-                    Thread.sleep(milliWaitTime1); //delay till each breath.
+                    if (firstFrame) {
+                        // First frame - use fast delay to quickly get to second frame
+                        firstFrame = false;
+                        Thread.sleep(firstFrameDelay);
+                    } else {
+                        SwingUtilities.invokeLater(() -> {
+                            // Checks the tempCLASS again for a reason here (and below).
+                            // Stops the one frame overlap with old class image when loop runs for final time.
+                            if (tempCLASS.equals(CLASS)) {
+                                characterArea.setText(character1);
+                                characterArea.setCaretPosition(0);
+                            }
+                        });
+                        Thread.sleep(milliWaitTime1); //delay till each breath.
+                    }
                     SwingUtilities.invokeLater(() -> {
                         if (tempCLASS.equals(CLASS)) {
                             characterArea.setText(character2);
@@ -1117,14 +1139,14 @@ public class GUI {
         frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel(new BorderLayout());
-        frame.setBackground(DEFAULT);
+        frame.setBackground(DEFAULT[1]);
 
         // Command Log Area
         commandLog = new JTextArea();
         commandLog.setEditable(false);
         commandLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        commandLog.setBackground(DEFAULT3);
-        commandLog.setForeground(WHITE);
+        commandLog.setBackground(DEFAULT[1]);
+        commandLog.setForeground(WHITE[0]);
         commandLog.setMargin(new Insets(10, 0, 10, 10));
 
 
@@ -1144,7 +1166,7 @@ public class GUI {
         display.setEditable(false);
         display.setFont(new Font("Monospaced", Font.PLAIN, 14));
         display.setBackground(BLACK);
-        display.setForeground(DEFAULT);
+        display.setForeground(DEFAULT[0]);
         display.setMargin(new Insets(20, 20, 20, 20));
         JScrollPane centerScroll = new JScrollPane(display);
         centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1152,7 +1174,7 @@ public class GUI {
 
         // Character & Stats Area
         JPanel rightPanel = new JPanel(new GridLayout(2, 1, 0, 0)); // 2 rows, 1 column, 10px gap
-        rightPanel.setBackground(WHITE);
+        rightPanel.setBackground(WHITE[1]);
 
         // Character area (top bit)
         characterArea = new JTextArea();
@@ -1169,7 +1191,7 @@ public class GUI {
         statsArea.setEditable(false);
         statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
         statsArea.setBackground(BLACK);
-        statsArea.setForeground(WHITE);
+        statsArea.setForeground(WHITE[0]);
         statsArea.setMargin(new Insets(0, 10, 0, 10));
         JScrollPane statsScroll = new JScrollPane(statsArea);
         statsScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1185,14 +1207,14 @@ public class GUI {
 
         JLabel promptLabel = new JLabel(" > ");
         promptLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        promptLabel.setForeground(WHITE);
+        promptLabel.setForeground(WHITE[0]);
         inputPanel.add(promptLabel, BorderLayout.WEST);
 
         terminal = new JTextField();
         terminal.setFont(new Font("Monospaced", Font.PLAIN, 14));
         terminal.setBackground(BLACK);
-        terminal.setForeground(WHITE);
-        terminal.setCaretColor(DEFAULT);
+        terminal.setForeground(WHITE[0]);
+        terminal.setCaretColor(DEFAULT[0]);
         terminal.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 10));
         inputPanel.add(terminal, BorderLayout.CENTER);
 
