@@ -6,7 +6,6 @@ import items.Chest;
 import items.Item;
 import world.Room;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Messages {
@@ -548,11 +547,13 @@ public class Messages {
 
         if (room.hasEnemies()) {
             sb.append("\nEnemies present:");
+            // e is the current enemy in the loop
             room.getEnemies().forEach(e -> sb.append("- ").append(e.getName()).append(" (HP: ").append(e.getCurrentHealth()).append(")"));
         }
 
         if (room.hasAccessibleChests()) {
             sb.append("\nChests available:");
+            // only show closed chests
             room.getChests().stream().filter(Chest::isClosed).forEach(c -> sb.append("- ").append(c.getRarity()).append(" chest"));
         }
         return sb.toString();
@@ -569,6 +570,7 @@ public class Messages {
             sb.append("  Weapon: ").append(player.getEquippedWeapon().getName()).append("\n");
         }
 
+        // type is armor slot, armor is the item
         player.getEquippedArmor().forEach((type, armor) -> sb.append("  ").append(type).append(": ").append(armor.getName()).append(" (+").append(armor.getDefenseBonus()).append(" def)"));
 
         if (player.getEquippedAccessory() != null) {
@@ -580,11 +582,12 @@ public class Messages {
         if (player.getFullInventory().isEmpty()) {
             sb.append("  Empty\n");
         } else {
-            // group items by type for display
+            // group items by type
             player.getFullInventory().stream().collect(Collectors.groupingBy(Item::getType)).forEach((type, items) -> {
                 sb.append("\n  ").append(type).append(":");
-                AtomicInteger i = new AtomicInteger(1);
-                items.forEach(item -> sb.append("    [").append(i.getAndIncrement()).append("] ").append(item).append("\n"));
+                for (int i = 0; i < items.size(); i++) {
+                    sb.append("    [").append(i + 1).append("] ").append(items.get(i)).append("\n");
+                }
             });
         }
 
