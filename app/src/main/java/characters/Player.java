@@ -170,6 +170,14 @@ public class Player extends Character {
         return maxMana;
     }
 
+    public void useMana(int amount) {
+        mana = Math.max(0, mana - amount);
+    }
+
+    public void heal(int amount) {
+        currentHealth = Math.min(maxHealth, currentHealth + amount);
+    }
+
     public int getLevel() {
         return level;
     }

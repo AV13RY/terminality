@@ -1,5 +1,6 @@
 package game;
 
+import characters.Boss;
 import characters.Enemy;
 import characters.Player;
 import items.*;
@@ -51,7 +52,7 @@ public class GUI {
     //                                                                                                       CONSTANTS
     private static final Set<String> VALID_CLASSES = Set.of("knight", "mage", "reaper");
     private static final Set<String> GRADER_NAMES = Set.of("matt", "matthew", "xi", "ayah");
-    private static final Set<String> COMBAT_ALLOWED_COMMANDS = Set.of("flee", "status", "inventory", "help", "attack");
+    private static final Set<String> COMBAT_ALLOWED_COMMANDS = Set.of("flee", "status", "inventory", "help", "attack", "cast");
 
     //                                                                                             COLOUR DECLARATIONS
     private record ColourScheme(String name, Color primary, Color secondary) {
@@ -368,6 +369,11 @@ public class GUI {
             return;
         }
 
+        if (input.equalsIgnoreCase("cast")) {
+            castSpell();
+            return;
+        }
+
         // common commands
         if (input.equals("help")) {
             println(Messages.inGameHelpMessage());
@@ -475,13 +481,15 @@ public class GUI {
 
             case "mage":
                 if (choice.equals("1")) {
-                    chosenWeapon = new Weapon("Grimoire", 20, "An ancient tome of forbidden knowledge.", Item.Rarity.COMMON, 10);
+                    chosenWeapon = new Weapon("Grimoire", 20, "An ancient tome of forbidden knowledge. Cast: Fireball (20 mana)", Item.Rarity.COMMON, 10, Weapon.SpellType.FIRE, 20);
                     println("\nYou open the GRIMOIRE, its pages crackling with arcane energy.");
                     println("Forbidden knowledge floods your mind as the tome accepts you as its master.");
+                    println("You can now cast FIREBALL! Use 'cast' in combat.");
                 } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Unstable Orb", 18, "A chaotic orb of pure annihilation.", Item.Rarity.COMMON, 10);
+                    chosenWeapon = new Weapon("Unstable Orb", 18, "A chaotic orb of pure annihilation. Cast: Frostbolt (25 mana)", Item.Rarity.COMMON, 10, Weapon.SpellType.ICE, 25);
                     println("\nYou grasp the UNSTABLE ORB, feeling its chaotic energy surge through you.");
                     println("The orb pulses erratically, barely contained destruction at your fingertips.");
+                    println("You can now cast FROSTBOLT! Use 'cast' in combat.");
                 }
                 break;
 
@@ -491,9 +499,10 @@ public class GUI {
                     println("\nYou grip the SCYTHE, its blade singing a song of endings.");
                     println("The weapon feels like an extension of death itself in your hands.");
                 } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Death Magic", 17, "A dark conduit for siphoning souls.", Item.Rarity.COMMON, 10);
+                    chosenWeapon = new Weapon("Death Magic", 17, "A dark conduit for siphoning souls. Cast: Drain Life (15 mana)", Item.Rarity.COMMON, 10, Weapon.SpellType.LIFESTEAL, 15);
                     println("\nYou channel DEATH MAGIC, feeling the cold touch of the void.");
                     println("Dark energy swirls around you, hungry for the essence of life.");
+                    println("You can now cast DRAIN LIFE! Use 'cast' in combat.");
                 }
                 break;
         }
@@ -824,9 +833,18 @@ public class GUI {
         if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
             currentEnemy = currentRoom.getEnemies().getFirst();
             inCombat = true;
-            println("\n⚔️ COMBAT INITIATED!");
-            println("You encounter a " + currentEnemy.getName() + "!");
-            println(currentEnemy.getEnemyType());
+
+            // boss encounter
+            if (currentEnemy instanceof Boss) {
+                println("\n⚠️ ═══════════════════════════════════════ ⚠️");
+                println("         A POWERFUL PRESENCE AWAKENS!");
+                println("⚠️ ═══════════════════════════════════════ ⚠️\n");
+                println("The " + currentEnemy.getName() + " rises before you!");
+                println("This is the final challenge. Prepare yourself!\n");
+            } else {
+                println("\n⚔️ COMBAT INITIATED!");
+                println("You encounter a " + currentEnemy.getName() + "!");
+            }
             println(Messages.displayCombatStatus());
         }
     }
@@ -838,45 +856,22 @@ public class GUI {
         println("\nYou attack the " + currentEnemy.getName() + " for " + playerDamage + " damage!");
         currentEnemy.takeDamage(playerDamage);
 
+        // boss phase change check
+        if (currentEnemy instanceof Boss boss && boss.hasPhaseChanged()) {
+            println(boss.getPhaseChangeMessage());
+        }
+
         if (currentEnemy.isDead()) {
-            println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
-
-            // rewards
-            int expGained = currentEnemy.getExperienceValue();
-            int goldGained = random.nextInt(20) + 10;
-            player.gainExperience(expGained);
-            player.addGold(goldGained);
-            println("You gained " + expGained + " EXP and " + goldGained + " gold!");
-            refreshSidePanel();
-
-            currentRoom.getEnemies().remove(currentEnemy);
-            inCombat = false;
-            currentEnemy = null;
-
-            // more enemies?
-            if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
-                println("\nThere are more enemies in the room!");
-                checkForCombat();
+            if (currentEnemy instanceof Boss) {
+                handleBossVictory();
             } else {
-                println("\nThe room is now clear of enemies.");
+                handleEnemyDefeat();
             }
             return;
         }
 
         // enemy turn
-        int enemyDamage = currentEnemy.getAttack();
-        println("\nThe " + currentEnemy.getName() + " attacks you for " + enemyDamage + " damage!");
-        player.takeDamage(enemyDamage);
-
-        refreshSidePanel();
-
-        if (player.isDead()) {
-            handlePlayerDeath();
-            return;
-        }
-
-        // show status
-        println(Messages.displayCombatStatus());
+        enemyTurn();
     }
 
     //                                                                                                     ATTEMPT FLEE
@@ -924,6 +919,137 @@ public class GUI {
         return baseDamage + random.nextInt(variance * 2 + 1) - variance;
     }
 
+    //                                                                                                       CAST SPELL
+    private void castSpell() {
+        if (!inCombat) {
+            println("You can only cast spells in combat!");
+            return;
+        }
+
+        Weapon weapon = player.getEquippedWeapon();
+        if (weapon == null || !weapon.hasSpell()) {
+            println("Your weapon has no spell to cast!");
+            return;
+        }
+
+        int manaCost = weapon.getManaCost();
+        if (player.getMana() < manaCost) {
+            println("Not enough mana! Need " + manaCost + ", have " + player.getMana());
+            return;
+        }
+
+        // cast the spell
+        player.useMana(manaCost);
+        Weapon.SpellType spell = weapon.getSpellType();
+        int baseDamage = spell.baseDamage + (player.getLevel() * 2); // scales with level
+        int variance = (int) (baseDamage * 0.2);
+        int damage = baseDamage + random.nextInt(variance * 2 + 1) - variance;
+
+        // spell effects
+        switch (spell) {
+            case FIRE -> {
+                println("\n🔥 You cast FIREBALL!");
+                println("Flames engulf the " + currentEnemy.getName() + " for " + damage + " damage!");
+                int burnDamage = damage / 4; // 25% burn
+                println("The enemy burns for " + burnDamage + " additional damage!");
+                currentEnemy.takeDamage(damage + burnDamage);
+            }
+            case ICE -> {
+                println("\n❄️ You cast FROSTBOLT!");
+                println("Ice shards pierce the " + currentEnemy.getName() + " for " + damage + " damage!");
+                println("The enemy is FROZEN and skips their next attack!");
+                currentEnemy.takeDamage(damage);
+                // skip enemy turn by returning early after status check
+                checkCombatEnd();
+                return;
+            }
+            case LIFESTEAL -> {
+                println("\n💀 You cast DRAIN LIFE!");
+                println("Dark energy drains " + damage + " life from the " + currentEnemy.getName() + "!");
+                int healAmount = damage / 2; // heal 50% of damage
+                player.heal(healAmount);
+                println("You absorb " + healAmount + " health!");
+                currentEnemy.takeDamage(damage);
+            }
+            default -> {
+                println("The spell fizzles...");
+                return;
+            }
+        }
+
+        // boss phase check
+        if (currentEnemy instanceof Boss boss && boss.hasPhaseChanged()) {
+            println(boss.getPhaseChangeMessage());
+        }
+
+        // check if enemy died
+        if (currentEnemy.isDead()) {
+            if (currentEnemy instanceof Boss) {
+                handleBossVictory();
+            } else {
+                handleEnemyDefeat();
+            }
+            return;
+        }
+
+        // enemy turn (unless frozen)
+        enemyTurn();
+    }
+
+    //                                                                                              CHECK COMBAT END STATE
+    private void checkCombatEnd() {
+        if (currentEnemy.isDead()) {
+            if (currentEnemy instanceof Boss) {
+                handleBossVictory();
+            } else {
+                handleEnemyDefeat();
+            }
+        } else {
+            refreshSidePanel();
+            println(Messages.displayCombatStatus());
+        }
+    }
+
+    //                                                                                               HANDLE ENEMY DEFEAT
+    private void handleEnemyDefeat() {
+        println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
+
+        int expGained = currentEnemy.getExperienceValue();
+        int goldGained = random.nextInt(20) + 10;
+        player.gainExperience(expGained);
+        player.addGold(goldGained);
+        println("You gained " + expGained + " EXP and " + goldGained + " gold!");
+        refreshSidePanel();
+
+        currentRoom.getEnemies().remove(currentEnemy);
+        inCombat = false;
+        currentEnemy = null;
+
+        if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
+            println("\nThere are more enemies in the room!");
+            checkForCombat();
+        } else {
+            println("\nThe room is now clear of enemies.");
+        }
+    }
+
+    //                                                                                                      ENEMY TURN
+    private void enemyTurn() {
+        println("\n" + currentEnemy.getAttackMessage());
+        int enemyDamage = currentEnemy.getAttackDamage();
+        println("The " + currentEnemy.getName() + " deals " + enemyDamage + " damage!");
+        player.takeDamage(enemyDamage);
+
+        refreshSidePanel();
+
+        if (player.isDead()) {
+            handlePlayerDeath();
+            return;
+        }
+
+        println(Messages.displayCombatStatus());
+    }
+
     //                                                                                                HANDLE PLAYER DEATH
     private void handlePlayerDeath() {
         inCombat = false;
@@ -935,6 +1061,38 @@ public class GUI {
         currentEnemy = null;
 
         // death screen listener
+        terminal.removeActionListener(terminal.getActionListeners()[0]);
+        terminal.addActionListener(e -> {
+            String input = terminal.getText().trim().toLowerCase();
+            if (input.equals("restart")) {
+                restartGame();
+            } else if (input.equals("exit")) {
+                System.exit(0);
+            } else {
+                println("\n > " + input);
+                println("Please type 'restart' or 'exit'");
+            }
+            terminal.setText("");
+        });
+    }
+
+    //                                                                                                 HANDLE BOSS VICTORY
+    private void handleBossVictory() {
+        // rewards before victory screen
+        int expGained = currentEnemy.getExperienceValue();
+        int goldGained = currentEnemy.getGoldDrop();
+        player.gainExperience(expGained);
+        player.addGold(goldGained);
+
+        currentRoom.getEnemies().remove(currentEnemy);
+        inCombat = false;
+        currentEnemy = null;
+
+        display.setText("");
+        println(Messages.displayVictoryArt());
+        println(Messages.displayVictoryInfo(CLASS));
+
+        // victory screen listener
         terminal.removeActionListener(terminal.getActionListeners()[0]);
         terminal.addActionListener(e -> {
             String input = terminal.getText().trim().toLowerCase();

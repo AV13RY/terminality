@@ -5,6 +5,7 @@ public class Boss extends Enemy {
     //--------------------------------------------------------------------------------------------------- DECLARATIONS
     private int phase;
     private boolean hasUsedSpecialAttack;
+    private boolean phaseChanged; // track if phase just changed
 
     private static final String[] PHASE1_ATTACKS = {"The Ancient Guardian swings its massive blade!", "Dark energy crackles as the Guardian strikes!", "The Guardian's eyes glow red as it attacks!"};
     private static final String[] PHASE2_ATTACKS = {"The Guardian enters a berserker rage and strikes wildly!", "Shadow tendrils lash out from the Guardian!", "The Guardian channels dark magic into a devastating blow!"};
@@ -67,7 +68,16 @@ public class Boss extends Enemy {
         // phase 2 at 50% hp
         if (phase == 1 && currentHealth <= maxHealth / 2) {
             phase = 2;
+            phaseChanged = true;
         }
+    }
+
+    public boolean hasPhaseChanged() {
+        if (phaseChanged) {
+            phaseChanged = false; // reset after checking
+            return true;
+        }
+        return false;
     }
 
     @Override

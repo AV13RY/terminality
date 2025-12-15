@@ -281,6 +281,7 @@ public class Messages {
                 
                 COMBAT:
                   attack          - Attack the current enemy
+                  cast            - Cast your weapon's spell (if available)
                   flee            - Attempt to escape combat
                 
                 CHARACTER:
@@ -774,6 +775,53 @@ public class Messages {
                         `-.___,-.      .-.        ___,'        (/   \s
                                  `---'`   `'----'`
                 """;
+    }
+
+    //----------------------------------------------------------------------------------------------- VICTORY MESSAGES
+    //                                                                                                    VICTORY ART
+    public static String displayVictoryArt() {
+        return """
+                
+                
+                                 ██╗   ██╗██╗ ██████╗████████╗ ██████╗ ██████╗ ██╗   ██╗██╗
+                                 ██║   ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝██║
+                                 ██║   ██║██║██║        ██║   ██║   ██║██████╔╝ ╚████╔╝ ██║
+                                 ╚██╗ ██╔╝██║██║        ██║   ██║   ██║██╔══██╗  ╚██╔╝  ╚═╝
+                                  ╚████╔╝ ██║╚██████╗   ██║   ╚██████╔╝██║  ██║   ██║   ██╗
+                                   ╚═══╝  ╚═╝ ╚═════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝
+                
+                                              ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣤⣤⣄⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+                                              ⠀⠀⠀⠀⠀⣀⣤⣶⣿⠿⠟⠛⠉⠉⠉⠛⠻⠿⣿⣶⣤⣀⠀⠀⠀⠀⠀
+                                              ⠀⠀⠀⣠⣾⣿⡿⠋⠀⠀⠀⠀⢀⣀⣀⡀⠀⠀⠀⠙⢿⣿⣷⣄⠀⠀⠀
+                                              ⠀⢀⣴⣿⡿⠋⠀⠀⠀⠀⠀⣴⣿⣿⣿⣦⠀⠀⠀⠀⠀⠙⢿⣿⣦⡀⠀
+                                              ⢀⣾⣿⡟⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢻⣿⣷⡀
+                                              ⣾⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠻⣿⣿⣿⠟⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣷
+                                              ⣿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿
+                                              ⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⣤⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⣿⣿
+                                              ⢻⣿⣧⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⠀⠀⠀⠀⣼⣿⡟
+                                              ⠈⢿⣿⣦⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⣴⣿⡿⠁
+                                              ⠀⠈⢿⣿⣷⣄⠀⠀⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠀⣠⣾⣿⡿⠁⠀
+                                              ⠀⠀⠀⠙⢿⣿⣷⣤⡀⠈⠛⠿⣿⣿⣿⣿⠿⠛⢀⣤⣾⣿⡿⠋⠀⠀⠀
+                                              ⠀⠀⠀⠀⠀⠙⠿⣿⣿⣶⣤⣄⣀⣀⣀⣠⣤⣶⣿⣿⠿⠋⠀⠀⠀⠀⠀
+                                              ⠀⠀⠀⠀⠀⠀⠀⠈⠙⠻⠿⣿⣿⣿⣿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+                
+                """;
+    }
+
+    //                                                                                                   VICTORY INFO
+    public static String displayVictoryInfo(String CLASS) {
+        return "         You have defeated the Ancient Guardian!\n" +
+               "         " + GUI.getName() + " the " + CLASS + " has conquered the dungeon!\n\n" +
+               "         ═══════════ FINAL STATISTICS ═══════════\n" +
+               "         Level: " + GUI.getPlayer().getLevel() + "\n" +
+               "         Experience: " + GUI.getPlayer().getExperience() + "\n" +
+               "         Gold Collected: " + GUI.getPlayer().getGold() + "\n" +
+               "         Rooms Explored: " + GUI.countVisitedRooms() + "\n" +
+               "         Commands Used: " + GUI.getCommandCount() + "\n" +
+               "         ═════════════════════════════════════\n\n" +
+               "         Congratulations, champion!\n" +
+               "         Type 'restart' to begin a new adventure\n" +
+               "         Type 'exit' to quit the game\n";
     }
 
     //------------------------------------------------------------------------------------------------ DEATH MESSAGES
