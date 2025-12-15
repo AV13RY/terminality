@@ -1,25 +1,21 @@
 package game;
 
 import characters.Boss;
-import characters.Enemy;
 import items.Accessory;
-import items.Armor;
 import items.Chest;
 import items.Item;
 import world.Room;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Messages {
 
-    //--------------------------------------------------------------------------------------------------- OS DETECTION
+    //---------------------------------------------------------------------------------------------------- CONSTANTS
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
 
-    //--------------------------------------------------------------------------------------------------- TEXT METHODS
-    //                                                                                                ASCII ART TITLES
+    //----------------------------------------------------------------------------------------------- TITLE MESSAGES
+    //                                                                                                 TUTORIAL TITLE
     public static String tutorialTitleMessage() {
         if (IS_WINDOWS) {
             return """
@@ -45,6 +41,7 @@ public class Messages {
                 ═══════════════════════════════════════════════════════════════════════════════════════""";
     }
 
+    //                                                                                                GRAVEYARD TITLE
     public static String graveyardTitleMessage() {
         if (IS_WINDOWS) {
             return """
@@ -82,6 +79,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                   CHURCH TITLE
     public static String churchTitleMessage() {
         if (IS_WINDOWS) {
             return """
@@ -113,7 +111,8 @@ public class Messages {
                 """;
     }
 
-    //                                                                                                  INTRO MESSAGES 
+    //----------------------------------------------------------------------------------------------- INTRO MESSAGES
+    //                                                                                                  TUTORIAL INTRO
     public static String tutorialIntroMessage() {
 
         if (IS_WINDOWS) {
@@ -188,6 +187,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                 GRAVEYARD INTRO
     public static String graveyardIntroMessage() {
         return """
                 You find yourself at the entrance of an ancient graveyard shrouded in mist.
@@ -214,10 +214,13 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                    CHURCH INTRO
     public static String churchIntroMessage(String CLASS) {
         return "\nYou push open the heavy wooden doors and step into the abandoned church. Dust motes dance\n" + "in the colored light streaming through stained glass windows, casting ethereal patterns\n" + "across the crumbling pews and debris-strewn floor.\n" + "                                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀ ⡀⡀⠀         \n" + "                         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⡀⠀⡀⠀⠂⡀⢀⢰⠀⢂⠀⠀⠀⠀⠀⠀⠀⠀\n" + "                         ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣐⣬⣄⣷⡀⢸⡃⡘⡸⡄⢸⠀⠀⡇⠀⢠⠀⠀⠀\n" + "                         ⠀⠀⠀⠀⠀⣠⡴⠚⢉⢍⢂⣼⣴⣿⣿⣿⣷⣷⣷⣣⣏⣆⣼⠀⠀⠄⠀⠀⠀\n" + "                         ⠀⠀⠀⢠⡞⠋⠀⡑⣮⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣾⣷⣼⣆⣌⡠⢁⡤\n" + "                         ⠀⠀⣰⠋⠀⣀⣺⣾⣿⣿⣿⣿⣿⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠟⠁\n" + "                         ⠀⡼⠁⢀⣿⣿⣿⡿⣿⡛⣿⣿⣿⡷⢸⣿⠀⠀⠀⠀⣹⣿⣿⣿⣿⣟⠣⠀⠀\n" + "                         ⡰⠁⢀⣼⣿⠟⢿⡇⠹⣿⣿⣿⠟⠀⢠⡿⠀⠀⣠⣾⡿⣿⡥⠊⠁⠀⠀⠀⠀\n" + "                         ⠁⢠⣾⠟⠁⠀⠈⠳⢿⣦⣠⣤⣦⣼⠟⠁⣠⣾⣿⣿⣟⠍⠒⠀⠠⠀⠀⠀⠀\n" + "                         ⢠⡟⠁⢀⣀⣀⣀⣀⡀⠈⣉⣉⣡⣤⣶⣿⡿⡿⡿⡻⠥⠑⡀⠀⠀⠀⠀⠀⠀\n" + "                         ⠏⡠⠚⠉⠋⢍⠋⢫⠋⠛⢹⢻⡟⠻⣟⢏⠌⢊⡌⠌⠄⠀⠀⠀⠀⠀⠀⠀⠀\n" + "                         ⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠘⠂⠘⠂⠿⠈⠀⠀⠀⠘⠀⠀⠀⠀⠀\n\n\n" + "At the altar, a spectre materializes - an overseer of sort.\n" + "Its hollow voice echoes through the sacred halls:\n\n" + "\"Ah, a " + CLASS + " has remembered their path.\n" + "You will need more than courage to survive what lies beyond these walls.\"\n\n" + "【﻿ＴＨＥ　ＥＹＥ　ＧＬＯＷＳ】\n\n" + displayClassWeapons(CLASS) + "\"Choose wisely, " + GUI.getName() + ". This decision will shape your journey through the darkness.\"\n\n" + "❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█═█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚❚█══█❚\n\n" + "Which weapon calls to you?" + "  - Use the command: [ choose <1 or 2> ]\n";
     }
 
+    //------------------------------------------------------------------------------------------------ HELP MESSAGES
+    //                                                                                                   TUTORIAL HELP
     public static String tutorialHelpMessage() {
         return """
                 
@@ -232,6 +235,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                  GRAVEYARD HELP
     public static String graveyardHelpMessage() {
         return """
                 
@@ -248,6 +252,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                     CHURCH HELP
     public static String churchHelpMessage() {
         return """
                 
@@ -265,6 +270,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                    IN-GAME HELP
     public static String inGameHelpMessage() {
         return """
                 
@@ -295,19 +301,16 @@ public class Messages {
                 """;
     }
 
+    //------------------------------------------------------------------------------------------ WEAPON DISPLAY MESSAGES
+    //                                                                                               CLASS WEAPONS ROUTER
+    // routes to the correct weapon display based on class
     public static String displayClassWeapons(String CLASS) {
-
-        if ("knight".equalsIgnoreCase(CLASS)) {
-            return displayKnightWeapons();
-        }
-
-        if ("mage".equalsIgnoreCase(CLASS)) {
-            return displayMageWeapons();
-        }
-
+        if ("knight".equalsIgnoreCase(CLASS)) return displayKnightWeapons();
+        if ("mage".equalsIgnoreCase(CLASS)) return displayMageWeapons();
         return displayReaperWeapons();
     }
 
+    //                                                                                                   KNIGHT WEAPONS
     private static String displayKnightWeapons() {
 
 
@@ -345,9 +348,9 @@ public class Messages {
                 
                 
                 """;
-
     }
 
+    //                                                                                                     MAGE WEAPONS
     private static String displayMageWeapons() {
 
         return """
@@ -377,6 +380,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                   REAPER WEAPONS
     private static String displayReaperWeapons() {
         if (IS_WINDOWS) {
             return """
@@ -438,6 +442,8 @@ public class Messages {
                 """;
     }
 
+    //------------------------------------------------------------------------------------------- GAME STATUS MESSAGES
+    //                                                                                                     DISPLAY MAP
     public static String displayMap() {
         StringBuilder sb = new StringBuilder();
         final int CONSOLE_WIDTH = 91;
@@ -450,7 +456,7 @@ public class Messages {
 
         sb.append("\n").append(centeredTitle).append("\n\n");
 
-        // Find map bounds
+        // find map bounds
         int minX = 0, maxX = 0, minY = 0, maxY = 0;
         for (Room room : GUI.getMapBuilder().getAllRooms().values()) {
             minX = Math.min(minX, room.getX());
@@ -459,10 +465,9 @@ public class Messages {
             maxY = Math.max(maxY, room.getY());
         }
 
-        // Calculate map width for centering
         int mapWidth = (maxX - minX + 1) * 4;
 
-        // Display map from top to bottom
+        // display map from top to bottom
         for (int y = maxY; y >= minY; y--) {
             StringBuilder mapRow = new StringBuilder();
             StringBuilder connectionRow = new StringBuilder();
@@ -472,35 +477,19 @@ public class Messages {
                 Room room = GUI.getMapBuilder().getAllRooms().get(coordKey);
 
                 if (room != null) {
-                    // Determine room symbol
+                    // room symbol priority: current > boss > treasure > visited > unvisited
                     String symbol;
-                    if (room == GUI.getCurrentRoom()) {
-                        symbol = "[◉]"; // Current position
-                    } else if (room.getType() == Room.RoomType.BOSS) {
-                        symbol = "[B]"; // Boss room
-                    } else if (room.getType() == Room.RoomType.TREASURE) {
-                        symbol = "[T]"; // Treasure room
-                    } else if (room.isVisited()) {
-                        symbol = "[·]"; // Visited room
-                    } else {
-                        symbol = "[?]"; // Unvisited room
-                    }
+                    if (room == GUI.getCurrentRoom()) symbol = "[◉]";
+                    else if (room.getType() == Room.RoomType.BOSS) symbol = "[B]";
+                    else if (room.getType() == Room.RoomType.TREASURE) symbol = "[T]";
+                    else if (room.isVisited()) symbol = "[·]";
+                    else symbol = "[?]";
 
                     mapRow.append(symbol);
+                    mapRow.append(room.getExit("east") != null ? "─" : " ");
 
-                    // Add horizontal connections
-                    if (room.getExit("east") != null) {
-                        mapRow.append("─");
-                    } else {
-                        mapRow.append(" ");
-                    }
-
-                    // Add vertical connections
-                    if (room.getExit("south") != null) {
-                        connectionRow.append(" │ ");
-                    } else {
-                        connectionRow.append("   ");
-                    }
+                    // vertical connections
+                    connectionRow.append(room.getExit("south") != null ? " │ " : "   ");
                     connectionRow.append(" ");
                 } else {
                     mapRow.append("    ");
@@ -508,7 +497,7 @@ public class Messages {
                 }
             }
 
-            // Center the map rows
+            // centre the map rows
             int padding = (CONSOLE_WIDTH - mapWidth) / 2;
             String paddingStr = " ".repeat(Math.max(0, padding));
 
@@ -518,7 +507,6 @@ public class Messages {
             }
         }
 
-        // Center the legend
         String legend = "Legend: [◉]=You [·]=Visited [?]=Unexplored [T]=Treasure [B]=Boss";
         int legendPadding = (CONSOLE_WIDTH - legend.length()) / 2;
         sb.append("\n").append(" ".repeat(Math.max(0, legendPadding))).append(legend).append("\n");
@@ -526,19 +514,23 @@ public class Messages {
         return sb.toString();
     }
 
+    //                                                                                               DISPLAY COMBAT STATUS
     public static String displayCombatStatus() {
+        var player = GUI.getPlayer();
+        var enemy = GUI.getCurrentEnemy();
         StringBuilder sb = new StringBuilder();
-        sb.append("\n═══ COMBAT STATUS ═══\n\n");
-        sb.append("Your HP: ").append(GUI.getPlayer().getCurrentHealth()).append("/").append(GUI.getPlayer().getMaxHealth()).append("\n");
 
-        if (GUI.getPlayer().getMaxMana() > 0) {
-            sb.append("Your MP: ").append(GUI.getPlayer().getMana()).append("/").append(GUI.getPlayer().getMaxMana()).append("\n");
+        sb.append("\n═══ COMBAT STATUS ═══\n\n");
+        sb.append("Your HP: ").append(player.getCurrentHealth()).append("/").append(player.getMaxHealth()).append("\n");
+
+        if (player.getMaxMana() > 0) {
+            sb.append("Your MP: ").append(player.getMana()).append("/").append(player.getMaxMana()).append("\n");
         }
 
-        sb.append(GUI.getCurrentEnemy().getName()).append(" HP: ").append(GUI.getCurrentEnemy().getCurrentHealth()).append("/").append(GUI.getCurrentEnemy().getMaxHealth()).append("\n\n");
+        sb.append(enemy.getName()).append(" HP: ").append(enemy.getCurrentHealth()).append("/").append(enemy.getMaxHealth()).append("\n\n");
 
-        // Show boss phase if applicable
-        if (GUI.getCurrentEnemy() instanceof Boss boss) {
+        // show boss phase if applicable
+        if (enemy instanceof Boss boss) {
             sb.append("Boss Phase: ").append(boss.getPhase()).append("\n");
         }
 
@@ -546,76 +538,63 @@ public class Messages {
         return sb.toString();
     }
 
+    //                                                                                                DISPLAY CURRENT ROOM
     public static String displayCurrentRoom() {
+        Room room = GUI.getCurrentRoom();
         StringBuilder sb = new StringBuilder();
-        sb.append("\n═══ ").append(GUI.getCurrentRoom().getName().toUpperCase()).append(" ═══\n");
-        sb.append(GUI.getCurrentRoom().getDescription());
+        sb.append("\n═══ ").append(room.getName().toUpperCase()).append(" ═══\n");
+        sb.append(room.getDescription());
+        sb.append("\nExits: ").append(String.join(", ", room.getExits().keySet())).append("\n");
 
-        // Show exits
-        sb.append("\nExits: ").append(String.join(", ", GUI.getCurrentRoom().getExits().keySet())).append("\n");
-
-        if (GUI.getCurrentRoom().hasEnemies()) {
+        if (room.hasEnemies()) {
             sb.append("\nEnemies present:");
-            for (Enemy enemy : GUI.getCurrentRoom().getEnemies()) {
-                sb.append("- ").append(enemy.getName()).append(" (HP: ").append(enemy.getCurrentHealth()).append(")");
-            }
+            room.getEnemies().forEach(e -> sb.append("- ").append(e.getName()).append(" (HP: ").append(e.getCurrentHealth()).append(")"));
         }
 
-        // Show accessible chests
-        if (GUI.getCurrentRoom().hasAccessibleChests()) {
+        if (room.hasAccessibleChests()) {
             sb.append("\nChests available:");
-            for (Chest chest : GUI.getCurrentRoom().getChests()) {
-                if (chest.isClosed()) {
-                    sb.append("- ").append(chest.getRarity()).append(" chest");
-                }
-            }
+            room.getChests().stream().filter(Chest::isClosed).forEach(c -> sb.append("- ").append(c.getRarity()).append(" chest"));
         }
         return sb.toString();
     }
 
+    //                                                                                                  DISPLAY INVENTORY
     public static String displayInventory() {
+        var player = GUI.getPlayer();
         StringBuilder sb = new StringBuilder();
         sb.append("\n═══ INVENTORY ═══\n");
 
-        // Equipped items
         sb.append("\n⚔️ EQUIPPED: \n");
-        if (GUI.getPlayer().getEquippedWeapon() != null) {
-            sb.append("  Weapon: ").append(GUI.getPlayer().getEquippedWeapon().getName()).append("\n");
+        if (player.getEquippedWeapon() != null) {
+            sb.append("  Weapon: ").append(player.getEquippedWeapon().getName()).append("\n");
         }
 
-        for (Map.Entry<Armor.ArmorType, Armor> entry : GUI.getPlayer().getEquippedArmor().entrySet()) {
-            sb.append("  ").append(entry.getKey()).append(": ").append(entry.getValue().getName()).append(" (+").append(entry.getValue().getDefenseBonus()).append(" def)");
-        }
+        player.getEquippedArmor().forEach((type, armor) -> sb.append("  ").append(type).append(": ").append(armor.getName()).append(" (+").append(armor.getDefenseBonus()).append(" def)"));
 
-        if (GUI.getPlayer().getEquippedAccessory() != null) {
-            Accessory acc = GUI.getPlayer().getEquippedAccessory();
+        if (player.getEquippedAccessory() != null) {
+            Accessory acc = player.getEquippedAccessory();
             sb.append("  Accessory: ").append(acc.getName()).append(" (+").append(acc.getBonusAmount()).append(" ").append(acc.getStatBonus().name()).append(")");
         }
 
-        // Inventory items
         sb.append("\n🎒BACKPACK:");
-        if (GUI.getPlayer().getFullInventory().isEmpty()) {
+        if (player.getFullInventory().isEmpty()) {
             sb.append("  Empty\n");
         } else {
-            Map<Item.ItemType, List<Item>> itemsByType = new HashMap<>();
-            for (Item item : GUI.getPlayer().getFullInventory()) {
-                itemsByType.computeIfAbsent(item.getType(), k -> new ArrayList<>()).add(item);
-            }
-
-            for (Map.Entry<Item.ItemType, List<Item>> entry : itemsByType.entrySet()) {
-                sb.append("\n  ").append(entry.getKey()).append(":");
-                for (int i = 0; i < entry.getValue().size(); i++) {
-                    Item item = entry.getValue().get(i);
-                    sb.append("    [").append(i + 1).append("] ").append(item.toString()).append("\n");
-                }
-            }
+            // group items by type for display
+            player.getFullInventory().stream().collect(Collectors.groupingBy(Item::getType)).forEach((type, items) -> {
+                sb.append("\n  ").append(type).append(":");
+                AtomicInteger i = new AtomicInteger(1);
+                items.forEach(item -> sb.append("    [").append(i.getAndIncrement()).append("] ").append(item).append("\n"));
+            });
         }
 
-        sb.append("\n💰 Gold: ").append(GUI.getPlayer().getGold()).append("\n\n");
+        sb.append("\n💰 Gold: ").append(player.getGold()).append("\n\n");
         sb.append("═════════════════\n");
         return sb.toString();
     }
 
+    //------------------------------------------------------------------------------------------------- CHARACTER ART
+    //                                                                                                    KNIGHT ASCII
     public static String displayKnight(int image) {
 
         return image == 1 ? """
@@ -663,6 +642,7 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                      MAGE ASCII
     public static String displayMage(int image) {
 
         return image == 1 ? """
@@ -712,9 +692,9 @@ public class Messages {
                       _.-'       |      BBb       '-.  '-.\s
                      (___________\\____.dBBBb.________)____)
                 """;
-
     }
 
+    //                                                                                                    REAPER ASCII
     public static String displayReaper(int image) {
         return image == 1 ? """
                                                                  .""--..__
@@ -793,6 +773,8 @@ public class Messages {
                 """;
     }
 
+    //------------------------------------------------------------------------------------------------ DEATH MESSAGES
+    //                                                                                                      DEATH ART
     public static String displayDeathArt() {
         return """
                 
@@ -821,14 +803,9 @@ public class Messages {
                 """;
     }
 
+    //                                                                                                     DEATH INFO
     public static String displayDeathInfo(String CLASS) {
-
-        return (GUI.getCurrentEnemy() != null ? "         You were slain by " + GUI.getCurrentEnemy().getName() + " in the " + GUI.getCurrentRoom().getName() + ".\n" : "         You have fallen in the " + GUI.getCurrentRoom().getName() + ".\n") + "         " + GUI.getName() + " the " + CLASS + " has met their end.\n" + "         Your journey lasted " + GUI.getCommandCount() + " commands.\n" +
-
-                // Display final stats
-                "\n         ═══════════ FINAL STATISTICS ═══════════\n" + "         Level: " + GUI.getPlayer().getLevel() + "\n" + "         Experience: " + GUI.getPlayer().getExperience() + "\n" + "         Gold Collected: " + GUI.getPlayer().getGold() + "\n" + "         Rooms Explored: " + GUI.countVisitedRooms() + "\n" + "         ═════════════════════════════════════\n\n" +
-
-                // Options
-                "         Would you like to try again?\n" + "         Type 'restart' to begin a new adventure\n" + "         Type 'exit' to quit the game\n";
+        // builds death message with optional enemy info, final stats, and restart options
+        return (GUI.getCurrentEnemy() != null ? "         You were slain by " + GUI.getCurrentEnemy().getName() + " in the " + GUI.getCurrentRoom().getName() + ".\n" : "         You have fallen in the " + GUI.getCurrentRoom().getName() + ".\n") + "         " + GUI.getName() + " the " + CLASS + " has met their end.\n" + "         Your journey lasted " + GUI.getCommandCount() + " commands.\n" + "\n         ═══════════ FINAL STATISTICS ═══════════\n" + "         Level: " + GUI.getPlayer().getLevel() + "\n" + "         Experience: " + GUI.getPlayer().getExperience() + "\n" + "         Gold Collected: " + GUI.getPlayer().getGold() + "\n" + "         Rooms Explored: " + GUI.countVisitedRooms() + "\n" + "         ═════════════════════════════════════\n\n" + "         Would you like to try again?\n" + "         Type 'restart' to begin a new adventure\n" + "         Type 'exit' to quit the game\n";
     }
 }
