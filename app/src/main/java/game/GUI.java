@@ -429,23 +429,6 @@ public class GUI {
         display.setCaretPosition(display.getDocument().getLength());
     }
 
-    public void println(String text, JTextArea area) {
-        area.append(" " + text + "\n");
-        area.setCaretPosition(area.getDocument().getLength());
-    }
-
-    public void println(String text, JTextPane pane) {
-        try {
-            StyledDocument doc = pane.getStyledDocument();
-            Style style = pane.addStyle("default", null);
-            StyleConstants.setForeground(style, getColour("white"));
-            doc.insertString(doc.getLength(), " " + text + "\n", style);
-            pane.setCaretPosition(doc.getLength());
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
     // pass pairs of (text, color)
     private void printColored(Object... args) {
         try {
