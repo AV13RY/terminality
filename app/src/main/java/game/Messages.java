@@ -297,11 +297,11 @@ public class Messages {
 
     public static String displayClassWeapons(String CLASS) {
 
-        if ("Knight".equals(CLASS)) {
+        if ("knight".equalsIgnoreCase(CLASS)) {
             return displayKnightWeapons();
         }
 
-        if ("Mage".equals(CLASS)) {
+        if ("mage".equalsIgnoreCase(CLASS)) {
             return displayMageWeapons();
         }
 
