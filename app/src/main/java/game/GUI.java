@@ -94,129 +94,120 @@ public class GUI {
 
     //------------------------------------------------------------------------------------------ SPECIFIC TEXT METHODS
     //                                                                                            DISPLAY PLAYER STATS
+    private final Color WHITE_C = getColour("white");
+    private final Color RED_C = new Color(255, 100, 100);
+    private final Color BLUE_C = new Color(100, 149, 237);
+    private final Color GREEN_C = new Color(100, 255, 100);
+    private final Color GOLD_C = new Color(255, 215, 0);
+    private final Color CYAN_C = new Color(100, 255, 255);
+    private final Color MAGENTA_C = new Color(255, 100, 255);
+    private final Color GREY_C = new Color(128, 128, 128);
+    private final Color DIM_RED_C = new Color(180, 80, 80);
+
     private void displayStats() {
         statsArea.setText("");
-        println(player.displayStatus(), statsArea);
+
+        printColored("\n══════════════════════════════════════\n", WHITE_C);
+        printColored("           CHARACTER STATUS\n", WHITE_C);
+        printColored("══════════════════════════════════════\n", WHITE_C);
+
+        printColored("Name: ", WHITE_C, player.getName() + "\n", GOLD_C);
+        printColored("Class: ", WHITE_C, CLASS + "\n", CYAN_C);
+        printColored("Weapon: ", WHITE_C, (player.getEquippedWeapon() != null ? player.getEquippedWeapon().getName() : "None") + "\n", MAGENTA_C);
+        printColored("Level: ", WHITE_C, player.getLevel() + "\n", GREEN_C);
+        printColored("Experience: ", WHITE_C, player.getExperience() + "/100\n", GREEN_C);
+
+        printColored("\nVitals:\n", WHITE_C);
+        printColored("  Health: ", WHITE_C, player.getCurrentHealth() + "/" + player.getMaxHealth() + "\n", RED_C);
+
+        if (player.getMaxMana() > 0) {
+            printColored("  Mana: ", WHITE_C, player.getMana() + "/" + player.getMaxMana() + "\n", BLUE_C);
+        }
+
+        printColored("\nStats:\n", WHITE_C);
+        printColored("  Attack: ", WHITE_C, player.getAttack() + "\n", GOLD_C);
+        printColored("  Defense: ", WHITE_C, player.getDefense() + "\n", BLUE_C);
+
+        printColored("═══════════════════════════════════════", WHITE_C);
     }
 
     //                                                                                     DISPLAY MINIMAP IN SIDE PANEL
     private void displayMinimap() {
         statsArea.setText("");
-        StyledDocument doc = statsArea.getStyledDocument();
 
-        // define color styles
-        Style defaultStyle = statsArea.addStyle("default", null);
-        StyleConstants.setForeground(defaultStyle, getColour("white"));
+        // find map bounds
+        int minX = 0, maxX = 0, minY = 0, maxY = 0;
+        for (Room room : mapBuilder.getAllRooms().values()) {
+            minX = Math.min(minX, room.getX());
+            maxX = Math.max(maxX, room.getX());
+            minY = Math.min(minY, room.getY());
+            maxY = Math.max(maxY, room.getY());
+        }
 
-        Style dimGrey = statsArea.addStyle("dimGrey", null);
-        StyleConstants.setForeground(dimGrey, new Color(128, 128, 128));
+        // display map from top to bottom
+        for (int y = maxY; y >= minY; y--) {
+            for (int x = minX; x <= maxX; x++) {
+                String coordKey = x + "," + y;
+                Room room = mapBuilder.getAllRooms().get(coordKey);
 
-        Style dimRed = statsArea.addStyle("dimRed", null);
-        StyleConstants.setForeground(dimRed, new Color(180, 80, 80));
+                if (room != null) {
+                    Color roomColor;
+                    String symbol;
 
-        Style gold = statsArea.addStyle("gold", null);
-        StyleConstants.setForeground(gold, new Color(255, 215, 0));
+                    if (room == currentRoom) {
+                        symbol = "[◉]";
+                        roomColor = GREEN_C;
+                    } else if (room.getType() == Room.RoomType.BOSS) {
+                        symbol = "[B]";
+                        roomColor = BLUE_C;
+                    } else if (room.getType() == Room.RoomType.TREASURE || room.hasAccessibleChests()) {
+                        symbol = "[T]";
+                        roomColor = GOLD_C;
+                    } else if (!room.isVisited()) {
+                        symbol = "[?]";
+                        roomColor = GREY_C;
+                    } else if (room.hasEnemies()) {
+                        symbol = "[!]";
+                        roomColor = DIM_RED_C;
+                    } else {
+                        symbol = "[·]";
+                        roomColor = WHITE_C;
+                    }
 
-        Style blue = statsArea.addStyle("blue", null);
-        StyleConstants.setForeground(blue, new Color(100, 149, 237));
+                    printColored(symbol, roomColor);
 
-        Style white = statsArea.addStyle("white", null);
-        StyleConstants.setForeground(white, getColour("white"));
-
-        Style green = statsArea.addStyle("green", null);
-        StyleConstants.setForeground(green, new Color(100, 255, 100));
-
-        try {
-            // title
-
-            // find map bounds
-            int minX = 0, maxX = 0, minY = 0, maxY = 0;
-            for (Room room : mapBuilder.getAllRooms().values()) {
-                minX = Math.min(minX, room.getX());
-                maxX = Math.max(maxX, room.getX());
-                minY = Math.min(minY, room.getY());
-                maxY = Math.max(maxY, room.getY());
+                    // horizontal connection
+                    if (room.getExit("east") != null) {
+                        printColored("─", WHITE_C);
+                    } else {
+                        printColored(" ", WHITE_C);
+                    }
+                } else {
+                    printColored("    ", WHITE_C);
+                }
             }
+            printColored("\n", WHITE_C);
 
-            // display map from top to bottom
-            for (int y = maxY; y >= minY; y--) {
+            // vertical connections row
+            if (y > minY) {
                 for (int x = minX; x <= maxX; x++) {
                     String coordKey = x + "," + y;
                     Room room = mapBuilder.getAllRooms().get(coordKey);
 
-                    if (room != null) {
-                        Style roomStyle;
-                        String symbol;
-
-                        if (room == currentRoom) {
-                            symbol = "[◉]";
-                            roomStyle = green;
-                        } else if (room.getType() == Room.RoomType.BOSS) {
-                            symbol = "[B]";
-                            roomStyle = blue;
-                        } else if (room.getType() == Room.RoomType.TREASURE || room.hasAccessibleChests()) {
-                            symbol = "[T]";
-                            roomStyle = gold;
-                        } else if (!room.isVisited()) {
-                            symbol = "[?]";
-                            roomStyle = dimGrey;
-                        } else if (room.hasEnemies()) {
-                            symbol = "[!]";
-                            roomStyle = dimRed;
-                        } else {
-                            symbol = "[·]";
-                            roomStyle = white;
-                        }
-
-                        doc.insertString(doc.getLength(), symbol, roomStyle);
-
-                        // horizontal connection
-                        if (room.getExit("east") != null) {
-                            doc.insertString(doc.getLength(), "─", defaultStyle);
-                        } else {
-                            doc.insertString(doc.getLength(), " ", defaultStyle);
-                        }
+                    if (room != null && room.getExit("south") != null) {
+                        printColored(" │  ", WHITE_C);
                     } else {
-                        doc.insertString(doc.getLength(), "    ", defaultStyle);
+                        printColored("    ", WHITE_C);
                     }
                 }
-                doc.insertString(doc.getLength(), "\n", defaultStyle);
-
-                // vertical connections row
-                if (y > minY) {
-                    for (int x = minX; x <= maxX; x++) {
-                        String coordKey = x + "," + y;
-                        Room room = mapBuilder.getAllRooms().get(coordKey);
-
-                        if (room != null && room.getExit("south") != null) {
-                            doc.insertString(doc.getLength(), " │  ", defaultStyle);
-                        } else {
-                            doc.insertString(doc.getLength(), "    ", defaultStyle);
-                        }
-                    }
-                    doc.insertString(doc.getLength(), "\n", defaultStyle);
-                }
+                printColored("\n", WHITE_C);
             }
-
-            // legend with colors
-            doc.insertString(doc.getLength(), "\n═════════════════════════════════════════════\n", defaultStyle);
-            doc.insertString(doc.getLength(), "[◉]", green);
-            doc.insertString(doc.getLength(), "= You ", defaultStyle);
-            doc.insertString(doc.getLength(), "[·]", white);
-            doc.insertString(doc.getLength(), "= Visited ", defaultStyle);
-            doc.insertString(doc.getLength(), "[?]", dimGrey);
-            doc.insertString(doc.getLength(), "= Unknown\n", defaultStyle);
-            doc.insertString(doc.getLength(), "[T]", gold);
-            doc.insertString(doc.getLength(), "= Treasure ", defaultStyle);
-            doc.insertString(doc.getLength(), "[B]", blue);
-            doc.insertString(doc.getLength(), "= Boss ", defaultStyle);
-            doc.insertString(doc.getLength(), "[!]", dimRed);
-            doc.insertString(doc.getLength(), "= Enemies", defaultStyle);
-
-
-        } catch (BadLocationException e) {
-            e.printStackTrace();
         }
+
+        // legend with colors
+        printColored("\n═════════════════════════════════════════════\n", WHITE_C);
+        printColored("[◉]", GREEN_C, "= You ", WHITE_C, "[·]", WHITE_C, "= Visited ", WHITE_C, "[?]", GREY_C, "= Unknown\n", WHITE_C);
+        printColored("[T]", GOLD_C, "= Treasure ", WHITE_C, "[B]", BLUE_C, "= Boss ", WHITE_C, "[!]", DIM_RED_C, "= Enemies", WHITE_C);
     }
 
     //                                                                                      REFRESH THE SIDE PANEL VIEW
@@ -461,6 +452,22 @@ public class GUI {
             StyleConstants.setForeground(style, getColour("white"));
             doc.insertString(doc.getLength(), " " + text + "\n", style);
             pane.setCaretPosition(doc.getLength());
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // prints colored text to statsArea - pass pairs of (text, color)
+    private void printColored(Object... args) {
+        try {
+            StyledDocument doc = statsArea.getStyledDocument();
+            for (int i = 0; i < args.length; i += 2) {
+                String text = String.valueOf(args[i]);
+                Color color = (Color) args[i + 1];
+                Style style = statsArea.addStyle("style" + i, null);
+                StyleConstants.setForeground(style, color);
+                doc.insertString(doc.getLength(), text, style);
+            }
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
