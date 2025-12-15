@@ -48,15 +48,30 @@ public class GUI {
     private boolean showingMinimap; // toggles between status and minimap in the side panel
 
     //                                                                                             COLOUR DECLARATIONS
-    private final Color[] RED = {Color.RED, new Color(0x4b0000)};
-    private final Color[] GREEN = {Color.GREEN, new Color(0x004b00)};
-    private final Color[] BLUE = {Color.BLUE, new Color(0x00004b)};
-    private final Color[] YELLOW = {Color.YELLOW, new Color(0x4b4b00)};
-    private final Color[] CYAN = {Color.CYAN, new Color(0x004b4b)};
-    private final Color[] MAGENTA = {Color.MAGENTA, new Color(0x4b004b)};
-    private final Color[] WHITE = {Color.WHITE, new Color(0x424549)};
+    private record ColourScheme(String name, Color primary, Color secondary) {}
+    
+    private final List<ColourScheme> COLOURS = List.of(
+            new ColourScheme("red", Color.RED, new Color(0x4b0000)),
+            new ColourScheme("green", Color.GREEN, new Color(0x004b00)),
+            new ColourScheme("blue", Color.BLUE, new Color(0x00004b)),
+            new ColourScheme("yellow", Color.YELLOW, new Color(0x4b4b00)),
+            new ColourScheme("cyan", Color.CYAN, new Color(0x004b4b)),
+            new ColourScheme("magenta", Color.MAGENTA, new Color(0x4b004b)),
+            new ColourScheme("white", Color.WHITE, new Color(0x424549)),
+            new ColourScheme("default", new Color(0xD8125B), new Color(0x4b0019))
+    );
+    
+    private Color getColour(String name) {
+        // finds colour by name, returns primary
+        return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::primary).orElse(Color.WHITE);
+    }
+    
+    private Color getSecondaryColour(String name) {
+        // finds colour by name, returns secondary
+        return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::secondary).orElse(Color.BLACK);
+    }
+    
     private final Color BLACK = Color.BLACK;
-    private final Color[] DEFAULT = {new Color(0xD8125B), new Color(0x4b0019)};
     private final Color DEFAULT2 = new Color(0x424549);
 
     //--------------------------------------------------------------------------------------------------- CORE METHODS
@@ -91,7 +106,7 @@ public class GUI {
 
         // define color styles
         Style defaultStyle = statsArea.addStyle("default", null);
-        StyleConstants.setForeground(defaultStyle, WHITE[0]);
+        StyleConstants.setForeground(defaultStyle, getColour("white"));
 
         Style dimGrey = statsArea.addStyle("dimGrey", null);
         StyleConstants.setForeground(dimGrey, new Color(128, 128, 128));
@@ -106,7 +121,7 @@ public class GUI {
         StyleConstants.setForeground(blue, new Color(100, 149, 237));
 
         Style white = statsArea.addStyle("white", null);
-        StyleConstants.setForeground(white, WHITE[0]);
+        StyleConstants.setForeground(white, getColour("white"));
 
         Style green = statsArea.addStyle("green", null);
         StyleConstants.setForeground(green, new Color(100, 255, 100));
@@ -219,7 +234,7 @@ public class GUI {
         switch (CLASS) {
             case "knight":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
-                characterArea.setForeground(WHITE[0]);
+                characterArea.setForeground(getColour("white"));
                 characterArea.setText(Messages.displayKnight(1));
                 idleAnimationThread = idleAnimation(Messages.displayKnight(1), Messages.displayKnight(2), 1500, 750);
                 idleAnimationThread.start();
@@ -233,7 +248,7 @@ public class GUI {
                 break;
             case "reaper":
                 characterArea.setFont(new Font("Monospaced", Font.PLAIN, 9));
-                characterArea.setForeground(RED[0]);
+                characterArea.setForeground(getColour("red"));
                 characterArea.setText(Messages.displayReaper(1));
                 idleAnimationThread = idleAnimation(Messages.displayReaper(1), Messages.displayReaper(2), 2500, 150, 1);
                 idleAnimationThread.start();
@@ -443,7 +458,7 @@ public class GUI {
         try {
             StyledDocument doc = pane.getStyledDocument();
             Style style = pane.addStyle("default", null);
-            StyleConstants.setForeground(style, WHITE[0]);
+            StyleConstants.setForeground(style, getColour("white"));
             doc.insertString(doc.getLength(), " " + text + "\n", style);
             pane.setCaretPosition(doc.getLength());
         } catch (BadLocationException e) {
@@ -973,42 +988,20 @@ public class GUI {
     //----------------------------------------------------------------------------------------------------- UI METHODS
     //                                                                                                     TEXT COLOUR
     private void changeTextColor(String colorName) {
-        Color[] colorPair;
+        ColourScheme scheme = COLOURS.stream()
+                .filter(c -> c.name().equalsIgnoreCase(colorName))
+                .findFirst()
+                .orElse(null);
 
-        switch (colorName.toLowerCase()) {
-            case "red":
-                colorPair = RED;
-                break;
-            case "green":
-                colorPair = GREEN;
-                break;
-            case "blue":
-                colorPair = BLUE;
-                break;
-            case "yellow":
-                colorPair = YELLOW;
-                break;
-            case "cyan":
-                colorPair = CYAN;
-                break;
-            case "magenta":
-                colorPair = MAGENTA;
-                break;
-            case "white":
-                colorPair = WHITE;
-                break;
-            case "default":
-                colorPair = DEFAULT;
-                break;
-            default:
-                println("Unknown color. Available colors: red, green, blue, yellow, cyan, magenta, white, default");
-                return;
+        if (scheme == null) {
+            println("Unknown color. Available colors: red, green, blue, yellow, cyan, magenta, white, default");
+            return;
         }
 
-        display.setForeground(colorPair[0]);
-        terminal.setForeground(colorPair[0]);
-        terminal.setCaretColor(colorPair[0]);
-        commandLog.setBackground(colorPair[1]);
+        display.setForeground(scheme.primary());
+        terminal.setForeground(scheme.primary());
+        terminal.setCaretColor(scheme.primary());
+        commandLog.setBackground(scheme.secondary());
         println("Text color changed to " + colorName);
     }
 
@@ -1139,14 +1132,14 @@ public class GUI {
         frame.setSize(1920, 1080);
         frame.setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel(new BorderLayout());
-        frame.setBackground(DEFAULT[1]);
+        frame.setBackground(getSecondaryColour("default"));
 
         // Command Log Area
         commandLog = new JTextArea();
         commandLog.setEditable(false);
         commandLog.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        commandLog.setBackground(DEFAULT[1]);
-        commandLog.setForeground(WHITE[0]);
+        commandLog.setBackground(getSecondaryColour("default"));
+        commandLog.setForeground(getColour("white"));
         commandLog.setMargin(new Insets(10, 0, 10, 10));
 
 
@@ -1166,7 +1159,7 @@ public class GUI {
         display.setEditable(false);
         display.setFont(new Font("Monospaced", Font.PLAIN, 14));
         display.setBackground(BLACK);
-        display.setForeground(DEFAULT[0]);
+        display.setForeground(getColour("default"));
         display.setMargin(new Insets(20, 20, 20, 20));
         JScrollPane centerScroll = new JScrollPane(display);
         centerScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1174,7 +1167,7 @@ public class GUI {
 
         // Character & Stats Area
         JPanel rightPanel = new JPanel(new GridLayout(2, 1, 0, 0)); // 2 rows, 1 column, 10px gap
-        rightPanel.setBackground(WHITE[1]);
+        rightPanel.setBackground(getSecondaryColour("white"));
 
         // Character area (top bit)
         characterArea = new JTextArea();
@@ -1191,7 +1184,7 @@ public class GUI {
         statsArea.setEditable(false);
         statsArea.setFont(new Font("Monospaced", Font.PLAIN, 20));
         statsArea.setBackground(BLACK);
-        statsArea.setForeground(WHITE[0]);
+        statsArea.setForeground(getColour("white"));
         statsArea.setMargin(new Insets(0, 10, 0, 10));
         JScrollPane statsScroll = new JScrollPane(statsArea);
         statsScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1207,14 +1200,14 @@ public class GUI {
 
         JLabel promptLabel = new JLabel(" > ");
         promptLabel.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        promptLabel.setForeground(WHITE[0]);
+        promptLabel.setForeground(getColour("white"));
         inputPanel.add(promptLabel, BorderLayout.WEST);
 
         terminal = new JTextField();
         terminal.setFont(new Font("Monospaced", Font.PLAIN, 14));
         terminal.setBackground(BLACK);
-        terminal.setForeground(WHITE[0]);
-        terminal.setCaretColor(DEFAULT[0]);
+        terminal.setForeground(getColour("white"));
+        terminal.setCaretColor(getColour("default"));
         terminal.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 10));
         inputPanel.add(terminal, BorderLayout.CENTER);
 
