@@ -72,7 +72,7 @@ public class GUI {
         println(Messages.tutorialTitleMessage());
         println(Messages.tutorialIntroMessage());
 
-        testing("reaper"); // temporary testing
+        testing("mage"); // temporary testing
     }
 
     //------------------------------------------------------------------------------------------ SPECIFIC TEXT METHODS
@@ -111,10 +111,7 @@ public class GUI {
         
         try {
             // title
-            doc.insertString(doc.getLength(), "\n══════════════════════════════════════\n", defaultStyle);
-            doc.insertString(doc.getLength(), "              MINIMAP\n", defaultStyle);
-            doc.insertString(doc.getLength(), "══════════════════════════════════════\n\n", defaultStyle);
-            
+
             // find map bounds
             int minX = 0, maxX = 0, minY = 0, maxY = 0;
             for (Room room : mapBuilder.getAllRooms().values()) {
@@ -185,20 +182,20 @@ public class GUI {
             }
             
             // legend with colors
-            doc.insertString(doc.getLength(), "\n", defaultStyle);
+            doc.insertString(doc.getLength(), "\n═════════════════════════════════════════════\n", defaultStyle);
             doc.insertString(doc.getLength(), "[◉]", green);
-            doc.insertString(doc.getLength(), "=You ", defaultStyle);
+            doc.insertString(doc.getLength(), "= You ", defaultStyle);
             doc.insertString(doc.getLength(), "[·]", white);
-            doc.insertString(doc.getLength(), "=Visited\n", defaultStyle);
+            doc.insertString(doc.getLength(), "= Visited ", defaultStyle);
             doc.insertString(doc.getLength(), "[?]", dimGrey);
-            doc.insertString(doc.getLength(), "=Unknown ", defaultStyle);
+            doc.insertString(doc.getLength(), "= Unknown\n", defaultStyle);
             doc.insertString(doc.getLength(), "[T]", gold);
-            doc.insertString(doc.getLength(), "=Treasure\n", defaultStyle);
+            doc.insertString(doc.getLength(), "= Treasure ", defaultStyle);
             doc.insertString(doc.getLength(), "[B]", blue);
-            doc.insertString(doc.getLength(), "=Boss ", defaultStyle);
+            doc.insertString(doc.getLength(), "= Boss ", defaultStyle);
             doc.insertString(doc.getLength(), "[!]", dimRed);
-            doc.insertString(doc.getLength(), "=Enemies\n", defaultStyle);
-            doc.insertString(doc.getLength(), "═══════════════════════════════════════", defaultStyle);
+            doc.insertString(doc.getLength(), "= Enemies", defaultStyle);
+
             
         } catch (BadLocationException e) {
             e.printStackTrace();
