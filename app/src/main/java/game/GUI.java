@@ -7,7 +7,10 @@ import world.MapBuilder;
 import world.Room;
 
 import javax.swing.*;
-import javax.swing.text.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,29 +89,29 @@ public class GUI {
     private void displayMinimap() {
         statsArea.setText("");
         StyledDocument doc = statsArea.getStyledDocument();
-        
+
         // define color styles
         Style defaultStyle = statsArea.addStyle("default", null);
         StyleConstants.setForeground(defaultStyle, WHITE);
-        
+
         Style dimGrey = statsArea.addStyle("dimGrey", null);
         StyleConstants.setForeground(dimGrey, new Color(128, 128, 128));
-        
+
         Style dimRed = statsArea.addStyle("dimRed", null);
         StyleConstants.setForeground(dimRed, new Color(180, 80, 80));
-        
+
         Style gold = statsArea.addStyle("gold", null);
         StyleConstants.setForeground(gold, new Color(255, 215, 0));
-        
+
         Style blue = statsArea.addStyle("blue", null);
         StyleConstants.setForeground(blue, new Color(100, 149, 237));
-        
+
         Style white = statsArea.addStyle("white", null);
         StyleConstants.setForeground(white, WHITE);
-        
+
         Style green = statsArea.addStyle("green", null);
         StyleConstants.setForeground(green, new Color(100, 255, 100));
-        
+
         try {
             // title
 
@@ -120,17 +123,17 @@ public class GUI {
                 minY = Math.min(minY, room.getY());
                 maxY = Math.max(maxY, room.getY());
             }
-            
+
             // display map from top to bottom
             for (int y = maxY; y >= minY; y--) {
                 for (int x = minX; x <= maxX; x++) {
                     String coordKey = x + "," + y;
                     Room room = mapBuilder.getAllRooms().get(coordKey);
-                    
+
                     if (room != null) {
                         Style roomStyle;
                         String symbol;
-                        
+
                         if (room == currentRoom) {
                             symbol = "[◉]";
                             roomStyle = green;
@@ -150,9 +153,9 @@ public class GUI {
                             symbol = "[·]";
                             roomStyle = white;
                         }
-                        
+
                         doc.insertString(doc.getLength(), symbol, roomStyle);
-                        
+
                         // horizontal connection
                         if (room.getExit("east") != null) {
                             doc.insertString(doc.getLength(), "─", defaultStyle);
@@ -164,13 +167,13 @@ public class GUI {
                     }
                 }
                 doc.insertString(doc.getLength(), "\n", defaultStyle);
-                
+
                 // vertical connections row
                 if (y > minY) {
                     for (int x = minX; x <= maxX; x++) {
                         String coordKey = x + "," + y;
                         Room room = mapBuilder.getAllRooms().get(coordKey);
-                        
+
                         if (room != null && room.getExit("south") != null) {
                             doc.insertString(doc.getLength(), " │  ", defaultStyle);
                         } else {
@@ -180,7 +183,7 @@ public class GUI {
                     doc.insertString(doc.getLength(), "\n", defaultStyle);
                 }
             }
-            
+
             // legend with colors
             doc.insertString(doc.getLength(), "\n═════════════════════════════════════════════\n", defaultStyle);
             doc.insertString(doc.getLength(), "[◉]", green);
@@ -196,7 +199,7 @@ public class GUI {
             doc.insertString(doc.getLength(), "[!]", dimRed);
             doc.insertString(doc.getLength(), "= Enemies", defaultStyle);
 
-            
+
         } catch (BadLocationException e) {
             e.printStackTrace();
         }
@@ -585,15 +588,16 @@ public class GUI {
 
     //                                                                                        PROCESSING STARTING GAME
     private void startAdventure() {
+        display.setText("");
         println("\nGenerating dungeon layout...");
         mapBuilder = new MapBuilder();
         currentRoom = mapBuilder.generateMap();
         currentRoom.setVisited(true);
 
         println("\nYou step through the church doors into the dungeon beyond...");
+        println("Type /help for a list of all game commands.");
         println(Messages.displayCurrentRoom());
-        println(Messages.displayMap());
-        
+
         showingMinimap = true;
         refreshSidePanel();
     }
