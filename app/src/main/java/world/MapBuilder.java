@@ -27,6 +27,13 @@ public class MapBuilder {
     }
 
     //                                                                                                    GENERATE MAP
+    /*
+     * ADDITIONAL FEATURE: Procedural map generation using coordinate-based spatial mapping and a randomised expansion algorithm.
+     * Rooms are stored in a HashMap with "x,y" coordinate keys, allowing O(1) lookup for adjacent positions.
+     * The algorithm starts from (0,0) and expands outward by randomly selecting rooms from a list,
+     * then attempting to create new rooms in shuffled compass directions. This creates an organic
+     * dungeon layout that can be different every playthrough.
+     */
     public Room generateMap() {
         int roomCount = random.nextInt(MAX_ROOMS - MIN_ROOMS + 1) + MIN_ROOMS;
 

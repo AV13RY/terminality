@@ -113,6 +113,12 @@ public class ItemGenerator {
     }
 
     //                                                                                                 SELECT A RARITY
+    /*
+     * ADDITIONAL FEATURE: Randomised, probability-based item rarity/loot generation system.
+     * Each rarity tier has a defined drop chance (common 60%, uncommon 30%, rare 8%, legendary 2%)
+     * stored in the Rarity enum. This method rolls a random and uses cumulative probability
+     * to determine which rarity is selected. The system is used by chests and enemy drops to create a balanced loot system.
+     */
     public static Item.Rarity selectRarity() {
         double roll = random.nextDouble();
 

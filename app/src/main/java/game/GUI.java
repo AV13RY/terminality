@@ -54,39 +54,25 @@ public class GUI {
     private static final Set<String> COMBAT_ALLOWED_COMMANDS = Set.of("flee", "status", "inventory", "help", "attack");
 
     //                                                                                             COLOUR DECLARATIONS
-    private record ColourScheme(String name, Color primary, Color secondary) {}
-    
+    private record ColourScheme(String name, Color primary, Color secondary) {
+    }
+
     private final List<ColourScheme> COLOURS = List.of(
             // theme colours (primary used for text, secondary for backgrounds)
-            new ColourScheme("red", Color.RED, new Color(0x4b0000)),
-            new ColourScheme("green", Color.GREEN, new Color(0x004b00)),
-            new ColourScheme("blue", Color.BLUE, new Color(0x00004b)),
-            new ColourScheme("yellow", Color.YELLOW, new Color(0x4b4b00)),
-            new ColourScheme("cyan", Color.CYAN, new Color(0x004b4b)),
-            new ColourScheme("magenta", Color.MAGENTA, new Color(0x4b004b)),
-            new ColourScheme("white", Color.WHITE, new Color(0x424549)),
-            new ColourScheme("default", new Color(0xD8125B), new Color(0x4b0019)),
+            new ColourScheme("red", Color.RED, new Color(0x4b0000)), new ColourScheme("green", Color.GREEN, new Color(0x004b00)), new ColourScheme("blue", Color.BLUE, new Color(0x00004b)), new ColourScheme("yellow", Color.YELLOW, new Color(0x4b4b00)), new ColourScheme("cyan", Color.CYAN, new Color(0x004b4b)), new ColourScheme("magenta", Color.MAGENTA, new Color(0x4b004b)), new ColourScheme("white", Color.WHITE, new Color(0x424549)), new ColourScheme("default", new Color(0xD8125B), new Color(0x4b0019)),
             // display colours (softer shades for stats/minimap readability)
-            new ColourScheme("soft-red", new Color(255, 100, 100), null),
-            new ColourScheme("soft-blue", new Color(100, 149, 237), null),
-            new ColourScheme("soft-green", new Color(100, 255, 100), null),
-            new ColourScheme("gold", new Color(255, 215, 0), null),
-            new ColourScheme("soft-cyan", new Color(100, 255, 255), null),
-            new ColourScheme("soft-magenta", new Color(255, 100, 255), null),
-            new ColourScheme("grey", new Color(128, 128, 128), null),
-            new ColourScheme("dim-red", new Color(180, 80, 80), null)
-    );
-    
+            new ColourScheme("soft-red", new Color(255, 100, 100), null), new ColourScheme("soft-blue", new Color(100, 149, 237), null), new ColourScheme("soft-green", new Color(100, 255, 100), null), new ColourScheme("gold", new Color(255, 215, 0), null), new ColourScheme("soft-cyan", new Color(100, 255, 255), null), new ColourScheme("soft-magenta", new Color(255, 100, 255), null), new ColourScheme("grey", new Color(128, 128, 128), null), new ColourScheme("dim-red", new Color(180, 80, 80), null));
+
     private Color getColour(String name) {
         // finds colour by name, returns primary
         return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::primary).orElse(Color.WHITE);
     }
-    
+
     private Color getSecondaryColour(String name) {
         // finds colour by name, returns secondary
         return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::secondary).orElse(Color.BLACK);
     }
-    
+
     private final Color BLACK = Color.BLACK;
     private final Color DEFAULT2 = new Color(0x424549);
 
@@ -528,6 +514,14 @@ public class GUI {
     }
 
     //                                                                                       COMMAND HISTORY METHODS
+    /*
+     * ADDITIONAL FEATURE: Git-style command history visualisation with unicode branching symbols.
+     * This displays the player's command history in a format inspired by git, using
+     * unicode characters (╟, ╠, ╔, ╚, etc.) to create a visual tree structure.
+     * Different command types get unique symbols (◆ for start, → for move, ⚔ for attack, etc.)
+     * and branch indicators appear when the player switches between command categories like
+     * movement vs combat vs utility commands.
+     */
     private void updateCommandHistory(String command) {
         commandHistory.add(command);
         commandCount++;
@@ -961,10 +955,7 @@ public class GUI {
     //----------------------------------------------------------------------------------------------------- UI METHODS
     //                                                                                                     TEXT COLOUR
     private void changeTextColor(String colorName) {
-        ColourScheme scheme = COLOURS.stream()
-                .filter(c -> c.name().equalsIgnoreCase(colorName))
-                .findFirst()
-                .orElse(null);
+        ColourScheme scheme = COLOURS.stream().filter(c -> c.name().equalsIgnoreCase(colorName)).findFirst().orElse(null);
 
         if (scheme == null) {
             println("Unknown color. Available colors: red, green, blue, yellow, cyan, magenta, white, default");
@@ -991,14 +982,38 @@ public class GUI {
     }
 
     //                                                                                                         GETTERS
-    public static MapBuilder getMapBuilder() { return mapBuilder; }
-    public static Room getCurrentRoom() { return currentRoom; }
-    public static Player getPlayer() { return player; }
-    public static Enemy getCurrentEnemy() { return currentEnemy; }
-    public static String getName() { return NAME; }
-    public static int getCommandCount() { return commandCount; }
+    public static MapBuilder getMapBuilder() {
+        return mapBuilder;
+    }
+
+    public static Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static Enemy getCurrentEnemy() {
+        return currentEnemy;
+    }
+
+    public static String getName() {
+        return NAME;
+    }
+
+    public static int getCommandCount() {
+        return commandCount;
+    }
 
     //                                                                                                IDLE ANIMATION
+    /*
+     * ADDITIONAL FEATURE: Threaded ASCII character animations using asynchronous threading & SwingUtilities.
+     * This creates a separate thread that runs alongside the main game loop to animate the character art.
+     * It alternates between two ascii frames at configurable intervals. SwingUtilities .invokeLater() is used to update
+     * the GUI from a background thread to prevent a specific race condition I experienced during testing.
+     * The daemon flag means the thread auto-closes when the main application exits.
+     */
     @SuppressWarnings("BusyWait")
     private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2) {
         return idleAnimation(character1, character2, milliWaitTime1, milliWaitTime2, milliWaitTime1);
@@ -1078,6 +1093,14 @@ public class GUI {
 
     //----------------------------------------------------------------------------------------- INITIALISATION METHODS
     //                                                                                                   INITIALISE UI
+    /*
+     * ADDITIONAL FEATURE: Custom Java Swing GUI with panels replacing terminal output.
+     * instead of using standard System.out terminal output, this game uses a custom-built
+     * swing interface with multiple JTextArea/JTextPane panels arranged in a BorderLayout.
+     * The left panel shows command history, the centre panel shows game output, the right panel
+     * shows character art and stats/minimap. This provides a more immersive experience
+     * than a basic console application would allow, and just 'makes' the game basically.
+     */
     private void initialiseUI() {
         JFrame frame = new JFrame("Terminality");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
