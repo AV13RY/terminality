@@ -904,6 +904,7 @@ public class GUI {
         return baseDamage + random.nextInt(variance * 2 + 1) - variance;
     }
 
+    // ADDITIONAL FEATURE: spellcasting system - weapons can have spells with unique effects (fire, ice, lifesteal, defense)
     //                                                                                                       CAST SPELL
     private void castSpell() {
         if (!inCombat) {
