@@ -37,11 +37,11 @@ public class MapBuilder {
     public Room generateMap() {
         int roomCount = random.nextInt(MAX_ROOMS - MIN_ROOMS + 1) + MIN_ROOMS;
 
-        // Create start room at center (0,0)
+        // start at (0,0)
         startRoom = new Room("Church Entrance", "The entrance to the abandoned church", 0, 0, Room.RoomType.START);
         allRooms.put("0,0", startRoom);
 
-        // Generate connected rooms
+        // expand outward
         List<Room> roomsToExpand = new ArrayList<>();
         roomsToExpand.add(startRoom);
 
@@ -50,7 +50,7 @@ public class MapBuilder {
         while (generatedRooms < roomCount && !roomsToExpand.isEmpty()) {
             Room currentRoom = roomsToExpand.remove(random.nextInt(roomsToExpand.size()));
 
-            // Try to add rooms in each direction
+            // try each direction
             String[] directions = {"north", "south", "east", "west"};
             Collections.shuffle(Arrays.asList(directions));
 
@@ -60,23 +60,23 @@ public class MapBuilder {
                 int[] newCoords = getNewCoordinates(currentRoom.getX(), currentRoom.getY(), direction);
                 String coordKey = newCoords[0] + "," + newCoords[1];
 
-                // check if position is within bounds
+                // bounds check
                 if (!isWithinBounds(newCoords[0], newCoords[1])) continue;
 
-                // Check if position is already occupied
+                // not occupied?
                 if (!allRooms.containsKey(coordKey)) {
-                    // Determine room type
+                    // room type
                     Room.RoomType type = (generatedRooms == roomCount - 1) ? Room.RoomType.BOSS : getRandomRoomType();
 
-                    // Create new room
+                    // new room
                     String roomName = (type == Room.RoomType.BOSS) ? "Boss Chamber" : ROOM_NAMES[random.nextInt(ROOM_NAMES.length)];
                     Room newRoom = new Room(roomName, generateDescription(type), newCoords[0], newCoords[1], type);
 
-                    // Connect rooms
+                    // connect
                     currentRoom.addExit(direction, newRoom);
                     newRoom.addExit(getOppositeDirection(direction), currentRoom);
 
-                    // Populate room
+                    // populate
                     populateRoom(newRoom);
 
                     allRooms.put(coordKey, newRoom);
@@ -90,12 +90,12 @@ public class MapBuilder {
             }
         }
 
-        // Check if boss room exists, if not, make one.
+        // ensure boss room
         if (bossRoom == null) {
             createBossRoom(roomsToExpand);
         }
 
-        // ensure map reaches all edges
+        // fill edges
         ensureMapReachesEdges();
 
         addExtraConnections();
@@ -107,42 +107,42 @@ public class MapBuilder {
     private void populateRoom(Room room) {
         switch (room.getType()) {
             case NORMAL:
-                // Add 1-3 enemies
+                // 1-3 enemies
                 int enemyCount = random.nextInt(3) + 1;
                 for (int i = 0; i < enemyCount; i++) {
                     room.addEnemy(generateEnemy());
                 }
 
-                // 30% chance for a chest
+                // 30% chest
                 if (random.nextDouble() < 0.3) {
                     room.addChest(generateChest());
                 }
                 break;
 
             case TREASURE:
-                // Add 1-2 enemies guarding treasure
+                // 1-2 enemies
                 for (int i = 0; i < random.nextInt(2) + 1; i++) {
                     room.addEnemy(generateEnemy());
                 }
 
-                // Add 2-3 chests
+                // 2-3 chests
                 for (int i = 0; i < random.nextInt(2) + 2; i++) {
                     room.addChest(generateChest());
                 }
                 break;
 
             case BOSS:
-                // Add boss enemy
+                // boss
                 room.addEnemy(new Boss("Ancient Guardian", 150, 25));
 
-                // Add legendary chests after boss defeat
+                // legendary chests
                 for (int i = 0; i < 3; i++) {
                     room.addChest(new Chest(Chest.Rarity.LEGENDARY));
                 }
                 break;
 
             case EMPTY:
-                // 20% chance for a hidden chest
+                // 20% hidden chest
                 if (random.nextDouble() < 0.2) {
                     room.addChest(generateChest());
                 }
@@ -152,7 +152,7 @@ public class MapBuilder {
 
     //                                                                                       GENERATE ENEMIES RANDOMLY
     private Enemy generateEnemy() {
-        // Generate random enemies based on difficulty
+        // random enemy type
         int type = random.nextInt(3);
         return switch (type) {
             case 0 -> new Goblin();
@@ -227,7 +227,7 @@ public class MapBuilder {
         int halfWidth = MAX_WIDTH / 2;
         int halfHeight = MAX_HEIGHT / 2;
 
-        // check current bounds
+        // current bounds
         int minX = 0, maxX = 0, minY = 0, maxY = 0;
         for (Room room : allRooms.values()) {
             minX = Math.min(minX, room.getX());
@@ -236,19 +236,19 @@ public class MapBuilder {
             maxY = Math.max(maxY, room.getY());
         }
 
-        // extend to right edge if needed
+        // right edge
         if (maxX < halfWidth) {
             extendToEdge(halfWidth, random.nextInt(halfHeight * 2 + 1) - halfHeight, "east");
         }
-        // extend to left edge if needed
+        // left edge
         if (minX > -halfWidth) {
             extendToEdge(-halfWidth, random.nextInt(halfHeight * 2 + 1) - halfHeight, "west");
         }
-        // extend to top edge if needed
+        // top edge
         if (maxY < halfHeight) {
             extendToEdge(random.nextInt(halfWidth * 2 + 1) - halfWidth, halfHeight, "north");
         }
-        // extend to bottom edge if needed
+        // bottom edge
         if (minY > -halfHeight) {
             extendToEdge(random.nextInt(halfWidth * 2 + 1) - halfWidth, -halfHeight, "south");
         }
@@ -256,7 +256,7 @@ public class MapBuilder {
 
     //                                                                                  EXTEND MAP TO REACH TARGET EDGE
     private void extendToEdge(int targetX, int targetY, String primaryDirection) {
-        // find the closest existing room to build from
+        // closest room
         Room closest = null;
         int closestDist = Integer.MAX_VALUE;
 
@@ -270,7 +270,7 @@ public class MapBuilder {
 
         if (closest == null) return;
 
-        // build a path from closest room towards the target
+        // path to target
         Room current = closest;
         while (current.getX() != targetX || current.getY() != targetY) {
             String direction;
@@ -285,7 +285,7 @@ public class MapBuilder {
             if (allRooms.containsKey(coordKey)) {
                 current = allRooms.get(coordKey);
             } else {
-                // create new room
+                // new room
                 Room newRoom = new Room(ROOM_NAMES[random.nextInt(ROOM_NAMES.length)], generateDescription(Room.RoomType.NORMAL), newCoords[0], newCoords[1], Room.RoomType.NORMAL);
                 current.addExit(direction, newRoom);
                 newRoom.addExit(getOppositeDirection(direction), current);

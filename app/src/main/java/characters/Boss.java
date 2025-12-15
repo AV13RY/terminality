@@ -36,10 +36,10 @@ public class Boss extends Enemy {
     //                                                                                                       OVERRIDES
     @Override
     public int getAttackDamage() {
-        // Boss does more damage in phase 2
+        // more damage in phase 2
         int baseDamage = (phase == 2) ? this.attack + 10 : this.attack;
 
-        // Special attack every 3 turns in phase 2
+        // special attack chance in phase 2
         if (phase == 2 && !hasUsedSpecialAttack && random.nextInt(3) == 0) {
             hasUsedSpecialAttack = true;
             return (int) (baseDamage * 1.5); // 50% more damage
@@ -64,7 +64,7 @@ public class Boss extends Enemy {
     public void takeDamage(int damage) {
         super.takeDamage(damage);
 
-        // Enter phase 2 at 50% health
+        // phase 2 at 50% hp
         if (phase == 1 && currentHealth <= maxHealth / 2) {
             phase = 2;
         }

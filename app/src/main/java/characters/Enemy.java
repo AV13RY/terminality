@@ -26,7 +26,7 @@ public abstract class Enemy extends Character {
 
     public int getAttackDamage() {
         int baseDamage = this.attack;
-        int variance = (int) (baseDamage * 0.2); // get attack damage with some variance
+        int variance = (int) (baseDamage * 0.2); // ±20% variance
         return baseDamage + random.nextInt(variance * 2 + 1) - variance;
     }
 

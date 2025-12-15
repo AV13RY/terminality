@@ -448,14 +448,14 @@ public class Messages {
         final int CONSOLE_WIDTH = 91;
         String divider = "═".repeat(CONSOLE_WIDTH);
 
-        // centre the map display
+        // centre title
         String title = " MAP ";
         int titlePadding = (CONSOLE_WIDTH - title.length()) / 2;
         String centeredTitle = "═".repeat(titlePadding) + title + "═".repeat(CONSOLE_WIDTH - titlePadding - title.length());
 
         sb.append("\n").append(centeredTitle).append("\n\n");
 
-        // find map bounds
+        // map bounds
         int minX = 0, maxX = 0, minY = 0, maxY = 0;
         for (Room room : GUI.getMapBuilder().getAllRooms().values()) {
             minX = Math.min(minX, room.getX());
@@ -466,7 +466,7 @@ public class Messages {
 
         int mapWidth = (maxX - minX + 1) * 4;
 
-        // display map from top to bottom
+        // top to bottom
         for (int y = maxY; y >= minY; y--) {
             StringBuilder mapRow = new StringBuilder();
             StringBuilder connectionRow = new StringBuilder();
@@ -476,7 +476,7 @@ public class Messages {
                 Room room = GUI.getMapBuilder().getAllRooms().get(coordKey);
 
                 if (room != null) {
-                    // room symbol priority: current > boss > treasure > visited > unvisited
+                    // symbol priority
                     String symbol;
                     if (room == GUI.getCurrentRoom()) symbol = "[◉]";
                     else if (room.getType() == Room.RoomType.BOSS) symbol = "[B]";
@@ -487,7 +487,7 @@ public class Messages {
                     mapRow.append(symbol);
                     mapRow.append(room.getExit("east") != null ? "─" : " ");
 
-                    // vertical connections
+                    // vertical
                     connectionRow.append(room.getExit("south") != null ? " │ " : "   ");
                     connectionRow.append(" ");
                 } else {
@@ -496,7 +496,7 @@ public class Messages {
                 }
             }
 
-            // centre the map rows
+            // centre rows
             int padding = (CONSOLE_WIDTH - mapWidth) / 2;
             String paddingStr = " ".repeat(Math.max(0, padding));
 

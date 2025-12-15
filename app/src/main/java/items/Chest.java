@@ -43,7 +43,7 @@ public class Chest {
         };
 
         for (int i = 0; i < itemCount; i++) {
-            // Higher rarity chests have better chances for rare items
+            // better rarity for legendary chests
             Item.Rarity itemRarity = (rarity == Rarity.LEGENDARY && rand.nextDouble() < 0.5) ? Item.Rarity.LEGENDARY : ItemGenerator.selectRarity();
 
             contents.add(ItemGenerator.generateItem(itemRarity));

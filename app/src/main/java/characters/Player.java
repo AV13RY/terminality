@@ -83,7 +83,7 @@ public class Player extends Character {
     //                                                                                                  ADD EXPERIENCE
     public void gainExperience(int exp) {
         experience += exp;
-        // Check if player should level up (every 100 exp)
+        // level up every 100 exp
         while (experience >= 100) {
             experience -= 100;
             levelUp();
@@ -93,7 +93,7 @@ public class Player extends Character {
     //                                                                                                     LEVELING UP
     public void levelUp() {
         level++;
-        // Increase stats based on class
+        // stats per class
         switch (playerClass) {
             case KNIGHT:
                 maxHealth += 15;
@@ -126,14 +126,14 @@ public class Player extends Character {
     public int castSpell(int manaCost) {
         if (mana >= manaCost) {
             mana -= manaCost;
-            // Magic damage calculation based on class
+            // damage per class
             if (playerClass.equals(MAGE)) {
                 return 25;
             } else if (playerClass.equals(REAPER)) {
                 return 10;
             }
         }
-        return 0; // No damage if not enough mana or no magic ability
+        return 0; // no mana or no magic
     }
 
     //                                                                                           DISPLAY PLAYER STATUS

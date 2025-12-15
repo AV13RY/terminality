@@ -45,8 +45,8 @@ public class GUI {
     private static Enemy currentEnemy;
     private boolean inCombat;
     private final Random random;
-    private boolean warnedAboutChests; // tracks if we already nagged them about leaving chests behind
-    private boolean showingMinimap; // toggles between status and minimap in the side panel
+    private boolean warnedAboutChests; // already warned about chests
+    private boolean showingMinimap; // minimap or stats toggle
 
     //                                                                                                       CONSTANTS
     private static final Set<String> VALID_CLASSES = Set.of("knight", "mage", "reaper");
@@ -64,12 +64,10 @@ public class GUI {
             new ColourScheme("soft-red", new Color(255, 100, 100), null), new ColourScheme("soft-blue", new Color(100, 149, 237), null), new ColourScheme("soft-green", new Color(100, 255, 100), null), new ColourScheme("gold", new Color(255, 215, 0), null), new ColourScheme("soft-cyan", new Color(100, 255, 255), null), new ColourScheme("soft-magenta", new Color(255, 100, 255), null), new ColourScheme("grey", new Color(128, 128, 128), null), new ColourScheme("dim-red", new Color(180, 80, 80), null));
 
     private Color getColour(String name) {
-        // finds colour by name, returns primary
         return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::primary).orElse(Color.WHITE);
     }
 
     private Color getSecondaryColour(String name) {
-        // finds colour by name, returns secondary
         return COLOURS.stream().filter(c -> c.name().equals(name)).findFirst().map(ColourScheme::secondary).orElse(Color.BLACK);
     }
 
@@ -127,7 +125,7 @@ public class GUI {
     private void displayMinimap() {
         statsArea.setText("");
 
-        // find map bounds
+        // map bounds
         int minX = 0, maxX = 0, minY = 0, maxY = 0;
         for (Room room : mapBuilder.getAllRooms().values()) {
             minX = Math.min(minX, room.getX());
@@ -136,7 +134,7 @@ public class GUI {
             maxY = Math.max(maxY, room.getY());
         }
 
-        // display map from top to bottom
+        // top to bottom
         for (int y = maxY; y >= minY; y--) {
             for (int x = minX; x <= maxX; x++) {
                 String coordKey = x + "," + y;
@@ -146,7 +144,7 @@ public class GUI {
                     Color roomColor;
                     String symbol;
 
-                    // room symbol priority: current > boss > treasure > unvisited > enemies > visited
+                    // symbol priority
                     if (room == currentRoom) {
                         symbol = "[◉]";
                         roomColor = getColour("soft-green");
@@ -169,7 +167,7 @@ public class GUI {
 
                     printColored(symbol, roomColor);
 
-                    // horizontal connection
+                    // horizontal
                     if (room.getExit("east") != null) {
                         printColored("─", getColour("white"));
                     } else {
@@ -181,7 +179,7 @@ public class GUI {
             }
             printColored("\n", getColour("white"));
 
-            // vertical connections row
+            // vertical
             if (y > minY) {
                 for (int x = minX; x <= maxX; x++) {
                     String coordKey = x + "," + y;
@@ -197,7 +195,7 @@ public class GUI {
             }
         }
 
-        // legend with colors
+        // legend
         printColored("\n═════════════════════════════════════════════\n", getColour("white"));
         printColored("[◉]", getColour("soft-green"), "= You ", getColour("white"), "[·]", getColour("white"), "= Visited ", getColour("white"), "[?]", getColour("grey"), "= Unknown\n", getColour("white"));
         printColored("[T]", getColour("gold"), "= Treasure ", getColour("white"), "[B]", getColour("soft-blue"), "= Boss ", getColour("white"), "[!]", getColour("dim-red"), "= Enemies", getColour("white"));
@@ -247,13 +245,13 @@ public class GUI {
         println("\n > " + input); // displays the inputted command in display area.
         updateCommandHistory(input);
 
-        // once dungeon is generated, use in-game command handler
+        // dungeon started, use game commands
         if (mapBuilder != null) {
             processGameCommand(input);
             return;
         }
 
-        // global commands available in pre-game
+        // pre-game commands
         if (input.startsWith("colour ")) {
             String[] parts = input.split(" ", 2);
             if (parts.length > 1) {
@@ -281,7 +279,7 @@ public class GUI {
             println(Messages.displayMap());
         }
 
-        // room-specific command handling for pre-game flow
+        // room-specific pre-game
         switch (currentRoom.getName().toLowerCase()) {
             case "tutorial":
                 if (input.equals("start")) {
@@ -298,7 +296,7 @@ public class GUI {
                     NAME = input.replace("name", "").toLowerCase().trim();
                     println("\nYour name will be: " + NAME);
 
-                    // easter egg for graders
+                    // easter egg
                     if (GRADER_NAMES.contains(NAME)) {
                         println("\n✨ Oh hey... thats a cool name... \n I have a cool lecturer whos called that.. huh. Enjoy ;) ✨");
                     }
@@ -323,7 +321,7 @@ public class GUI {
 
                 if (input.equals("proceed")) {
                     println(NAME + ", a " + CLASS + " from the Lands Between is ready to start their journey.");
-                    // map class name to player constant
+                    // map to player constant
                     String playerClass = switch (CLASS) {
                         case "knight" -> Player.KNIGHT;
                         case "mage" -> Player.MAGE;
@@ -359,7 +357,7 @@ public class GUI {
     //                                                                                      IN-GAME COMMAND PROCESSING
     private void processGameCommand(String input) {
 
-        // combat restricts most commands
+        // combat mode
         if (inCombat && !COMBAT_ALLOWED_COMMANDS.contains(input.toLowerCase())) {
             println("You're in combat! You must attack or flee!");
             return;
@@ -370,7 +368,7 @@ public class GUI {
             return;
         }
 
-        // common commands available anywhere
+        // common commands
         if (input.equals("help")) {
             println(Messages.inGameHelpMessage());
             return;
@@ -395,7 +393,7 @@ public class GUI {
             return;
         }
 
-        // combat commands
+        // combat
         if (inCombat) {
             if (input.equals("flee")) {
                 attemptFlee();
@@ -405,7 +403,7 @@ public class GUI {
             return;
         }
 
-        // movement and exploration commands
+        // movement
         if (input.startsWith("move ")) {
             String direction = input.substring(5).trim();
             movePlayer(direction);
@@ -442,7 +440,7 @@ public class GUI {
         }
     }
 
-    // prints colored text to statsArea - pass pairs of (text, color)
+    // pass pairs of (text, color)
     private void printColored(Object... args) {
         try {
             StyledDocument doc = statsArea.getStyledDocument();
@@ -529,12 +527,12 @@ public class GUI {
         commandLog.setText("   【\uFEFFＣＯＭＭＡＮＤ　ＨＩＳＴＯＲＹ】\n");
         commandLog.append(" ═══════════════════════════════════════\n\n");
 
-        // display commands in reverse order with git-style branching
+        // reverse order with branching
         for (int i = commandHistory.size() - 1; i >= 0; i--) {
             String cmd = commandHistory.get(i);
             int cmdNumber = i + 1;
 
-            // node symbol based on command type
+            // symbol per command type
             String node = "○";
             if (cmd.startsWith("start")) node = "◆";
             else if (cmd.startsWith("move")) node = "→";
@@ -542,24 +540,24 @@ public class GUI {
             else if (cmd.startsWith("name") || cmd.startsWith("class")) node = "★";
             else if (cmd.equals("help") || cmd.equals("clear")) node = "◌";
 
-            // build the visualization line
+            // build line
             String str = "  ╟─" + node + " [" + String.format("%03d", cmdNumber) + "] " + cmd + "\n";
             if (i == commandHistory.size() - 1) {
-                // most recent command
+                // current
                 commandLog.append("  ╔═ CURRENT\n");
                 commandLog.append("  ║\n");
                 commandLog.append(str);
             } else if (i == 0) {
-                // first command (root)
+                // root
                 commandLog.append("  ║\n");
                 commandLog.append(str);
                 commandLog.append("  ║\n");
                 commandLog.append("  ╚═ ORIGIN\n");
             } else {
-                // middle commands
+                // middle
                 commandLog.append("  ║\n");
 
-                // branch indicators for type changes
+                // branch on type change
                 if (i < commandHistory.size() - 1) {
                     String nextCmd = commandHistory.get(i + 1);
                     String prevCmd = commandHistory.get(i - 1);
@@ -585,12 +583,12 @@ public class GUI {
         commandLog.setCaretPosition(0);
     }
 
-    // checks if command type changed between two commands
+    // type changed?
     private boolean isCommandTypeChange(String cmd1, String cmd2) {
         return !getCommandType(cmd1).equals(getCommandType(cmd2));
     }
 
-    // categorises commands for branch visualization
+    // get command category
     private String getCommandType(String cmd) {
         if (cmd.startsWith("move")) return "movement";
         if (cmd.startsWith("attack") || cmd.equals("flee") || cmd.startsWith("open") || cmd.startsWith("use") || cmd.startsWith("equip"))
@@ -628,7 +626,7 @@ public class GUI {
                 return;
             }
 
-            // warn once about unopened chests before letting player leave
+            // warn about chests once
             int unopenedCount = countUnopenedChests();
             if (unopenedCount > 0 && !warnedAboutChests) {
                 String chestWord = unopenedCount == 1 ? "chest" : "chests";
@@ -708,7 +706,7 @@ public class GUI {
                 player.addItem(item);
             }
 
-            // Also add some gold based on chest rarity
+            // gold based on rarity
             int goldAmount = switch (targetChest.getRarity()) {
                 case COMMON -> 10 + random.nextInt(20);
                 case UNCOMMON -> 30 + random.nextInt(40);
@@ -725,7 +723,7 @@ public class GUI {
 
     //                                                                                                        USE ITEM
     private void useItem(String itemIdentifier) {
-        // filter to consumable items only
+        // consumables only
         List<Item> consumables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.CONSUMABLE).toList();
 
         if (consumables.isEmpty()) {
@@ -760,7 +758,7 @@ public class GUI {
 
     //                                                                                                      EQUIP ITEM
     private void equipItem(String itemIdentifier) {
-        // filter to equipable items only
+        // equipables only
         List<Item> equipables = player.getFullInventory().stream().filter(item -> item.getType() == Item.ItemType.ARMOR || item.getType() == Item.ItemType.ACCESSORY).toList();
 
         if (equipables.isEmpty()) {
@@ -789,7 +787,7 @@ public class GUI {
 
     //                                                                                                    RESTART GAME
     private void restartGame() {
-        // reset game state
+        // reset state
         NAME = "";
         CLASS = "";
         player = null;
@@ -808,7 +806,7 @@ public class GUI {
 
         initialiseWorld();
 
-        // swap death listener back to normal command processing
+        // swap listener back
         terminal.removeActionListener(terminal.getActionListeners()[0]);
         terminal.addActionListener(e -> {
             String input = terminal.getText().trim().toLowerCase();
@@ -843,7 +841,7 @@ public class GUI {
         if (currentEnemy.isDead()) {
             println("\n🎉 Victory! You defeated the " + currentEnemy.getName() + "!");
 
-            // give rewards
+            // rewards
             int expGained = currentEnemy.getExperienceValue();
             int goldGained = random.nextInt(20) + 10;
             player.gainExperience(expGained);
@@ -855,7 +853,7 @@ public class GUI {
             inCombat = false;
             currentEnemy = null;
 
-            // check for more enemies
+            // more enemies?
             if (currentRoom.hasEnemies() && !currentRoom.getEnemies().isEmpty()) {
                 println("\nThere are more enemies in the room!");
                 checkForCombat();
@@ -865,7 +863,7 @@ public class GUI {
             return;
         }
 
-        // enemy attacks back
+        // enemy turn
         int enemyDamage = currentEnemy.getAttack();
         println("\nThe " + currentEnemy.getName() + " attacks you for " + enemyDamage + " damage!");
         player.takeDamage(enemyDamage);
@@ -877,7 +875,7 @@ public class GUI {
             return;
         }
 
-        // Show updated combat status
+        // show status
         println(Messages.displayCombatStatus());
     }
 
@@ -893,7 +891,7 @@ public class GUI {
             inCombat = false;
             currentEnemy = null;
 
-            // move to random adjacent room
+            // random exit
             List<String> exits = new ArrayList<>(currentRoom.getExits().keySet());
             if (!exits.isEmpty()) {
                 String randomExit = exits.get(random.nextInt(exits.size()));
@@ -921,7 +919,7 @@ public class GUI {
         if (player.getEquippedWeapon() != null) {
             baseDamage += player.getEquippedWeapon().getAttackBonus();
         }
-        // add randomness (±20%)
+        // ±20% variance
         int variance = (int) (baseDamage * 0.2);
         return baseDamage + random.nextInt(variance * 2 + 1) - variance;
     }
@@ -936,7 +934,7 @@ public class GUI {
 
         currentEnemy = null;
 
-        // swap to death screen listener - only accepts restart or exit
+        // death screen listener
         terminal.removeActionListener(terminal.getActionListeners()[0]);
         terminal.addActionListener(e -> {
             String input = terminal.getText().trim().toLowerCase();
@@ -1021,19 +1019,19 @@ public class GUI {
 
     @SuppressWarnings("BusyWait")
     private Thread idleAnimation(String character1, String character2, int milliWaitTime1, int milliWaitTime2, int firstFrameDelay) {
-        String tempCLASS = CLASS; // capture current class to detect changes
+        String tempCLASS = CLASS; // detect class changes
 
         Thread animationThread = new Thread(() -> {
             boolean firstFrame = true;
             while (tempCLASS.equals(CLASS)) {
                 try {
                     if (firstFrame) {
-                        // fast first frame for reaper to hide font sizing glitch
+                        // fast first frame for reaper
                         firstFrame = false;
                         Thread.sleep(firstFrameDelay);
                     } else {
                         SwingUtilities.invokeLater(() -> {
-                            // check class again to prevent overlap when class changes mid-loop
+                            // prevent overlap
                             if (tempCLASS.equals(CLASS)) {
                                 characterArea.setText(character1);
                                 characterArea.setCaretPosition(0);
@@ -1054,7 +1052,7 @@ public class GUI {
                 }
             }
         });
-        animationThread.setDaemon(true); // background thread so app closes properly
+        animationThread.setDaemon(true); // closes with app
         return animationThread;
     }
 
