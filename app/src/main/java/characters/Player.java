@@ -21,6 +21,7 @@ public class Player extends Character {
     private int level;
     private int experience;
     private int gold;
+    private boolean defenseBuffActive; // heavenly defense buff
     //                                                                                                PLAYER INVENTORY
     private final List<Item> inventory;
     private final Map<Armor.ArmorType, Armor> equippedArmor;
@@ -56,8 +57,8 @@ public class Player extends Character {
                 this.currentHealth = 120;
                 this.attack = 12;
                 this.defense = 10;
-                this.maxMana = 0;
-                this.mana = 0;
+                this.maxMana = 30; // for heavenly defense
+                this.mana = 30;
                 break;
 
             case MAGE:
@@ -100,6 +101,8 @@ public class Player extends Character {
                 currentHealth = maxHealth;
                 attack += 3;
                 defense += 2;
+                maxMana += 5; // for heavenly defense
+                mana = maxMana;
                 break;
 
             case MAGE:
@@ -215,7 +218,20 @@ public class Player extends Character {
         for (Armor armor : equippedArmor.values()) {
             totalDefense += armor.getDefenseBonus();
         }
+        if (defenseBuffActive) totalDefense *= 2; // heavenly defense doubles it
         return totalDefense;
+    }
+
+    public void activateDefenseBuff() {
+        defenseBuffActive = true;
+    }
+
+    public void clearDefenseBuff() {
+        defenseBuffActive = false;
+    }
+
+    public boolean hasDefenseBuff() {
+        return defenseBuffActive;
     }
 
     public void addWeapon(Weapon weapon) {

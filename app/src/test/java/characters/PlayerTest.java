@@ -25,7 +25,7 @@ class PlayerTest {
 
     //------------------------------------------------------------------------------------------- CLASS INITIALIZATION TESTS
     @ParameterizedTest
-    @CsvSource({"Knight, 120, 12, 10, 0", "Mage, 60, 20, 3, 100", "reaper, 80, 15, 5, 30"})
+    @CsvSource({"Knight, 120, 12, 10, 30", "Mage, 60, 20, 3, 100", "reaper, 80, 15, 5, 30"})
     @DisplayName("Should initialize player with correct class stats")
     void shouldInitializePlayerWithClassStats(String className, int expectedHealth, int expectedAttack, int expectedDefense, int expectedMana) {
         Player player = new Player("Test" + className, className);
@@ -42,7 +42,7 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"Knight, TestKnight, 'TestKnight - HP: 120/120 | ATK: 12 | DEF: 10', 'Class: Knight | Level: 1 | EXP: 0/100'", "Mage, TestMage, 'TestMage - HP: 60/60 | ATK: 20 | DEF: 3', 'Class: Mage | Level: 1 | EXP: 0/100 | MP: 100/100'", "reaper, TestReaper, 'TestReaper - HP: 80/80 | ATK: 15 | DEF: 5', 'Class: reaper | Level: 1 | EXP: 0/100 | MP: 30/30'"})
+    @CsvSource({"Knight, TestKnight, 'TestKnight - HP: 120/120 | ATK: 12 | DEF: 10', 'Class: Knight | Level: 1 | EXP: 0/100 | MP: 30/30'", "Mage, TestMage, 'TestMage - HP: 60/60 | ATK: 20 | DEF: 3', 'Class: Mage | Level: 1 | EXP: 0/100 | MP: 100/100'", "reaper, TestReaper, 'TestReaper - HP: 80/80 | ATK: 15 | DEF: 5', 'Class: reaper | Level: 1 | EXP: 0/100 | MP: 30/30'"})
     @DisplayName("Should return correct status string for each class")
     void shouldReturnCorrectStatusForClass(String className, String playerName, String baseStatus, String classInfo) {
         Player player = new Player(playerName, className);
@@ -136,7 +136,7 @@ class PlayerTest {
 
     //------------------------------------------------------------------------------------------- LEVEL UP STAT INCREASE TESTS
     @ParameterizedTest
-    @CsvSource({"Knight, 120, 12, 10, 0, 15, 3, 2, 0", "Mage, 60, 20, 3, 100, 5, 1, 1, 20", "reaper, 80, 15, 5, 30, 10, 2, 1, 5"})
+    @CsvSource({"Knight, 120, 12, 10, 30, 15, 3, 2, 5", "Mage, 60, 20, 3, 100, 5, 1, 1, 20", "reaper, 80, 15, 5, 30, 10, 2, 1, 5"})
     @DisplayName("Should increase stats correctly when leveling up")
     public void shouldIncreaseStatsOnLevelUp(String className, int initialHealth, int initialAttack, int initialDefense, int initialMana, int healthGain, int attackGain, int defenseGain, int manaGain) {
         Player player = new Player("Test", className);
@@ -181,7 +181,7 @@ class PlayerTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"Mage, 100, 150", "reaper, 30, 50", "Knight, 0, 10"})
+    @CsvSource({"Mage, 100, 150", "reaper, 30, 50", "Knight, 30, 50"})
     @DisplayName("Should not cast spell with insufficient mana")
     public void shouldNotCastSpellWithInsufficientMana(String className, int initialMana, int manaCost) {
         Player player = new Player("Test", className);
@@ -204,8 +204,8 @@ class PlayerTest {
 
     //----------------------------------------------------------------------------------------------- DISPLAY STATUS TESTS
     @Test
-    @DisplayName("Knight should display status without mana (maxMana = 0)")
-    public void knightShouldDisplayStatusWithoutMana() {
+    @DisplayName("Knight should display status with mana")
+    public void knightShouldDisplayStatusWithMana() {
         String status = playerKnight.displayStatus();
 
         // Verify all required elements are present
@@ -217,7 +217,7 @@ class PlayerTest {
         assertTrue(status.contains("Experience: 0/100"));
         assertTrue(status.contains("Vitals:"));
         assertTrue(status.contains("Health: 120/120"));
-        assertFalse(status.contains("Mana:")); // Knight should not display mana
+        assertTrue(status.contains("Mana: 30/30")); // knight now has mana
         assertTrue(status.contains("Stats:"));
         assertTrue(status.contains("Attack: 12"));
         assertTrue(status.contains("Defense: 10"));
@@ -301,7 +301,7 @@ class PlayerTest {
 
     //--------------------------------------------------------------------------------------------------- GET STATUS TESTS
     @ParameterizedTest
-    @CsvSource({"Knight, false, ''", "Mage, true, 'MP: 100/100'", "reaper, true, 'MP: 30/30'"})
+    @CsvSource({"Knight, true, 'MP: 30/30'", "Mage, true, 'MP: 100/100'", "reaper, true, 'MP: 30/30'"})
     @DisplayName("Should return getStatus with correct mana display for each class")
     public void shouldReturnGetStatusWithCorrectManaDisplay(String className, boolean hasMana, String manaString) {
         Player player = new Player("Test" + className, className);

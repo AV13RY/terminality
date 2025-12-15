@@ -8,10 +8,11 @@ public class Weapon extends Item {
     private int manaCost;
 
     public enum SpellType {
-        NONE("None", 0),           // knight weapons
-        FIRE("Fireball", 15),      // mage fire staff
-        ICE("Frostbolt", 20),      // mage ice staff
-        LIFESTEAL("Drain Life", 10); // reaper scythe
+        NONE("None", 0),                  // no spell
+        FIRE("Fireball", 15),             // mage fire staff
+        ICE("Frostbolt", 20),             // mage ice staff
+        LIFESTEAL("Drain Life", 10),      // reaper scythe
+        DEFENSE("Heavenly Defense", 0);   // knight shield buff
 
         public final String name;
         public final int baseDamage;

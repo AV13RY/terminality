@@ -473,9 +473,10 @@ public class GUI {
                     println("\nYou grasp the MACE, feeling its weight and power.");
                     println("The weapon pulses with righteous fury as you swing it experimentally.");
                 } else if (choice.equals("2")) {
-                    chosenWeapon = new Weapon("Sword & Shield", 12, "The bastion of any successful knight.", Item.Rarity.COMMON, 10);
+                    chosenWeapon = new Weapon("Sword & Shield", 12, "The bastion of any successful knight. Cast: Heavenly Defense (15 mana)", Item.Rarity.COMMON, 10, Weapon.SpellType.DEFENSE, 15);
                     println("\nYou take up the SWORD & SHIELD, feeling their perfect balance.");
                     println("The blade gleams with deadly purpose while the shield promises protection.");
+                    println("You can now cast HEAVENLY DEFENSE! Use 'cast' in combat.");
                 }
                 break;
 
@@ -846,6 +847,7 @@ public class GUI {
                 println("You encounter a " + currentEnemy.getName() + "!");
             }
             println(Messages.displayCombatStatus());
+            println(Messages.getEnemyArt(currentEnemy.getEnemyType())); // show enemy art after status
         }
     }
 
@@ -971,6 +973,14 @@ public class GUI {
                 println("You absorb " + healAmount + " health!");
                 currentEnemy.takeDamage(damage);
             }
+            case DEFENSE -> {
+                println("\n🛡️ You cast HEAVENLY DEFENSE!");
+                println("Divine light surrounds you, doubling your defense!");
+                player.activateDefenseBuff();
+                refreshSidePanel();
+                enemyTurn(); // no damage, just buff then enemy attacks
+                return;
+            }
             default -> {
                 println("The spell fizzles...");
                 return;
@@ -1019,6 +1029,8 @@ public class GUI {
         player.gainExperience(expGained);
         player.addGold(goldGained);
         println("You gained " + expGained + " EXP and " + goldGained + " gold!");
+
+        player.clearDefenseBuff(); // reset buff after combat
         refreshSidePanel();
 
         currentRoom.getEnemies().remove(currentEnemy);
@@ -1078,6 +1090,8 @@ public class GUI {
 
     //                                                                                                 HANDLE BOSS VICTORY
     private void handleBossVictory() {
+        player.clearDefenseBuff(); // reset buff after combat
+
         // rewards before victory screen
         int expGained = currentEnemy.getExperienceValue();
         int goldGained = currentEnemy.getGoldDrop();
